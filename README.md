@@ -1,17 +1,25 @@
-# 🐾 Plataforma para Refugios de Animales
+# 🐾 LUMA – Plataforma para Refugios de Animales
 
-Proyecto final de la materia de Informática – Secundaria ORT  
+Proyecto final de Informática – Secundaria ORT  
 **Iara Szwarstein & Juana López Valenzuela**
 
 ---
 
-## 📋 Descripción
+## ✨ ¿Qué es LUMA?
 
-Plataforma web orientada a refugios de animales que busca digitalizar y simplificar tres procesos clave:
+LUMA es una plataforma web diseñada para transformar la manera en que los refugios de animales gestionan sus procesos. Sabemos que los refugios hacen un trabajo enorme con recursos limitados, y LUMA nació para aliviar esa carga: menos WhatsApps perdidos, menos planillas desorganizadas y más tiempo para lo que realmente importa.
 
-- **Adopción**: publicación de animales disponibles, gestión de solicitudes y seguimiento del proceso en tiempo real.
-- **Capacitación**: recursos y materiales para que los adoptantes lleguen preparados antes de recibir al animal.
-- **Seguimiento post adopción**: canal de comunicación entre el refugio y el adoptante para acompañar la adaptación del animal en su nuevo hogar.
+Con LUMA, los refugios pueden digitalizar tres procesos clave:
+
+- 🐶 **Adopción** – Publicación de animales disponibles, gestión de solicitudes y seguimiento del proceso en tiempo real, todo desde un solo lugar.
+- 📚 **Capacitación** – Recursos y materiales para que los adoptantes lleguen preparados y la transición sea lo mejor posible para el animal y para ellos.
+- 💚 **Seguimiento post adopción** – Canal de comunicación continuo entre el refugio y el adoptante para acompañar la adaptación del animal en su nuevo hogar.
+
+---
+
+## 🎨 Diseño
+
+LUMA tiene una identidad visual cálida y cercana, pensada para transmitir confianza y cuidado. La paleta de colores combina **tonos marrón, beige y crema** con **verde sage**, creando una experiencia visual tranquila y acogedora que refleja los valores del proyecto.
 
 ---
 
@@ -36,8 +44,8 @@ Plataforma web orientada a refugios de animales que busca digitalizar y simplifi
 
 1. Cloná el repositorio:
 ```bash
-git clone https://github.com/usuario/nombre-del-repo.git
-cd nombre-del-repo
+git clone https://github.com/usuario/luma.git
+cd luma
 ```
 
 2. Instalá las dependencias:
@@ -56,7 +64,7 @@ VITE_SUPABASE_ANON_KEY=tu_anon_key
 npm run dev
 ```
 
-5. Abrí el navegador en `http://localhost:5173`
+5. Abrí el navegador en `http://localhost:5173` 🎉
 
 ---
 
@@ -88,3 +96,7 @@ npm run dev
 ## 📌 Estado del proyecto
 
 🟡 En desarrollo – Proyecto académico 2025
+
+---
+
+*Hecho con 💚 y muchas ganas de hacer algo que valga la pena.*
