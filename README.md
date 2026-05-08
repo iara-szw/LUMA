@@ -1,16 +1,90 @@
-# React + Vite
+# 🐾 Plataforma para Refugios de Animales
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto final de la materia de Informática – Secundaria ORT  
+**Iara Szwarstein & Juana López Valenzuela**
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📋 Descripción
 
-## React Compiler
+Plataforma web orientada a refugios de animales que busca digitalizar y simplificar tres procesos clave:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Adopción**: publicación de animales disponibles, gestión de solicitudes y seguimiento del proceso en tiempo real.
+- **Capacitación**: recursos y materiales para que los adoptantes lleguen preparados antes de recibir al animal.
+- **Seguimiento post adopción**: canal de comunicación entre el refugio y el adoptante para acompañar la adaptación del animal en su nuevo hogar.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Tecnologías utilizadas
+
+| Capa | Tecnología |
+|---|---|
+| Frontend | React + Vite |
+| Estilos | HTML + CSS |
+| Backend | Node.js |
+| Base de datos | Supabase |
+
+---
+
+## ⚙️ Instalación y uso local
+
+### Requisitos previos
+- Node.js instalado
+- Cuenta en Supabase con el proyecto configurado
+
+### Pasos
+
+1. Cloná el repositorio:
+```bash
+git clone https://github.com/usuario/nombre-del-repo.git
+cd nombre-del-repo
+```
+
+2. Instalá las dependencias:
+```bash
+npm install
+```
+
+3. Creá un archivo `.env` en la raíz del proyecto con las variables de Supabase:
+```env
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_anon_key
+```
+
+4. Corré el proyecto en modo desarrollo:
+```bash
+npm run dev
+```
+
+5. Abrí el navegador en `http://localhost:5173`
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+├── src/
+│   ├── components/       # Componentes reutilizables
+│   ├── pages/            # Vistas principales
+│   ├── styles/           # Archivos CSS
+│   └── main.jsx          # Punto de entrada
+├── public/
+├── .env                  # Variables de entorno (no incluido en el repo)
+├── package.json
+└── README.md
+```
+
+---
+
+## 👩‍💻 Equipo
+
+| Nombre | GitHub |
+|---|---|
+| Iara Szwarstein | [@iara](https://github.com/) |
+| Juana López Valenzuela | [@juana](https://github.com/) |
+
+---
+
+## 📌 Estado del proyecto
+
+🟡 En desarrollo – Proyecto académico 2025
