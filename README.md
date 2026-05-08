@@ -1,7 +1,7 @@
 # 🐾 LUMA – Plataforma para Refugios de Animales
 
 Proyecto final de Informática – Secundaria ORT  
-**Iara Szwarstein & Juana López Valenzuela**
+**Iara S. & Juana L.**
 
 ---
 
@@ -14,12 +14,6 @@ Con LUMA, los refugios pueden digitalizar tres procesos clave:
 - 🐶 **Adopción** – Publicación de animales disponibles, gestión de solicitudes y seguimiento del proceso en tiempo real, todo desde un solo lugar.
 - 📚 **Capacitación** – Recursos y materiales para que los adoptantes lleguen preparados y la transición sea lo mejor posible para el animal y para ellos.
 - 💚 **Seguimiento post adopción** – Canal de comunicación continuo entre el refugio y el adoptante para acompañar la adaptación del animal en su nuevo hogar.
-
----
-
-## 🎨 Diseño
-
-LUMA tiene una identidad visual cálida y cercana, pensada para transmitir confianza y cuidado. La paleta de colores combina **tonos marrón, beige y crema** con **verde sage**, creando una experiencia visual tranquila y acogedora que refleja los valores del proyecto.
 
 ---
 
@@ -44,7 +38,7 @@ LUMA tiene una identidad visual cálida y cercana, pensada para transmitir confi
 
 1. Cloná el repositorio:
 ```bash
-git clone https://github.com/usuario/luma.git
+git clone https://github.com/iara-szw/LUMA
 cd luma
 ```
 
@@ -88,8 +82,8 @@ npm run dev
 
 | Nombre | GitHub |
 |---|---|
-| Iara Szwarstein | [@iara](https://github.com/) |
-| Juana López Valenzuela | [@juana](https://github.com/) |
+| Iara Szwarstein | [@iara](https://github.com/iara-szw) |
+| Juana López Valenzuela | [@juana](https://github.com/juaaloop) |
 
 ---
 
