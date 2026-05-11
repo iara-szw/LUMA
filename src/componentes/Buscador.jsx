@@ -7,7 +7,7 @@ function Buscador({ placeholder, onBuscar }) {
 
   return (
     <div className="buscador">
-      <span className="buscador-icono">🔍</span>
+      <img src="../cliente/img/lupa.png"></img>
       <input
         type="text"
         placeholder={placeholder}

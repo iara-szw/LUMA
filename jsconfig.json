@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "jsx": "react-jsx"
+  },
+  "include": ["src", "contexto", "database"]
+}
