@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { supabase } from '../../servicios/Supbase'
+import { supbase } from '../../servicios/Supbase'
 
 export default function IniciarSesion() {
   const navigate = useNavigate()
@@ -19,11 +19,11 @@ export default function IniciarSesion() {
     setCargando(true)
 
     // Le pedimos a Supabase que verifique email + contraseña
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supbase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      // Si algo salió mal mostramos el mensaje
-      setError('Email o contraseña incorrectos')
+console.log(error)   
+   setError('Email o contraseña incorrectos')
       setCargando(false)
       return
     }

@@ -1,20 +1,19 @@
 
-// servicios/supabase.js
+// servicios/supbase.js
 // Instancia única — importar desde acá siempre
 // ─────────────────────────────────────────────
 import { createClient } from '@supabase/supabase-js'
-
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
+export const supbase = createClient( 
+  import.meta.env.VITE_SUPBASE_URL,
+  import.meta.env.VITE_SUPBASE_ANON_KEY
 )
 
 export const registrar = async (email, password, nombre, rol) => {
-  const { data, error } = await supabase.auth.signUp({ email, password })
+  const { data, error } = await supbase.auth.signUp({ email, password })
   if (error) throw error
 
-  const { error: perfilError } = await supabase
-    .from('perfiles')
+  const { error: perfilError } = await supbase
+    .from('usuarios')
     .insert({ id: data.user.id, nombre, rol })
   if (perfilError) throw perfilError
 
@@ -22,22 +21,22 @@ export const registrar = async (email, password, nombre, rol) => {
 }
 
 export const iniciarSesion = async (email, password) => {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supbase.auth.signInWithPassword({ email, password })
   if (error) throw error
   return data.user
 }
 
 export const cerrarSesion = async () => {
-  const { error } = await supabase.auth.signOut()
+  const { error } = await supbase.auth.signOut()
   if (error) throw error
 }
 
 export const obtenerUsuarioActual = async () => {
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await supbase.auth.getUser()
   if (!user) return null
 
-  const { data: perfil, error } = await supabase
-    .from('perfiles')
+  const { data: perfil, error } = await supbase
+    .from('usuarios')
     .select('*')
     .eq('id', user.id)
     .single()
@@ -53,7 +52,7 @@ export const obtenerUsuarioActual = async () => {
 
 
 export const obtenerMascotas = async ({ estado, refugioId, limite } = {}) => {
-  let query = supabase
+  let query = supbase
     .from('mascotas')
     .select('id, nombre, foto_url, urgente, edad, estado, refugio_id')
     .order('creado_en', { ascending: false })
@@ -68,7 +67,7 @@ export const obtenerMascotas = async ({ estado, refugioId, limite } = {}) => {
 }
 
 export const obtenerMascotaPorId = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('mascotas')
     .select('*, refugios(nombre, direccion)')
     .eq('id', id)
@@ -78,7 +77,7 @@ export const obtenerMascotaPorId = async (id) => {
 }
 
 export const crearMascota = async (mascota) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('mascotas')
     .insert(mascota)
     .select()
@@ -88,7 +87,7 @@ export const crearMascota = async (mascota) => {
 }
 
 export const actualizarMascota = async (id, cambios) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('mascotas')
     .update(cambios)
     .eq('id', id)
@@ -99,7 +98,7 @@ export const actualizarMascota = async (id, cambios) => {
 }
 
 export const eliminarMascota = async (id) => {
-  const { error } = await supabase
+  const { error } = await supbase
     .from('mascotas')
     .delete()
     .eq('id', id)
@@ -108,12 +107,12 @@ export const eliminarMascota = async (id) => {
 
 export const subirFotoMascota = async (id, archivo) => {
   const ruta = `mascotas/${id}/${archivo.name}`
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supbase.storage
     .from('fotos')
     .upload(ruta, archivo, { upsert: true })
   if (uploadError) throw uploadError
 
-  const { data } = supabase.storage.from('fotos').getPublicUrl(ruta)
+  const { data } = supbase.storage.from('fotos').getPublicUrl(ruta)
   return data.publicUrl
 }
 
@@ -123,11 +122,11 @@ export const subirFotoMascota = async (id, archivo) => {
 // ────────────────────────────────────────────
 
 export const obtenerSolicitudesPorRefugio = async (refugioId, estado = null) => {
-  let query = supabase
+  let query = supbase
     .from('solicitudes')
     .select(`
       id, estado, creado_en, respuestas,
-      perfiles(id, nombre, avatar_url),
+      usuarios(id, nombre, avatar_url),
       mascotas(id, nombre, foto_url)
     `)
     .eq('mascotas.refugio_id', refugioId)
@@ -141,7 +140,7 @@ export const obtenerSolicitudesPorRefugio = async (refugioId, estado = null) => 
 }
 
 export const obtenerSolicitudesPorAdoptante = async (adoptanteId) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('solicitudes')
     .select(`
       id, estado, creado_en,
@@ -154,7 +153,7 @@ export const obtenerSolicitudesPorAdoptante = async (adoptanteId) => {
 }
 
 export const crearSolicitud = async ({ adoptanteId, mascotaId, formularioId, respuestas }) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('solicitudes')
     .insert({
       adoptante_id: adoptanteId,
@@ -170,7 +169,7 @@ export const crearSolicitud = async ({ adoptanteId, mascotaId, formularioId, res
 }
 
 export const actualizarEstadoSolicitud = async (id, estado) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('solicitudes')
     .update({ estado })
     .eq('id', id)
@@ -187,7 +186,7 @@ export const actualizarEstadoSolicitud = async (id, estado) => {
 
 
 export const obtenerRefugioPorPerfil = async (perfilId) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('refugios')
     .select('*')
     .eq('perfil_id', perfilId)
@@ -197,7 +196,7 @@ export const obtenerRefugioPorPerfil = async (perfilId) => {
 }
 
 export const obtenerRefugioPorId = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('refugios')
     .select('*')
     .eq('id', id)
@@ -207,7 +206,7 @@ export const obtenerRefugioPorId = async (id) => {
 }
 
 export const actualizarRefugio = async (id, cambios) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('refugios')
     .update(cambios)
     .eq('id', id)
@@ -224,7 +223,7 @@ export const actualizarRefugio = async (id, cambios) => {
 
 
 export const obtenerFormularioPorMascota = async (mascotaId) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('formularios')
     .select('*')
     .eq('mascota_id', mascotaId)
@@ -235,7 +234,7 @@ export const obtenerFormularioPorMascota = async (mascotaId) => {
 
 export const guardarFormulario = async ({ refugioId, mascotaId, preguntas }) => {
   // upsert: actualiza si ya existe, crea si no
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('formularios')
     .upsert({ refugio_id: refugioId, mascota_id: mascotaId, preguntas })
     .select()
@@ -251,7 +250,7 @@ export const guardarFormulario = async ({ refugioId, mascotaId, preguntas }) => 
 
 
 export const obtenerEventos = async ({ refugioId, limite } = {}) => {
-  let query = supabase
+  let query = supbase
     .from('eventos')
     .select('id, nombre, lugar, fecha, hora, refugio_id')
     .order('fecha', { ascending: true })
@@ -265,7 +264,7 @@ export const obtenerEventos = async ({ refugioId, limite } = {}) => {
 }
 
 export const crearEvento = async (evento) => {
-  const { data, error } = await supabase
+  const { data, error } = await supbase
     .from('eventos')
     .insert(evento)
     .select()
@@ -275,6 +274,6 @@ export const crearEvento = async (evento) => {
 }
 
 export const eliminarEvento = async (id) => {
-  const { error } = await supabase.from('eventos').delete().eq('id', id)
+  const { error } = await supbase.from('eventos').delete().eq('id', id)
   if (error) throw error
 }

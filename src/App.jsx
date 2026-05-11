@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { ProveedorAuth, usarAuth } from './contexto/ContextoAuth'
+import { ProveedorAuth, usarAuth } from './contexto/ContextoAuth.jsx'
 import IniciarSesion from './paginas/auth/InicioSesion'
 import Registro from './paginas/auth/Registro'
 

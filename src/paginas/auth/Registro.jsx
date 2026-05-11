@@ -1,60 +1,90 @@
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '../../servicios/Supbase'
+import { supbase } from '../../servicios/supbase'
+
+const ROLES = {
+  adoptante: 'b89cc8e2-c8cc-4c9d-9394-87f7d995b4fe',
+  refugio: 'f5346fd4-12d6-463b-bb40-d1872611cb39',
+}
 
 export default function Registro() {
-  const [nombre, setNombre]     = useState('')
-  const [email, setEmail]       = useState('')
+  const [nombre, setNombre] = useState('')
+  const [apellido, setApellido] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [rol, setRol]           = useState('adoptante') // 'adoptante' o 'refugio'
-  const [error, setError]       = useState(null)
+  const [telefono, setTelefono] = useState('')
+  const [ciudad, setCiudad] = useState('')
+  const [provincia, setProvincia] = useState('')
+  const [rol, setRol] = useState('adoptante')
+
+  const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
 
   const manejarRegistro = async () => {
-    setError(null)
+    try {
+      setError('')
+      setCargando(true)
 
-    // Validación mínima antes de llamar a Supabase
-    if (!nombre || !email || !password) {
-      setError('Completá todos los campos')
-      return
-    }
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
-      return
-    }
+      if (!nombre || !apellido || !email || !password) {
+        throw new Error('Completá todos los campos obligatorios')
+      }
 
-    setCargando(true)
+      if (password.length < 6) {
+        throw new Error('La contraseña debe tener al menos 6 caracteres')
+      }
 
-    // PASO 1: Crear el usuario en el sistema de autenticación de Supabase
-    // Esto guarda email + contraseña de forma segura (nunca en nuestra tabla)
-    const { data, error: errorAuth } = await supabase.auth.signUp({ email, password })
-
-    if (errorAuth) {
-      setError('No se pudo crear la cuenta. Probá con otro email.')
-      setCargando(false)
-      return
-    }
-
-    // PASO 2: Guardar el perfil en nuestra tabla "perfiles"
-    // Usamos el ID que Supabase le asignó al usuario nuevo
-    const { error: errorPerfil } = await supabase
-      .from('perfiles')
-      .insert({
-        id: data.user.id,  // mismo ID que el usuario de auth
-        nombre,
-        rol,
+      // Crear usuario auth
+      const { data, error: authError } = await supbase.auth.signUp({
+        email,
+        password,
       })
 
-    if (errorPerfil) {
-      setError('Cuenta creada pero hubo un problema al guardar el perfil.')
-      setCargando(false)
-      return
-    }
+      if (authError) throw authError
 
-    // Listo. Supabase inicia sesión automáticamente después del signUp.
-    // El ContextoAuth detecta la sesión → redirige según rol.
-    setCargando(false)
+      if (!data.user) {
+        throw new Error('No se pudo crear el usuario')
+      }
+
+      const uid = data.user.id
+
+      // Insertar usuario
+      const { error: usuarioError } = await supbase
+        .from('usuarios')
+        .insert([
+          {
+            id: uid,
+            nombre,
+            apellido,
+            email,
+            telefono: telefono || null,
+            ciudad: ciudad || null,
+            provincia: provincia || null,
+            activo: true,
+          },
+        ])
+
+      if (usuarioError) throw usuarioError
+
+      // Insertar rol
+      const { error: rolError } = await supbase
+        .from('usuarios_roles')
+        .insert([
+          {
+            usuario_id: uid,
+            rol_id: ROLES[rol],
+          },
+        ])
+
+      if (rolError) throw rolError
+
+      alert('Cuenta creada correctamente')
+
+    } catch (err) {
+      console.error(err)
+      setError(err.message)
+    } finally {
+      setCargando(false)
+    }
   }
 
   return (
@@ -62,15 +92,17 @@ export default function Registro() {
       <h1 className="logo">LUMA</h1>
       <h2>Crear cuenta</h2>
 
-      {/* El usuario elige qué tipo de cuenta quiere */}
       <div className="selector-rol">
         <button
+          type="button"
           className={rol === 'adoptante' ? 'activo' : ''}
           onClick={() => setRol('adoptante')}
         >
           Quiero adoptar
         </button>
+
         <button
+          type="button"
           className={rol === 'refugio' ? 'activo' : ''}
           onClick={() => setRol('refugio')}
         >
@@ -80,28 +112,60 @@ export default function Registro() {
 
       <input
         type="text"
-        placeholder={rol === 'refugio' ? 'Nombre del refugio' : 'Tu nombre'}
+        placeholder="Nombre *"
         value={nombre}
-        onChange={e => setNombre(e.target.value)}
+        onChange={(e) => setNombre(e.target.value)}
+      />
+
+      <input
+        type="text"
+        placeholder="Apellido *"
+        value={apellido}
+        onChange={(e) => setApellido(e.target.value)}
       />
 
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Email *"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
       />
 
       <input
         type="password"
-        placeholder="Contraseña (mínimo 6 caracteres)"
+        placeholder="Contraseña *"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <input
+        type="tel"
+        placeholder="Teléfono"
+        value={telefono}
+        onChange={(e) => setTelefono(e.target.value)}
+      />
+
+      <input
+        type="text"
+        placeholder="Ciudad"
+        value={ciudad}
+        onChange={(e) => setCiudad(e.target.value)}
+      />
+
+      <input
+        type="text"
+        placeholder="Provincia"
+        value={provincia}
+        onChange={(e) => setProvincia(e.target.value)}
       />
 
       {error && <p className="error">{error}</p>}
 
-      <button onClick={manejarRegistro} disabled={cargando}>
+      <button
+        type="button"
+        onClick={manejarRegistro}
+        disabled={cargando}
+      >
         {cargando ? 'Creando cuenta...' : 'Crear cuenta'}
       </button>
 

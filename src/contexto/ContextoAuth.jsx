@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../servicios/Supbase'
+import { supbase } from '../servicios/Supbase'
 
 const ContextoAuth = createContext(null)
 
@@ -9,12 +9,12 @@ export function ProveedorAuth({ children })
 
   useEffect(() => {
     const cargarSesion = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { session } } = await supbase.auth.getSession()
       if (session?.user) await cargarPerfil(session.user.id)
       setCargando(false)
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supbase.auth.onAuthStateChange(
       async (_evento, session) => {
         if (session?.user) {
           await cargarPerfil(session.user.id)
@@ -29,14 +29,23 @@ export function ProveedorAuth({ children })
     return () => subscription.unsubscribe()
   }, [])
 
-  const cargarPerfil = async (uid) => {
-    const { data, error } = await supabase
-      .from('perfiles')
-      .select('*')
-      .eq('id', uid)
-      .single()
-    if (!error) setUsuario(data)
+const cargarPerfil = async (uid) => {
+  const { data, error } = await supbase
+    .from('usuarios')
+    .select(`
+      *,
+      usuarios_roles (
+        roles ( nombre )
+      )
+    `)
+    .eq('id', uid)
+    .single()
+
+  if (!error) {
+    const rol = data.usuarios_roles?.[0]?.roles?.nombre ?? null
+    setUsuario({ ...data, rol })
   }
+}
 
   const valor = {
     usuario,      
