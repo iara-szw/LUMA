@@ -17,7 +17,9 @@ export function ProveedorAuth({ children })
     const { data: { subscription } } = Supabase.auth.onAuthStateChange(
       async (_evento, session) => {
         if (session?.user) {
+
           await cargarPerfil(session.user.id)
+
         } else {
           setUsuario(null)
         }
@@ -30,15 +32,24 @@ export function ProveedorAuth({ children })
   }, [])
 
 const cargarPerfil = async (uid) => {
-  const { data, error } = await Supabase
-    .from('usuarios')
-    .select(`*, usuarios_roles(roles(nombre))`)
-    .eq('id', uid)
-    .single()
+  try {
 
-  if (!error) {
-    const rol = data.usuarios_roles?.[0]?.roles?.nombre ?? null
-    setUsuario({ ...data, rol })
+    const promesa = Supabase
+      .from('usuarios')
+      .select('*')
+      .eq('id', uid)
+      .maybeSingle()
+
+    const resultado = await Promise.race([
+      promesa,
+      new Promise((_, reject) =>
+        setTimeout(() => reject('TIMEOUT'), 5000)
+      )
+    ])
+
+
+  } catch (e) {
+    console.log('ERROR:', e)
   }
 }
 

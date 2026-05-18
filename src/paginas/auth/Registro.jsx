@@ -30,17 +30,15 @@ if (password.length < 6) {
   return
 }
 
-
 setCargando(true)
-try {
-  console.log('antes del signup')
-  const { data, error: authError } = await Supabase.auth.signUp({ email, password })
-  console.log('despues del signup', data, authError)
-} catch (e) {
-  console.log('EXCEPCION:', e)
-}
+
+const { data, error: authError } = await Supabase.auth.signUp({ email, password })
+
 if (authError) {
-  setEstado(authError.message)
+  if(authError.message="User already registered"){
+  setEstado("Email ya en uso")
+
+  }
   setCargando(false)
   return
 }

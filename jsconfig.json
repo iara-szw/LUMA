@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "checkJs": false,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+       "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["src", "contexto", "database"]
 }
