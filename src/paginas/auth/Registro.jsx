@@ -16,47 +16,50 @@ export default function Registro() {
   const [ciudad, setCiudad]       = useState('')
   const [provincia, setProvincia] = useState('')
   const [rol, setRol]             = useState('adoptante')
-  const [error, setError]         = useState('')
+  const [estado, setEstado]         = useState('')
   const [cargando, setCargando]   = useState(false)
 
   const manejarRegistro = async () => {
-    setError('')
+    setEstado('')
+   if (!nombre || !apellido || !email || !password) {
+  setEstado('Completa todos los campos obligatorios')
+  return
+}
+if (password.length < 6) {
+  setEstado('La contrasena debe tener al menos 6 caracteres')
+  return
+}
 
-    if (!nombre || !apellido || !email || !password) {
-      setError('Completá todos los campos obligatorios')
-      return
-    }
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
-      return
-    }
 
-    setCargando(true)
-
-const { data, error: authError } = await Supabase.auth.signUp({ email, password })
+setCargando(true)
+try {
+  console.log('antes del signup')
+  const { data, error: authError } = await Supabase.auth.signUp({ email, password })
+  console.log('despues del signup', data, authError)
+} catch (e) {
+  console.log('EXCEPCION:', e)
+}
 if (authError) {
-  setError(authError.message)
+  setEstado(authError.message)
   setCargando(false)
   return
 }
 
 const uid = data.user.id
-
 const { error: usuarioError } = await Supabase
   .from('usuarios')
   .insert({
     id: uid,
-    nombre,
-    apellido,
-    email,
+    nombre: nombre,
+    apellido: apellido,
+    email: email,
     telefono:  telefono  || null,
     ciudad:    ciudad    || null,
     provincia: provincia || null,
     activo:    true,
   })
-
 if (usuarioError) {
-  setError('No se pudo guardar el perfil: ' + usuarioError.message)
+  setEstado('No se pudo guardar el perfil: ' + usuarioError.message)
   setCargando(false)
   return
 }
@@ -66,11 +69,12 @@ const { error: rolError } = await Supabase
   .insert({ usuario_id: uid, rol_id: ROLES[rol] })
 
 if (rolError) {
-  setError('No se pudo asignar el rol: ' + rolError.message)
+  setEstado('No se pudo asignar el rol: ' + rolError.message)
   setCargando(false)
   return
 }
 
+setEstado("Usuario creado exitosamente")
 setCargando(false)
   }
 
@@ -92,17 +96,18 @@ setCargando(false)
       <input type="text"     placeholder="Apellido *"   value={apellido} id="Apellido" onChange={e => setApellido(e.target.value)} />
       <input type="email"    placeholder="Email *"      value={email}    id="Mail" onChange={e => setEmail(e.target.value)} />
       <input type="password" placeholder="Contraseña *" value={password} id="Password" onChange={e => setPassword(e.target.value)} />
-      <input type="tel"      placeholder="Teléfono"     value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
+      <input type="tel"      placeholder="Telefono"     value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
       <input type="text"     placeholder="Ciudad"       value={ciudad}   id="Ciudad" onChange={e => setCiudad(e.target.value)} />
       <input type="text"     placeholder="Provincia"    value={provincia} id="Provincia" onChange={e => setProvincia(e.target.value)} />
 
-      {error && <p className="error">{error}</p>}
+      {estado && <p className="estado">{estado}</p>}
 
       <button type="button" onClick={manejarRegistro} disabled={cargando}>
         {cargando ? 'Creando cuenta...' : 'Crear cuenta'}
       </button>
 
-      <p>¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link></p>
+      <p>¿Ya tenes cuenta? <Link to="/login">Iniciar sesión</Link></p>
     </div>
   )
 }
+
