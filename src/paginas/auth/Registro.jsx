@@ -1,60 +1,79 @@
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '../../servicios/Supbase'
+import { Supabase } from '../../servicios/Supabase'
+
+const ROLES = {
+  adoptante: 'b89cc8e2-c8cc-4c9d-9394-87f7d995b4fe',
+  refugio:   'f5346fd4-12d6-463b-bb40-d1872611cb39',
+}
 
 export default function Registro() {
-  const [nombre, setNombre]     = useState('')
-  const [email, setEmail]       = useState('')
-  const [password, setPassword] = useState('')
-  const [rol, setRol]           = useState('adoptante') // 'adoptante' o 'refugio'
-  const [error, setError]       = useState(null)
-  const [cargando, setCargando] = useState(false)
+  const [nombre, setNombre]       = useState('')
+  const [apellido, setApellido]   = useState('')
+  const [email, setEmail]         = useState('')
+  const [password, setPassword]   = useState('')
+  const [telefono, setTelefono]   = useState('')
+  const [ciudad, setCiudad]       = useState('')
+  const [provincia, setProvincia] = useState('')
+  const [rol, setRol]             = useState('adoptante')
+  const [estado, setEstado]         = useState('')
+  const [cargando, setCargando]   = useState(false)
 
   const manejarRegistro = async () => {
-    setError(null)
+    setEstado('')
+   if (!nombre || !apellido || !email || !password) {
+  setEstado('Completa todos los campos obligatorios')
+  return
+}
+if (password.length < 6) {
+  setEstado('La contrasena debe tener al menos 6 caracteres')
+  return
+}
 
-    // Validación mínima antes de llamar a Supabase
-    if (!nombre || !email || !password) {
-      setError('Completá todos los campos')
-      return
-    }
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
-      return
-    }
+setCargando(true)
 
-    setCargando(true)
+const { data, error: authError } = await Supabase.auth.signUp({ email, password })
 
-    // PASO 1: Crear el usuario en el sistema de autenticación de Supabase
-    // Esto guarda email + contraseña de forma segura (nunca en nuestra tabla)
-    const { data, error: errorAuth } = await supabase.auth.signUp({ email, password })
+if (authError) {
+  if(authError.message="User already registered"){
+  setEstado("Email ya en uso")
 
-    if (errorAuth) {
-      setError('No se pudo crear la cuenta. Probá con otro email.')
-      setCargando(false)
-      return
-    }
+  }
+  setCargando(false)
+  return
+}
 
-    // PASO 2: Guardar el perfil en nuestra tabla "perfiles"
-    // Usamos el ID que Supabase le asignó al usuario nuevo
-    const { error: errorPerfil } = await supabase
-      .from('perfiles')
-      .insert({
-        id: data.user.id,  // mismo ID que el usuario de auth
-        nombre,
-        rol,
-      })
+const uid = data.user.id
+const { error: usuarioError } = await Supabase
+  .from('usuarios')
+  .insert({
+    id: uid,
+    nombre: nombre,
+    apellido: apellido,
+    email: email,
+    telefono:  telefono  || null,
+    ciudad:    ciudad    || null,
+    provincia: provincia || null,
+    activo:    true,
+  })
+if (usuarioError) {
+  setEstado('No se pudo guardar el perfil: ' + usuarioError.message)
+  setCargando(false)
+  return
+}
 
-    if (errorPerfil) {
-      setError('Cuenta creada pero hubo un problema al guardar el perfil.')
-      setCargando(false)
-      return
-    }
+const { error: rolError } = await Supabase
+  .from('usuarios_roles')
+  .insert({ usuario_id: uid, rol_id: ROLES[rol] })
 
-    // Listo. Supabase inicia sesión automáticamente después del signUp.
-    // El ContextoAuth detecta la sesión → redirige según rol.
-    setCargando(false)
+if (rolError) {
+  setEstado('No se pudo asignar el rol: ' + rolError.message)
+  setCargando(false)
+  return
+}
+
+setEstado("Usuario creado exitosamente")
+setCargando(false)
   }
 
   return (
@@ -62,52 +81,33 @@ export default function Registro() {
       <h1 className="logo">LUMA</h1>
       <h2>Crear cuenta</h2>
 
-      {/* El usuario elige qué tipo de cuenta quiere */}
       <div className="selector-rol">
-        <button
-          className={rol === 'adoptante' ? 'activo' : ''}
-          onClick={() => setRol('adoptante')}
-        >
+        <button type="button" className={rol === 'adoptante' ? 'activo' : ''} onClick={() => setRol('adoptante')}>
           Quiero adoptar
         </button>
-        <button
-          className={rol === 'refugio' ? 'activo' : ''}
-          onClick={() => setRol('refugio')}
-        >
+        <button type="button" className={rol === 'refugio' ? 'activo' : ''} onClick={() => setRol('refugio')}>
           Soy un refugio
         </button>
       </div>
 
-      <input
-        type="text"
-        placeholder={rol === 'refugio' ? 'Nombre del refugio' : 'Tu nombre'}
-        value={nombre}
-        onChange={e => setNombre(e.target.value)}
-      />
+      <input type="text"     placeholder="Nombre *"     value={nombre} id="Nombre"   onChange={e => setNombre(e.target.value)} />
+      <input type="text"     placeholder="Apellido *"   value={apellido} id="Apellido" onChange={e => setApellido(e.target.value)} />
+      <input type="email"    placeholder="Email *"      value={email}    id="Mail" onChange={e => setEmail(e.target.value)} />
+      <input type="password" placeholder="Contraseña *" value={password} id="Password" onChange={e => setPassword(e.target.value)} />
+      <input type="tel"      placeholder="Telefono"     value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
+      <input type="text"     placeholder="Ciudad"       value={ciudad}   id="Ciudad" onChange={e => setCiudad(e.target.value)} />
+      <input type="text"     placeholder="Provincia"    value={provincia} id="Provincia" onChange={e => setProvincia(e.target.value)} />
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
+      {estado && <p className="estado">{estado}</p>}
 
-      <input
-        type="password"
-        placeholder="Contraseña (mínimo 6 caracteres)"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-
-      {error && <p className="error">{error}</p>}
-
-      <button onClick={manejarRegistro} disabled={cargando}>
+      <button type="button" onClick={manejarRegistro} disabled={cargando}>
         {cargando ? 'Creando cuenta...' : 'Crear cuenta'}
       </button>
 
-      <p>
-        ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
-      </p>
+      <p>¿Ya tenes cuenta? <Link to="/login">Iniciar sesión</Link></p>
+
+      <p><Link to="/">Volver al inicio</Link></p>
     </div>
   )
 }
+

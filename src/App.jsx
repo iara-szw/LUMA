@@ -1,19 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { ProveedorAuth, usarAuth } from './contexto/ContextoAuth'
+import { ProveedorAuth, usarAuth } from './contexto/ContextoAuth.jsx'
+import Home from './paginas/Home'
 import IniciarSesion from './paginas/auth/InicioSesion'
 import Registro from './paginas/auth/Registro'
 
-function RutasProtegidas() {
-  const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
+function RutaProtegida({ children }) {
+  const { usuario, cargando } = usarAuth()
 
-  if (cargando) return <div>Cargando...</div>
-
+  if (cargando) return <div className="pantalla-carga">Cargando...</div>
   if (!usuario) return <Navigate to="/login" replace />
 
-  if (esAdoptante) return <Navigate to="/inicio" replace />
-  if (esRefugio)   return <Navigate to="/dashboard" replace />
-
-  return <Navigate to="/login" replace />
+  return children
 }
 
 export default function App() {
@@ -21,15 +18,25 @@ export default function App() {
     <BrowserRouter>
       <ProveedorAuth>
         <Routes>
-          <Route path="/login"    element={<IniciarSesion />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<IniciarSesion />} />
           <Route path="/registro" element={<Registro />} />
 
-          {/* Rutas protegidas — las vas agregando acá */}
-          <Route path="/inicio"    element={<RutasProtegidas />} />
-          <Route path="/dashboard" element={<RutasProtegidas />} />
+          <Route
+            path="/dashboard"
+            element={
+              <RutaProtegida>
+                <div className="pagina-dashboard">
+                  <h1>Panel del refugio</h1>
+                  <p>Bienvenido al dashboard.</p>
+                  <a href="/">Volver al inicio</a>
+                </div>
+              </RutaProtegida>
+            }
+          />
 
-          {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/inicio" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </ProveedorAuth>
     </BrowserRouter>
