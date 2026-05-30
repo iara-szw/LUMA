@@ -105,6 +105,8 @@ setCargando(false)
       </button>
 
       <p>¿Ya tenes cuenta? <Link to="/login">Iniciar sesión</Link></p>
+
+      <p><Link to="/">Volver al inicio</Link></p>
     </div>
   )
 }

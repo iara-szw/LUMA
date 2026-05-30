@@ -6,11 +6,8 @@ import { Supabase } from '../../servicios/Supabase'
 export default function IniciarSesion() {
   const navigate = useNavigate()
 
-  // Guardamos lo que escribe el usuario
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
-
-  // Para mostrar errores y el estado de carga
   const [error, setError]       = useState(null)
   const [cargando, setCargando] = useState(false)
 
@@ -18,18 +15,16 @@ export default function IniciarSesion() {
     setError(null)
     setCargando(true)
 
-    // Le pedimos a Supabase que verifique email + contraseña
     const { error } = await Supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-console.log(error)   
-   setError('Email o contraseña incorrectos')
+      console.log(error)
+      setError('Email o contraseña incorrectos')
       setCargando(false)
       return
     }
 
-    // Si está bien, el ContextoAuth detecta la sesión nueva
-    // y redirige solo según el rol. No hace falta hacer nada más acá.
+    navigate('/', { replace: true })
     setCargando(false)
   }
 
@@ -52,7 +47,6 @@ console.log(error)
         onChange={e => setPassword(e.target.value)}
       />
 
-      {/* Solo se muestra si hay un error */}
       {error && <p className="error">{error}</p>}
 
       <button onClick={manejarLogin} disabled={cargando}>
@@ -61,6 +55,10 @@ console.log(error)
 
       <p>
         ¿No tenés cuenta? <Link to="/registro">Registrate</Link>
+      </p>
+
+      <p>
+        <Link to="/">Volver al inicio</Link>
       </p>
     </div>
   )

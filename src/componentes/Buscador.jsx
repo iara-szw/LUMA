@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 function Buscador({ placeholder, onBuscar }) {
   const [valor, setValor] = useState('')
 
