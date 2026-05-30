@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prueba": "Index.jsx",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
