@@ -1,4 +1,4 @@
-
+import '../../css/auth.css'
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Supabase } from '../../servicios/Supabase'
@@ -30,7 +30,7 @@ export default function IniciarSesion() {
 
   return (
     <div className="pantalla-auth">
-      <h1 className="logo">LUMA</h1>
+<img src="../../../cliente/public/assets/img/logo.png" alt="LUMA" className="logo-img" />
       <h2>Iniciar sesión</h2>
 
       <input

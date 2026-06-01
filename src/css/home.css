@@ -1,0 +1,486 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --crema: #F7F3EA;
+    --fondo: #FAFAFA;
+    --verde: #9CA788;
+    --verde-oscuro: #7A8A6A;
+    --arena: #BAA392;
+    --arena-hover: #A08878;
+    --texto: #5C4A3A;
+    --texto-suave: #8C7A6A;
+    --blanco: #FFFFFF;
+    --urgente: #E8726A;
+    --font: 'Nunito', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--fondo);
+}
+
+/* ── Página ───────────────────────────────────────── */
+.pagina-inicio {
+    font-family: var(--font);
+    background: var(--fondo);
+    min-height: 100dvh;
+    width: 100%;
+    padding-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Header con fondo crema ───────────────────────── */
+.inicio-header {
+    background: var(--crema);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.25rem 1rem;
+}
+
+.inicio-header .logo {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--arena);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+}
+
+.inicio-header-iconos {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.icono-campana {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    color: var(--texto-suave);
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid var(--arena);
+}
+
+.nav-auth {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.nav-auth a {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+    text-decoration: none;
+}
+
+.nav-auth .btn-registro {
+    background: var(--arena);
+    color: var(--blanco);
+    padding: 0.4rem 0.9rem;
+    border-radius: 50px;
+}
+
+/* ── Saludo ───────────────────────────────────────── */
+.saludo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--texto);
+    padding: 1.1rem 1.25rem 0.75rem;
+    background: var(--crema);
+        border-radius: 0 0 24px 24px;
+    padding-bottom: 22%; 
+}
+
+/* ── Buscador ─────────────────────────────────────── */
+.buscador-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--blanco);
+    border-radius: 50px;
+    padding: 0.7rem 1.1rem;
+    margin: 0 1.25rem 0;
+    box-shadow: 0 2px 8px rgba(92, 74, 58, 0.07);
+}
+
+.buscador-contenedor input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    color: var(--texto);
+    background: transparent;
+    
+}
+
+.buscador-contenedor input::placeholder {
+    color: #C5B8AE;
+}
+
+.buscador-contenedor svg,
+.buscador-contenedor .icono-buscar {
+    color: #C5B8AE;
+    flex-shrink: 0;
+}
+
+/* wrapper crema que contiene header + saludo + buscador */
+.inicio-superior {
+    background: var(--crema);
+    border-radius: 0 0 28px 28px;
+    padding-bottom: 1.5rem;
+}
+
+/* ── Banner test match ────────────────────────────── */
+.banner-test-match {
+    background: var(--verde);
+    border-radius: 20px;
+    margin: 1.25rem 1.25rem 0.5rem;
+    padding: 1.25rem 5rem 1.1rem 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-test-match::after {
+    content: '🐾';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.75rem;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 60px;
+    text-align: center;
+}
+
+.banner-test-match p {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--blanco);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+}
+
+.banner-test-match>p:last-of-type {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 0.85rem;
+}
+
+.banner-test-match button {
+    background: var(--blanco);
+    color: var(--verde-oscuro);
+    border: none;
+    border-radius: 50px;
+    padding: 0.55rem 1.25rem;
+    font-family: var(--font);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Secciones ────────────────────────────────────── */
+.seccion {
+    padding: 1.25rem 0 0.5rem;
+}
+
+.seccion-titulo {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--texto);
+    padding: 0 1.25rem 0.85rem;
+}
+
+/* ── Scroll horizontal mascotas ───────────────────── */
+.scroll-horizontal {
+    display: flex;
+    gap: 0.85rem;
+    overflow-x: auto;
+    padding: 0.25rem 1.25rem 0.75rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.scroll-horizontal::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Tarjeta mascota ──────────────────────────────── */
+.tarjeta-mascota {
+    flex-shrink: 0;
+    width: 145px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tarjeta-mascota img {
+    width: 145px;
+    height: 145px;
+    object-fit: cover;
+    border-radius: 18px;
+    display: block;
+}
+
+.tarjeta-mascota::before {
+    content: '♡';
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    line-height: 28px;
+    text-align: center;
+    z-index: 1;
+}
+
+.tarjeta-mascota h4 {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--texto);
+    margin-top: 0.45rem;
+}
+
+.tarjeta-mascota span {
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+}
+
+.badge-urgente {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: var(--urgente);
+    color: var(--blanco) !important;
+    font-size: 0.65rem !important;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    z-index: 1;
+}
+
+/* ── Lista eventos ────────────────────────────────── */
+.lista-eventos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.tarjeta-evento {
+    background: var(--blanco);
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(92, 74, 58, 0.06);
+}
+
+.tarjeta-evento .evento-fecha {
+    background: var(--arena);
+    color: var(--blanco);
+    border-radius: 12px;
+    min-width: 50px;
+    text-align: center;
+    padding: 0.4rem 0.5rem;
+    flex-shrink: 0;
+}
+
+.tarjeta-evento .evento-fecha .mes {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    display: block;
+}
+
+.tarjeta-evento .evento-fecha .dia {
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: block;
+}
+
+.tarjeta-evento .evento-info h4 {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--texto);
+    margin-bottom: 0.2rem;
+}
+
+.tarjeta-evento .evento-info p {
+    font-size: 0.8125rem;
+    color: var(--texto-suave);
+}
+
+/* ── Botón ver todos ──────────────────────────────── */
+.btn-ver-todos {
+    display: block;
+    margin: 0 auto;
+    background: none;
+    border: 1.5px solid var(--arena);
+    border-radius: 50px;
+    padding: 0.55rem 1.75rem;
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--arena);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Estado vacío ─────────────────────────────────── */
+.vacio {
+    font-size: 0.875rem;
+    color: var(--texto-suave);
+    padding: 0 1.25rem;
+}
+
+/* ── CTA no logueado ──────────────────────────────── */
+.cta-auth {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+}
+
+.cta-auth>p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--texto);
+    margin-bottom: 1rem;
+}
+
+.cta-auth-botones {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.btn-primario {
+    background: var(--arena);
+    color: var(--blanco);
+    border-radius: 50px;
+    padding: 0.7rem 1.5rem;
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.btn-secundario {
+    background: var(--blanco);
+    color: var(--texto);
+    border: 1.5px solid #E0D5CC;
+    border-radius: 50px;
+    padding: 0.7rem 1.5rem;
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ── Navbar inferior ──────────────────────────────── */
+.navbar-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--blanco);
+    border-top: 1px solid #EDE8E3;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.6rem 0 calc(0.6rem + env(safe-area-inset-bottom));
+    z-index: 100;
+}
+
+.navbar-inferior a,
+.navbar-inferior button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    font-family: var(--font);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0 0.5rem;
+}
+
+.navbar-inferior a.activo,
+.navbar-inferior button.activo {
+    color: var(--arena);
+}
+
+.navbar-inferior .icono-nav {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.navbar-inferior .nav-central {
+    background: var(--arena);
+    color: var(--blanco);
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -18px;
+    box-shadow: 0 4px 14px rgba(186, 163, 146, 0.45);
+    padding: 0;
+    gap: 0;
+    font-size: 0.6rem;
+}
+
+.navbar-inferior .nav-central .icono-nav {
+    font-size: 1.2rem;
+}

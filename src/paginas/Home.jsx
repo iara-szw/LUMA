@@ -1,3 +1,4 @@
+import '../css/home.css'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Supabase } from '../servicios/Supabase'
@@ -14,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     let activo = true
-
+    
     const obtenerDatos = async () => {
       try {
         const [mascotasRes, eventosRes] = await Promise.all([
