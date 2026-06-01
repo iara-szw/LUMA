@@ -59,12 +59,12 @@ export default function Home() {
             <>
               <button className="icono-campana" aria-label="Notificaciones"><img src="/cliente/public/assets/img/notificaciones.png" />
 </button>
-              <img
-                className="avatar"
-                src="/assets/avatar-placeholder.png"
-                alt="perfil"
-                onClick={() => navigate('/adoptante/perfil',{usuario})}
-              />
+        <img
+  className="avatar"
+  src={usuario.foto_perfil || '/cliente/public/assets/img/perfil_default.jpg'}
+  alt="perfil"
+  onClick={() => navigate('/adoptante/perfil')}
+/>
             </>
           ) : (
             <nav className="nav-auth">
