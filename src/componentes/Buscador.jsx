@@ -1,3 +1,4 @@
+import '../css/buscador.css'
 import { useState } from 'react'
 
 function Buscador({ placeholder, onBuscar }) {

@@ -1,3 +1,4 @@
+import '../../css/auth.css'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Supabase } from '../../servicios/Supabase'
@@ -78,9 +79,7 @@ setCargando(false)
 
   return (
     <div className="pantalla-auth">
-      <h1 className="logo">LUMA</h1>
-      <h2>Crear cuenta</h2>
-
+<img src="../../../cliente/public/assets/img/logo.png" alt="LUMA" className="logo-img" />
       <div className="selector-rol">
         <button type="button" className={rol === 'adoptante' ? 'activo' : ''} onClick={() => setRol('adoptante')}>
           Quiero adoptar
