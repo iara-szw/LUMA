@@ -79,8 +79,8 @@ export default function Perfil() {
         </div>
         <h2>{usuario.nombre} </h2>
         <h3>Sobre mí</h3>
-        <p>{usuario.bio || 'Sin descripción todavía.'}</p>
-      </section>
+<p>{usuario.biografia || 'Sin descripción todavía.'}</p>   
+   </section>
 
       <section className="seccion">
         <h3 className="seccion-titulo">Mis Postulaciones</h3>

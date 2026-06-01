@@ -62,6 +62,7 @@ const valor = {
   usuario,
   cargando,
   cerrarSesion,
+  refrescarUsuario: () => cargarPerfil(usuario?.id),
   esAdoptante: usuario?.rol === 'adoptante',
   esRefugio:   usuario?.rol === 'refugio',
 }

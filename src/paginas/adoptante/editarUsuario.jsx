@@ -5,7 +5,7 @@ import { usarAuth } from '../../contexto/usarAuth'
 
 export default function EditarUsuario() {
   const navigate = useNavigate()
-  const { usuario } = usarAuth()
+  const { refrescarUsuario, usuario } = usarAuth()
 
   const [loading, setLoading] = useState(false)
   const [nombre, setNombre] = useState(usuario?.nombre || '')
@@ -19,18 +19,21 @@ export default function EditarUsuario() {
     e.preventDefault()
     setLoading(true)
 
-    const { error } = await Supabase
-      .from('usuarios')
-      .update({ nombre, apellido, telefono, ciudad, provincia, biografia })
-      .eq('id', usuario.id)
+    try {
+      const { error } = await Supabase
+        .from('usuarios')
+        .update({ nombre, apellido, telefono, ciudad, provincia, biografia })
+        .eq('id', usuario.id)
 
-    if (error) {
-      alert(error.message)
-    } else {
-      navigate('/adoptante/perfil')
+      if (error) {
+        alert(error.message)
+      } else {
+        await refrescarUsuario()
+        navigate('/adoptante/perfil')
+      }
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (
