@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { ProveedorAuth, usarAuth } from './contexto/ContextoAuth.jsx'
+import { ProveedorAuth } from './contexto/ContextoAuth.jsx'
+import {usarAuth} from './contexto/UsarAuth.jsx'
 import Home from './paginas/Home'
+import Perfil from './paginas/adoptante/Perfil.jsx'
 import IniciarSesion from './paginas/auth/InicioSesion'
+import EditarPerfil from './paginas/adoptante/editarUsuario.jsx'
 import Registro from './paginas/auth/Registro'
 
 function RutaProtegida({ children }) {
@@ -34,7 +37,22 @@ export default function App() {
               </RutaProtegida>
             }
           />
-
+<Route
+  path="/adoptante/perfil"
+  element={
+    <RutaProtegida>
+      <Perfil></Perfil>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/adoptante/editarUsuario"
+  element={
+    <RutaProtegida>
+      <EditarPerfil></EditarPerfil>
+    </RutaProtegida>
+  }
+/>
           <Route path="/inicio" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

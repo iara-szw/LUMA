@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Supabase } from '../servicios/Supabase'
-import { usarAuth } from '../contexto/ContextoAuth'
+import { usarAuth } from '../contexto/UsarAuth'
 import Buscador from '../componentes/Buscador'
 
 export default function Home() {
@@ -60,7 +60,7 @@ export default function Home() {
                 className="avatar"
                 src="/assets/avatar-placeholder.png"
                 alt="perfil"
-                onClick={() => navigate('/adoptante/perfil')}
+                onClick={() => navigate('/adoptante/perfil',{usuario})}
               />
             </>
           ) : (
