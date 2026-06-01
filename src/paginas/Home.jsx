@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Supabase } from '../servicios/Supabase'
 import { usarAuth } from '../contexto/ContextoAuth'
 import Buscador from '../componentes/Buscador'
+import Footer from '../componentes/Footer'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -149,6 +150,7 @@ export default function Home() {
           </div>
         </section>
       )}
+      <Footer />
     </div>
-  )
+      )
 }
