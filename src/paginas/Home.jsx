@@ -52,11 +52,12 @@ export default function Home() {
   return (
     <div className="pagina-inicio">
       <header className="inicio-header">
-        <Link to="/" className="logo">LUMA</Link>
+        <Link to="/" className="logo"><img src="/cliente/public/assets/img/logo.png" alt="" /></Link>
         <div className="inicio-header-iconos">
           {usuario ? (
             <>
-              <button className="icono-campana" aria-label="Notificaciones">🔔</button>
+              <button className="icono-campana" aria-label="Notificaciones"><img src="/cliente/public/assets/img/notificaciones.png" />
+</button>
               <img
                 className="avatar"
                 src="/assets/avatar-placeholder.png"
