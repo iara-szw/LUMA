@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Supabase } from '../../servicios/Supabase'
 import { usarAuth } from '../../contexto/UsarAuth'
+import '../../css/perfil.css'
 
 export default function Perfil() {
   const navigate = useNavigate()

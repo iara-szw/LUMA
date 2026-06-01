@@ -1,0 +1,296 @@
+/* ── Página perfil ────────────────────────────────── */
+.pagina-perfil {
+  font-family: var(--font);
+  background: var(--fondo);
+  min-height: 100dvh;
+  width: 100%;
+  padding-bottom: 90px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ───────────────────────────────────────── */
+.perfil-header {
+  background: var(--crema);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+.perfil-header > button {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--texto);
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.perfil-header-iconos {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.perfil-header-iconos button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Info / avatar ────────────────────────────────── */
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1.25rem 1.25rem;
+  background: var(--crema);
+  border-radius: 0 0 28px 28px;
+  text-align: center;
+}
+
+.perfil-avatar-wrapper {
+  position: relative;
+  margin-bottom: 0.85rem;
+}
+
+.perfil-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--blanco);
+  box-shadow: 0 4px 12px rgba(92,74,58,0.15);
+}
+
+.perfil-avatar-editar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--arena);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.perfil-info h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--texto);
+  margin-bottom: 0.1rem;
+}
+
+.perfil-info h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--texto);
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+
+.perfil-info p {
+  font-size: 0.875rem;
+  color: var(--texto-suave);
+  line-height: 1.55;
+  text-align: left;
+}
+
+/* ── Secciones ────────────────────────────────────── */
+.seccion {
+  padding: 1.25rem 0 0.5rem;
+}
+
+.seccion-titulo {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--texto);
+  padding: 0 1.25rem 0.85rem;
+}
+
+/* ── Tarjeta postulación ──────────────────────────── */
+.tarjeta-postulacion {
+  background: var(--blanco);
+  border-radius: 16px;
+  margin: 0 1.25rem 0.75rem;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(92,74,58,0.06);
+}
+
+.postulacion-mascota {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.postulacion-mascota img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--crema);
+}
+
+/* avatar sin foto */
+.postulacion-mascota .avatar-placeholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--arena);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.postulacion-mascota > div {
+  flex: 1;
+}
+
+.postulacion-mascota h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.postulacion-mascota p {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+/* badges de estado */
+.badge-estado {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 50px;
+  flex-shrink: 0;
+}
+
+.badge-en_revision {
+  background: #F0EBE5;
+  color: var(--arena);
+}
+
+.badge-aprobada {
+  background: #EEF5EB;
+  color: #6B8F5E;
+}
+
+.badge-rechazada {
+  background: #FDECEA;
+  color: #C0392B;
+}
+
+/* pasos de la postulación */
+.postulacion-pasos {
+  border-top: 1px solid #F0EBE5;
+  padding-top: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.postulacion-pasos p {
+  font-size: 0.8125rem;
+  color: var(--texto-suave);
+  line-height: 1.45;
+}
+
+/* ── Mi preparación ───────────────────────────────── */
+.preparacion-resumen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--blanco);
+  border-radius: 16px;
+  margin: 0 1.25rem 0.65rem;
+  padding: 0.9rem 1rem 0.9rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(92,74,58,0.06);
+}
+
+.preparacion-resumen span {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--texto);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* círculo toggle decorativo */
+.preparacion-resumen span::before {
+  content: '';
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--crema-oscura);
+  flex-shrink: 0;
+  display: block;
+}
+
+.preparacion-resumen button {
+  background: var(--verde);
+  color: var(--blanco);
+  border: none;
+  border-radius: 50px;
+  padding: 0.4rem 1.1rem;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Cerrar sesión ────────────────────────────────── */
+.btn-cerrar-sesion {
+  margin: 1rem 1.25rem 0;
+  width: calc(100% - 2.5rem);
+  background: none;
+  border: 1.5px solid #E0D5CC;
+  border-radius: 50px;
+  padding: 0.85rem;
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Guardados (reutiliza scroll-horizontal) ──────── */
+.scroll-horizontal {
+  display: flex;
+  gap: 0.85rem;
+  overflow-x: auto;
+  padding: 0.25rem 1.25rem 0.75rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-horizontal::-webkit-scrollbar { display: none; }
+
+.vacio {
+  font-size: 0.875rem;
+  color: var(--texto-suave);
+  padding: 0 1.25rem;
+}
