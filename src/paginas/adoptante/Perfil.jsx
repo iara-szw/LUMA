@@ -71,7 +71,7 @@ export default function Perfil() {
         <div className="perfil-avatar-wrapper">
           <img
             className="perfil-avatar"
-            src={usuario.foto_url || '/assets/avatar-placeholder.png'}
+            src={usuario.foto_url ||  '../cliente/public/assets/img/perfil_default.jpg'}
             alt={usuario.nombre}
           />
           <button className="perfil-avatar-editar" onClick={() => navigate('/adoptante/editarUsuario')}>
