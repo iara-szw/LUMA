@@ -3,7 +3,8 @@
   font-family: var(--font);
   background: var(--fondo);
   min-height: 100dvh;
-  width: 100%;
+  width: 166%;
+  margin-left: -33%;
   padding-bottom: 90px;
   display: flex;
   flex-direction: column;
