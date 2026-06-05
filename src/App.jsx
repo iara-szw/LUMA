@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { ProveedorAuth } from './contexto/ContextoAuth.jsx'
-import {usarAuth} from './contexto/UsarAuth.jsx'
-import Home from './paginas/Home'
-import Perfil from './paginas/adoptante/Perfil.jsx'
-import IniciarSesion from './paginas/auth/InicioSesion'
-import EditarPerfil from './paginas/adoptante/editarUsuario.jsx'
-import Registro from './paginas/auth/Registro'
+import { ProveedorAuth } from './contexts/ContextoAuth.jsx'
+import {usarAuth} from './hooks/UsarAuth.jsx'
+import Home from './pages/Home'
+import Perfil from './pages/adoptante/Perfil.jsx'
+import IniciarSesion from './pages/auth/InicioSesion'
+import EditarPerfil from './pages/adoptante/editarUsuario.jsx'
+import Registro from './pages/auth/Registro'
 
 function RutaProtegida({ children }) {
   const { usuario, cargando } = usarAuth()
