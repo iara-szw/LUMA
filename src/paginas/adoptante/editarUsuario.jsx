@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Supabase } from '../../servicios/Supabase'
 import { usarAuth } from '../../contexto/usarAuth'
+import '../../css/editarUsuario.css'
 
 export default function EditarUsuario() {
   const navigate = useNavigate()

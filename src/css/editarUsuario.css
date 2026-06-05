@@ -1,0 +1,110 @@
+
+/* ── Página editar ────────────────────────────────── */
+.pagina-editar {
+  background: var(--fondo);
+  min-height: 100dvh;
+  width: 158%;
+  margin-left: -30%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header (reutiliza .perfil-header) ────────────── */
+.pagina-editar .perfil-header {
+  background: var(--crema);
+  border-radius: 0 0 28px 28px;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+/* ── Formulario ───────────────────────────────────── */
+.pagina-editar form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+.pagina-editar form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* ── Labels ───────────────────────────────────────── */
+.pagina-editar label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding-left: 0.25rem;
+}
+
+/* ── Inputs ───────────────────────────────────────── */
+.pagina-editar input,
+.pagina-editar textarea {
+  width: 100%;
+  background: var(--blanco);
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  padding: 0.85rem 1.1rem;
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  color: var(--texto);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  box-shadow: 0 2px 8px rgba(92,74,58,0.05);
+}
+
+.pagina-editar input::placeholder,
+.pagina-editar textarea::placeholder {
+  color: #C5B8AE;
+}
+
+.pagina-editar input:focus,
+.pagina-editar textarea:focus {
+  border-color: var(--arena);
+  box-shadow: 0 0 0 3px rgba(186,163,146,0.15);
+}
+
+/* input deshabilitado (email) */
+.pagina-editar input:disabled {
+  background: var(--crema);
+  color: var(--texto-suave);
+  cursor: not-allowed;
+}
+
+/* ── Textarea ─────────────────────────────────────── */
+.pagina-editar textarea {
+  resize: none;
+  min-height: 110px;
+  line-height: 1.55;
+}
+
+/* ── Botón guardar ────────────────────────────────── */
+.pagina-editar button[type="submit"] {
+  width: 100%;
+  background: var(--arena);
+  color: var(--blanco);
+  border: none;
+  border-radius: 50px;
+  padding: 1rem;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pagina-editar button[type="submit"]:active:not(:disabled) {
+  transform: scale(0.98);
+  background: var(--arena-hover);
+}
+
+.pagina-editar button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
