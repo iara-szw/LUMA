@@ -56,7 +56,7 @@ export default function Perfil() {
         <button onClick={() => navigate(-1)}>← Mi perfil</button>
         <div className="perfil-header-iconos">
               <button className="icono-campana" aria-label="Notificaciones"><img src="/cliente/public/assets/img/notificaciones.png"></img> </button>
-          <button onClick={() => navigate('/adoptante/editarUsuario')}>⚙️</button>
+              <button className="icono-configuracion" aria-label="Configuración" onClick={() => navigate('/adoptante/editarUsuario')}><img src="/cliente/public/assets/img/configurar.png"></img> </button>
         </div>
       </header>
 
