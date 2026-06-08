@@ -5,3 +5,9 @@ export async function obtenerRefugios() {
     .from('refugios')
     .select('id, nombre, foto_url')
 }
+
+export async function insertarRefugio(usuarioId, { nombre, descripcion, telefono_responsable, direccion }) {
+  return Supabase
+    .from('refugios')
+    .insert({ usuario_id: usuarioId, nombre, descripcion, telefono_responsable, direccion })
+}
