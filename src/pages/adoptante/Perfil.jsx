@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
+import Loader from '../../components/Loader'
 import {
   obtenerPostulacionesDeUsuario,
   obtenerCursosDeUsuario,
@@ -48,7 +49,7 @@ export default function Perfil() {
   const cursosCompletos = cursos.filter(c => c.completado).length
   const nombre = usuario?.nombre?.split(' ')[0]
 
-  if (cargando) return <p>Cargando perfil...</p>
+  if (cargando) return( <Loader></Loader>)
 
   return (
     <div className="pagina-perfil">

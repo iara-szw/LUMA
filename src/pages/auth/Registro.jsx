@@ -76,7 +76,7 @@ setCargando(false)
       <input type="text"     placeholder="Apellido *"   value={apellido} id="Apellido" onChange={e => setApellido(e.target.value)} />
       <input type="email"    placeholder="Email *"      value={email}    id="Mail" onChange={e => setEmail(e.target.value)} />
       <input type="password" placeholder="Contraseña *" value={password} id="Password" onChange={e => setPassword(e.target.value)} />
-      <input type="tel"      placeholder="Telefono"     value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
+      <input type="tel"      placeholder="Telefono"   pattern="[0-9]{2} [0-9]{4}-[0-9]{4}"  value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
       <input type="text"     placeholder="Ciudad"       value={ciudad}   id="Ciudad" onChange={e => setCiudad(e.target.value)} />
       <input type="text"     placeholder="Provincia"    value={provincia} id="Provincia" onChange={e => setProvincia(e.target.value)} />
 

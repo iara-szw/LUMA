@@ -2,7 +2,7 @@
 
 .exp-pagina {
   min-height: 100vh;
-  background-color: var(--crema);
+  background: var(--fondo);
   display: flex;
   flex-direction: column;
   padding: 1.25rem 1.25rem 5rem;
