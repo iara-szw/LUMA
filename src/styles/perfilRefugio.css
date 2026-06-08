@@ -1,0 +1,415 @@
+/* ===========================
+   Perfil Refugio – perfilRefugio.css
+   =========================== */
+
+.pagina-perfil-refugio {
+  min-height: 100vh;
+  background-color: #f5f3ee;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2c2c2a;
+  padding-bottom: 80px;
+}
+
+/* ── Header flotante ── */
+.perfil-refugio-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.perfil-refugio-header button {
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c2c2a;
+}
+
+.perfil-refugio-header-iconos {
+  display: flex;
+  gap: 8px;
+}
+
+.perfil-refugio-header-iconos button {
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perfil-refugio-header-iconos button img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* ── Foto portada ── */
+.perfil-refugio-portada {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.perfil-refugio-portada img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Info principal ── */
+.perfil-refugio-info {
+  background: #fff;
+  padding: 18px 16px 16px;
+  border-bottom: 1px solid #e8e4dc;
+}
+
+.perfil-refugio-info h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c2c2a;
+  margin: 0 0 6px;
+}
+
+.perfil-refugio-ubicacion {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #6b6b68;
+  margin: 0;
+}
+
+.perfil-refugio-ubicacion img {
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
+}
+
+/* ── Secciones genéricas ── */
+.seccion-refugio {
+  background: #fff;
+  margin: 10px 12px;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #e8e4dc;
+}
+
+.seccion-refugio-titulo {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c2c2a;
+  margin: 0 0 14px;
+}
+
+/* ── Resumen general ── */
+.resumen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.resumen-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c2c2a;
+  margin: 0;
+}
+
+.resumen-periodo {
+  font-size: 12px;
+  color: #6b6b68;
+  background: #f5f3ee;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #e0ddd5;
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.resumen-stat {
+  background: #f9f8f5;
+  border: 1px solid #e8e4dc;
+  border-radius: 12px;
+  padding: 14px 12px;
+}
+
+.resumen-stat-label {
+  font-size: 12px;
+  color: #8a8a86;
+  margin: 0 0 6px;
+}
+
+.resumen-stat-valor {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2c2c2a;
+  margin: 0;
+}
+
+/* ── Sobre nosotros ── */
+.sobre-nosotros-texto {
+  font-size: 14px;
+  color: #4a4a47;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Mascotas en adopción ── */
+.scroll-horizontal-refugio {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-horizontal-refugio::-webkit-scrollbar {
+  display: none;
+}
+
+.tarjeta-mascota-refugio {
+  flex: 0 0 110px;
+  background: #f9f8f5;
+  border: 1px solid #e8e4dc;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.tarjeta-mascota-refugio:active {
+  transform: scale(0.97);
+}
+
+.tarjeta-mascota-refugio img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+}
+
+.tarjeta-mascota-refugio-info {
+  padding: 6px 8px 8px;
+}
+
+.tarjeta-mascota-refugio-info h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c2c2a;
+  margin: 0 0 2px;
+}
+
+.tarjeta-mascota-refugio-info p {
+  font-size: 11px;
+  color: #8a8a86;
+  margin: 0;
+}
+
+.badge-urgente-refugio {
+  display: inline-block;
+  font-size: 10px;
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+/* ── Solicitudes recientes ── */
+.lista-solicitudes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tarjeta-solicitud {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f9f8f5;
+  border: 1px solid #e8e4dc;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.tarjeta-solicitud:active {
+  background: #f0ece3;
+}
+
+.tarjeta-solicitud img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.solicitud-info {
+  flex: 1;
+}
+
+.solicitud-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c2c2a;
+  margin: 0 0 2px;
+}
+
+.solicitud-info p {
+  font-size: 12px;
+  color: #8a8a86;
+  margin: 0;
+}
+
+/* ── Badges de estado ── */
+.badge-estado {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.badge-pendiente {
+  background: #fef9ec;
+  color: #a07000;
+}
+
+.badge-en_revision {
+  background: #eef4fd;
+  color: #1a5fa8;
+}
+
+.badge-aprobada {
+  background: #eaf6ee;
+  color: #1e7e3a;
+}
+
+.badge-rechazada {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+/* ── Botón editar perfil ── */
+.btn-editar-perfil {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 10px 12px;
+  background: #7a9e6e;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  transition: background 0.2s;
+}
+
+.btn-editar-perfil:hover {
+  background: #6a8e5f;
+}
+
+/* ── Botón cerrar sesión ── */
+.btn-cerrar-sesion-refugio {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 6px 12px 16px;
+  background: transparent;
+  color: #c0392b;
+  border: 1.5px solid #e8c0bb;
+  border-radius: 14px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cerrar-sesion-refugio:hover {
+  background: #fdecea;
+}
+
+/* ── Vacío ── */
+.vacio-refugio {
+  font-size: 13px;
+  color: #a0a09c;
+  text-align: center;
+  padding: 12px 0;
+  margin: 0;
+}
+
+/* ── Bottom nav ── */
+.bottom-nav-refugio {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #fff;
+  border-top: 1px solid #e8e4dc;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item-refugio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  color: #a0a09c;
+  transition: color 0.15s;
+}
+
+.nav-item-refugio img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.5;
+}
+
+.nav-item-refugio span {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.nav-item-refugio.activo {
+  color: #7a9e6e;
+}
+
+.nav-item-refugio.activo img {
+  opacity: 1;
+  filter: invert(50%) sepia(30%) saturate(500%) hue-rotate(60deg);
+}
