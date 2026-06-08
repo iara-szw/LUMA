@@ -118,25 +118,25 @@ export default function Registro() {
       )}
 
       {step === 2 && (
-        <div className="datos-refugio">
+        <>
           <input type="text" placeholder="Nombre del refugio *" value={refNombre} onChange={e => setRefNombre(e.target.value)} />
           <input type="text" placeholder="Descripcion *" value={refDescripcion} onChange={e => setRefDescripcion(e.target.value)} />
           <input type="tel" placeholder="Telefono responsable *" value={refTelefonoResp} onChange={e => setRefTelefonoResp(e.target.value)} />
           <input type="text" placeholder="Direccion *" value={refDireccion} onChange={e => setRefDireccion(e.target.value)} />
-        </div>
+     </>
       )}
       {estado && <p className="estado">{estado}</p>}
 
       {step === 1 ? (
-        <button type="button" onClick={handleContinue} disabled={cargando}>
+        <button type="button" className="btn-primary" onClick={handleContinue} disabled={cargando}>
           {cargando ? 'Creando cuenta...' : (rol === 'adoptante' ? 'Crear cuenta' : 'Siguiente')}
         </button>
       ) : (
         <div style={{display: 'flex', gap: '0.5rem', width: '100%'}}>
-          <button type="button" onClick={() => setStep(1)} disabled={cargando} style={{flex: 1, background: 'transparent', border: '1.5px solid #E0D5CC'}}>
+          <button type="button" className="btn-outline" onClick={() => setStep(1)} disabled={cargando} style={{flex: 1}}>
             Volver
           </button>
-          <button type="button" onClick={manejarRegistroFinal} disabled={cargando} style={{flex: 1}}>
+          <button type="button" className="btn-primary" onClick={manejarRegistroFinal} disabled={cargando} style={{flex: 2}}>
             {cargando ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </div>

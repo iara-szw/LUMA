@@ -118,7 +118,7 @@ body {
 }
 
 /* ── Botón primario ───────────────────────────────── */
-.pantalla-auth > button {
+.btn-primary {
   width: 100%;
   background: var(--arena);
   color: var(--blanco);
