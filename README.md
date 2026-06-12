@@ -1,4 +1,4 @@
-# 🐾 LUMA – Plataforma para Refugios de Animales
+# 🐾 LUMA – Plataforma de Adopción Responsable de Animales
 
 Proyecto final de Informática – Secundaria ORT  
 **Iara S. & Juana L.**
@@ -7,13 +7,37 @@ Proyecto final de Informática – Secundaria ORT
 
 ## ✨ ¿Qué es LUMA?
 
-LUMA es una plataforma web diseñada para transformar la manera en que los refugios de animales gestionan sus procesos. Sabemos que los refugios hacen un trabajo enorme con recursos limitados, y LUMA nació para aliviar esa carga: menos WhatsApps perdidos, menos planillas desorganizadas y más tiempo para lo que realmente importa.
+LUMA es una aplicación móvil que centraliza y moderniza el proceso de adopción de mascotas en Argentina. Conecta adoptantes y refugios en una única plataforma, reemplazando los flujos fragmentados que hoy corren por Instagram, formularios sueltos, planillas de Excel, mails y grupos de WhatsApp.
 
-Con LUMA, los refugios pueden digitalizar tres procesos clave:
+El proyecto nació de una investigación de campo real: entrevistas con organizaciones de rescate y adoptantes que revelaron la misma frustración de ambos lados — procesos opacos, información dispersa y pérdida constante de postulaciones. LUMA no reemplaza cómo trabajan las organizaciones; digitaliza, ordena y hace más eficiente lo que ya hacen.
 
-- 🐶 **Adopción** – Publicación de animales disponibles, gestión de solicitudes y seguimiento del proceso en tiempo real, todo desde un solo lugar.
-- 📚 **Capacitación** – Recursos y materiales para que los adoptantes lleguen preparados y la transición sea lo mejor posible para el animal y para ellos.
-- 💚 **Seguimiento post adopción** – Canal de comunicación continuo entre el refugio y el adoptante para acompañar la adaptación del animal en su nuevo hogar.
+---
+
+## 🎯 ¿Para quién es LUMA?
+
+### Para refugios
+- Publicación de animales con perfiles completos y actualizados
+- Gestión centralizada de postulaciones y documentación
+- Formularios personalizables según tipo de animal
+- Seguimiento del estado de cada caso de adopción
+- Comunicación post-adopción con los nuevos hogares
+- Difusión de eventos
+
+### Para adoptantes
+- Descubrimiento de mascotas con información detallada y real
+- Postulaciones simples y visibilidad del estado en tiempo real
+- Contenido educativo para prepararse para una adopción responsable
+- Acompañamiento durante todo el proceso, no solo al principio
+
+---
+
+## 🔑 Funcionalidades principales
+
+- 🐶 **Adopción** – Perfiles de animales, gestión de solicitudes y seguimiento en tiempo real desde un solo lugar.
+- 📚 **Capacitación** – Recursos educativos para que los adoptantes lleguen preparados y la transición sea la mejor posible para el animal.
+- 💚 **Seguimiento post-adopción** – Canal de comunicación continuo entre el refugio y el adoptante para acompañar la adaptación.
+- 📋 **Formularios adaptables** – Cada organización puede personalizar sus formularios según sus criterios y el tipo de animal.
+- 📅 **Difusión de eventos** – Espacio para que las organizaciones compartan jornadas de adopción y actividades.
 
 ---
 
@@ -77,6 +101,12 @@ npm run dev
 ```
 
 ---
+
+## 🌱 Contexto y motivación
+
+Argentina tiene miles de animales en situación de calle y una comunidad de rescatistas y refugios que trabaja con recursos limitados. Las plataformas existentes —como Petfinder o AdoptAR— funcionan principalmente como catálogos estáticos. LUMA apunta a algo diferente: acompañar todo el ciclo de adopción, desde el primer contacto hasta la adaptación del animal en su nuevo hogar.
+
+La visión es que LUMA se convierta en la plataforma de referencia para la adopción responsable en Argentina — para que más mascotas encuentren el hogar adecuado, y las organizaciones puedan dedicar más energía al bienestar animal y menos a la administración.
 
 ## 👩‍💻 Equipo
 
