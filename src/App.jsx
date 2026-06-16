@@ -25,7 +25,7 @@ function RutaInicio() {
   const { usuario, cargando, esRefugio } = usarAuth()
 
   if (cargando) return <Loader />
-  if (usuario && esRefugio) return <Navigate to="/dashboard" replace />
+  if (usuario && esRefugio) return <Navigate to="/refugio/dashboard" replace />
 
   return <Home />
 }
@@ -43,13 +43,23 @@ export default function App() {
 
           {/* Dashboard del refugio */}
           <Route
-            path="/dashboard"
+            path="refugio/dashboard"
             element={
               <RutaProtegida rol="refugio">
                 <Dashboard />
               </RutaProtegida>
             }
           />
+
+            <Route
+            path="refugio/perfil"
+            element={
+              <RutaProtegida rol="refugio">
+                <Dashboard />
+              </RutaProtegida>
+            }
+          />
+
 
           {/* Rutas del adoptante */}
           <Route

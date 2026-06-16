@@ -24,7 +24,7 @@ export default function Footer() {
         <img src="../../../cliente/public/assets/img/calendario.png"  alt="Eventos" className="footer-icono" />
         <span>Eventos</span>
       </Link>
-
+      
       <Link to="/adoptante/perfil" className={`footer-item ${pathname.includes('perfil') ? 'activo' : ''}`}>
         <img src="../../../cliente/public/assets/img/perfil.png"  alt="Perfil" className="footer-icono" />
         <span>Perfil</span>
