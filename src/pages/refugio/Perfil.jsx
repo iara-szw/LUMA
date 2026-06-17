@@ -2,49 +2,55 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
-import {
-  obtenerMascotasDeRefugio,
-  obtenerSolicitudesDeRefugio,
-  obtenerEstadisticasDeRefugio,
-} from '../../repositories/perfilRefugioRepository'
+// import {
+//   obtenerMascotasDeRefugio,
+//   obtenerSolicitudesDeRefugio,
+//   obtenerEstadisticasDeRefugio,
+// } from '../../repositories/perfilRefugioRepository'
 import '../../styles/perfilRefugio.css'
 
-export default function PerfilRefugio() {
+export default function Perfil() {
   const navigate = useNavigate()
-  const { usuario, cerrarSesion } = usarAuth()
+  const { usuario, cerrarSesion, cargando } = usarAuth()
   const [mascotas, setMascotas] = useState([])
   const [solicitudes, setSolicitudes] = useState([])
   const [stats, setStats] = useState({ mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
-  const [cargando, setCargando] = useState(true)
 
+   // useEffect(() => {
+  //   if (!usuario) {
+  //     navigate('/login')
+  //     return
+  //   }
+
+  //   let activo = true
+
+  //   const obtenerDatos = async () => {
+  //     try {
+  //       const [mascotasRes, solicitudesRes, statsRes] = await Promise.all([
+  //         obtenerMascotasDeRefugio(usuario.id),
+  //         obtenerSolicitudesDeRefugio(usuario.id),
+  //         obtenerEstadisticasDeRefugio(usuario.id),
+  //       ])
+
+  //       if (!activo) return
+  //       setMascotas(mascotasRes.data || [])
+  //       setSolicitudes(solicitudesRes.data || [])
+  //       setStats(statsRes.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
+  //     } finally {
+  //       if (activo) setCargando(false)
+  //     }
+  //   }
+
+  //   obtenerDatos()
+  //   return () => { activo = false }
+  // }, [usuario])
+
+  
   useEffect(() => {
-    if (!usuario) {
+    if (!cargando && !usuario) {
       navigate('/login')
-      return
     }
-
-    let activo = true
-
-    const obtenerDatos = async () => {
-      try {
-        const [mascotasRes, solicitudesRes, statsRes] = await Promise.all([
-          obtenerMascotasDeRefugio(usuario.id),
-          obtenerSolicitudesDeRefugio(usuario.id),
-          obtenerEstadisticasDeRefugio(usuario.id),
-        ])
-
-        if (!activo) return
-        setMascotas(mascotasRes.data || [])
-        setSolicitudes(solicitudesRes.data || [])
-        setStats(statsRes.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
-      } finally {
-        if (activo) setCargando(false)
-      }
-    }
-
-    obtenerDatos()
-    return () => { activo = false }
-  }, [usuario])
+  }, [cargando, usuario])
 
   if (cargando) return <Loader />
 
@@ -64,12 +70,19 @@ export default function PerfilRefugio() {
         </div>
       </header>
 
-      {/* Foto de portada */}
+      {/* Foto de portada + avatar superpuesto */}
       <div className="perfil-refugio-portada">
         <img
           src={usuario.foto_portada_url || '/cliente/public/assets/img/refugio_default.jpg'}
           alt={usuario.nombre}
         />
+        <div className="perfil-refugio-avatar">
+          {usuario.logo_url ? (
+            <img src={usuario.logo_url} alt={usuario.nombre} />
+          ) : (
+            <span className="perfil-refugio-avatar-icono">🐾</span>
+          )}
+        </div>
       </div>
 
       {/* Nombre y ubicación */}
@@ -91,20 +104,24 @@ export default function PerfilRefugio() {
         </div>
         <div className="resumen-grid">
           <div className="resumen-stat">
-            <p className="resumen-stat-label">Mascotas</p>
+            <span className="resumen-stat-icono">🐶</span>
             <p className="resumen-stat-valor">{stats.mascotas}</p>
+            <p className="resumen-stat-label">Mascotas</p>
           </div>
           <div className="resumen-stat">
-            <p className="resumen-stat-label">Voluntarios</p>
+            <span className="resumen-stat-icono">🙋</span>
             <p className="resumen-stat-valor">{stats.voluntarios}</p>
+            <p className="resumen-stat-label">Voluntarios</p>
           </div>
           <div className="resumen-stat">
-            <p className="resumen-stat-label">Adopciones</p>
+            <span className="resumen-stat-icono">🏠</span>
             <p className="resumen-stat-valor">{stats.adopciones}</p>
+            <p className="resumen-stat-label">Adopciones</p>
           </div>
           <div className="resumen-stat">
-            <p className="resumen-stat-label">Eventos</p>
+            <span className="resumen-stat-icono">📅</span>
             <p className="resumen-stat-valor">{stats.eventos}</p>
+            <p className="resumen-stat-label">Eventos</p>
           </div>
         </div>
       </section>
