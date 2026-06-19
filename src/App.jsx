@@ -9,6 +9,7 @@ import EditarPerfil from './pages/adoptante/editarUsuario.jsx'
 import Registro from './pages/auth/Registro'
 import Dashboard from './pages/refugio/Dashboard.jsx'
 import PerfilRefugio from './pages/refugio/Perfil.jsx'
+import CargarMascota from './pages/refugio/CargarMascota.jsx'
 
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
@@ -61,7 +62,22 @@ export default function App() {
               </RutaProtegida>
             }
           />
-
+        <Route
+            path="/refugio/dashboard"
+            element={
+              <RutaProtegida rol="refugio">
+                <Dashboard />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/cargarMascota"
+            element={
+              <RutaProtegida rol="refugio">
+                <CargarMascota />
+              </RutaProtegida>
+            }
+          />
           {/* Rutas del adoptante */}
           <Route
             path="/adoptante/perfil"

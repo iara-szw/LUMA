@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Footer from '../../components/Footer'
-// import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
+import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 // import { obtenerEventosProximos } from '../../repositories/eventoRepository'
 import '../../styles/dashboard.css'
 
@@ -128,7 +128,7 @@ export default function Dashboard() {
           <span className="dash-accion-icono">📋</span>
           <span>Solicitudes</span>
         </button>
-        <button className="dash-accion-btn dash-accion-btn--verde" onClick={() => navigate('/refugio/cargar')}>
+        <button className="dash-accion-btn dash-accion-btn--verde" onClick={() => navigate('/refugio/cargarMascota')}>
           <span className="dash-accion-icono">＋</span>
           <span>Cargar</span>
         </button>
