@@ -3,7 +3,7 @@
    ===================== */
 
 :root {
-  --dash-bg: #f5f0e8;
+  --dash-bg: #FAFAFA;
   --dash-card: #ffffff;
   --dash-primario: #8b7355;
   --dash-verde: #6b8f6b;
@@ -12,6 +12,7 @@
   --dash-borde: #e5ddd0;
   --dash-urgente: #e07b5a;
   --dash-radius: 16px;
+  
   --dash-radius-sm: 10px;
   --dash-sombra: 0 2px 10px rgba(0, 0, 0, 0.07);
 }
@@ -25,6 +26,8 @@
   color: var(--dash-texto);
   max-width: 430px;
   margin: 0 auto;
+  width: 114%;
+  margin-left: -7%;
 }
 
 /* ── Header ── */
@@ -36,7 +39,9 @@
   background: var(--dash-bg);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 10; 
+      background-color: #F7F3EA;
+
 }
 
 .dash-logo img {

@@ -8,6 +8,8 @@
   font-family: 'Segoe UI', sans-serif;
   color: #2c2c2a;
   padding-bottom: 80px;
+  width: 160%;
+  margin-left: -30%;
 }
 
 /* ── Header flotante ── */
