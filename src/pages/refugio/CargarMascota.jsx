@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
+import {ESTADOS} from '../../services/authService'
 import { crearMascotaRefugio, idEspeciePorNombre } from '../../repositories/mascotaRepository'
 import { subirFotoMascota } from '../../repositories/storageRepository'
 import '../../styles/cargarMascota.css'
@@ -84,7 +85,6 @@ export default function CargarMascota() {
         edad: form.edad.trim(),
         foto_url: fotoUrl,
         urgente: form.urgente,
-        estado:1
       })
 
       if (res?.error) {

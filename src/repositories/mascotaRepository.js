@@ -1,7 +1,8 @@
 import { Supabase } from '../services/supabase'
-
+import {ESTADOS} from '../services/authService'
 const ESPECIE_PERRO = '67fdca6b-e83d-4b2f-a374-b777a1e70037'
 const ESPECIE_GATO  = '64c51957-d60e-4f24-be64-f6830572cb95'
+
 
 const aplicarLimite = (query, cantidad) => {
   return cantidad && cantidad > 0 ? query.limit(cantidad) : query
@@ -40,11 +41,10 @@ export async function obtenerGatos(cantidad) {
 export async function obtenerMascotasRefugio(refugioId, cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, especie, tipo, edad, foto_url, urgente')
+    .select('id, nombre, edad, urgente')
     .eq('refugio_id', refugioId)
-    .eq('estado', 1)
-    .order('creado_en', { ascending: false })
-
+    .eq('estado_id', ESTADOS.publicada)
+    
   return aplicarLimite(query, cantidad)
 }
 
@@ -62,7 +62,7 @@ export async function crearMascotaRefugio(refugioId, datos) {
     refugio_id: refugioId,
     nombre: datos.nombre || null,
     especie_id: datos.especie || null,
-    estado_id: datos.estado_id || null,
+    estado_id: datos.estado_id || ESTADOS.publicada,
     edad: datos.edad || null,
     sexo: datos.sexo || null,
     tamaño: datos.tamaño || null,

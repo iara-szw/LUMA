@@ -5,7 +5,7 @@ import Buscador from '../../components/Buscador'
 
 import Footer from '../../components/Footer'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
-// import { obtenerEventosProximos } from '../../repositories/eventoRepository'
+import { obtenerEventosProximos } from '../../repositories/eventoRepository'
 import '../../styles/dashboard.css'
 
 export default function Dashboard() {
@@ -35,6 +35,7 @@ export default function Dashboard() {
       } finally {
         if (activo) {
           setCargandoMascotas(false)
+          
           setCargandoEventos(false)
         }
       }
