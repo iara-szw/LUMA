@@ -84,6 +84,7 @@ export default function CargarMascota() {
         edad: form.edad.trim(),
         foto_url: fotoUrl,
         urgente: form.urgente,
+        estado:1
       })
 
       if (res?.error) {

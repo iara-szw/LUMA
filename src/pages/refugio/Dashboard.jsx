@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
+import Buscador from '../../components/Buscador'
+
 import Footer from '../../components/Footer'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 // import { obtenerEventosProximos } from '../../repositories/eventoRepository'
@@ -18,29 +20,29 @@ export default function Dashboard() {
   const publicadas = mascotas.length
   const urgentes = mascotas.filter(m => m.urgente).length
 
-  // useEffect(() => {
-  //   let activo = true
+  useEffect(() => {
+    let activo = true
 
-  //   // const obtenerDatos = async () => {
-  //   //   try {
-  //   //     const [mascotasRes, eventosRes] = await Promise.all([
-  //   //       obtenerMascotasRefugio(usuario?.id),
-  //   //       obtenerEventosProximos(),
-  //   //     ])
-  //   //     if (!activo) return
-  //   //     setMascotas(mascotasRes.data || [])
-  //   //     setEventos(eventosRes.data || [])
-  //   //   } finally {
-  //   //     if (activo) {
-  //   //       setCargandoMascotas(false)
-  //   //       setCargandoEventos(false)
-  //   //     }
-  //   //   }
-  //   // }
+    const obtenerDatos = async () => {
+      try {
+        const [mascotasRes, eventosRes] = await Promise.all([
+          obtenerMascotasRefugio(usuario?.id),
+          obtenerEventosProximos(),
+        ])
+        if (!activo) return
+        setMascotas(mascotasRes.data || [])
+        setEventos(eventosRes.data || [])
+      } finally {
+        if (activo) {
+          setCargandoMascotas(false)
+          setCargandoEventos(false)
+        }
+      }
+    }
 
-  //   if (usuario?.id) obtenerDatos()
-  //   return () => { activo = false }
-  // }, [usuario])
+    if (usuario?.id) obtenerDatos()
+    return () => { activo = false }
+  }, [usuario])
 
   const nombreRefugio = usuario?.nombre || 'Refugio'
 
@@ -78,13 +80,8 @@ export default function Dashboard() {
 
       {/* Buscador */}
       <div className="dash-buscador">
-        <span className="dash-buscador-icono">🔍</span>
-        <input
-          type="text"
-          placeholder="Buscar por nombre o refugio..."
-          readOnly
-          onClick={() => navigate('/refugio/buscar')}
-        />
+     <Buscador ></Buscador>
+
       </div>
 
       {/* Dashboard stats */}
