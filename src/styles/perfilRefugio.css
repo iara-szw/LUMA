@@ -1,10 +1,17 @@
 /* ===========================
    Perfil Refugio – perfilRefugio.css
    =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+  :root {
+  --font: 'Nunito', sans-serif;
+  }
+* {
+    font-family: var(--font);
+}
 
 .pagina-perfil-refugio {
   min-height: 100vh;
-  background-color: #f5f3ee;
+  background-color: #fafafa;
   font-family: 'Segoe UI', sans-serif;
   color: #2c2c2a;
   padding-bottom: 80px;
@@ -78,15 +85,15 @@
 
 /* ── Info principal ── */
 .perfil-refugio-info {
-  background: #fff;
+  background: #F7F3EA;
   padding: 18px 16px 16px;
   border-bottom: 1px solid #e8e4dc;
 }
 
 .perfil-refugio-info h2 {
   font-size: 22px;
-  font-weight: 700;
-  color: #2c2c2a;
+  font-weight: 800;
+  color: #3d2e1e;
   margin: 0 0 6px;
 }
 
@@ -107,7 +114,7 @@
 
 /* ── Secciones genéricas ── */
 .seccion-refugio {
-  background: #fff;
+  background: #F7F3EA;
   margin: 10px 12px;
   border-radius: 16px;
   padding: 16px;
@@ -323,16 +330,16 @@
   display: block;
   width: calc(100% - 24px);
   margin: 10px 12px;
-  background: #7a9e6e;
+  background: #9CA788;
   color: #fff;
   border: none;
-  border-radius: 14px;
   padding: 15px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   letter-spacing: 0.2px;
   transition: background 0.2s;
+  border-radius: 30px;
 }
 
 .btn-editar-perfil:hover {
@@ -347,7 +354,7 @@
   background: transparent;
   color: #c0392b;
   border: 1.5px solid #e8c0bb;
-  border-radius: 14px;
+  border-radius: 30px;
   padding: 13px;
   font-size: 14px;
   font-weight: 600;
