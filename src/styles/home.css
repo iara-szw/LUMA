@@ -47,6 +47,13 @@ body {
     padding: 1.25rem 1.25rem 1rem;
 }
 
+.inicioDiv{
+    background: var(--crema);
+    padding-bottom:5%;
+        border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+
+}
 .inicio-header .logo {
     font-size: 1.75rem;
     font-weight: 800;
@@ -111,7 +118,6 @@ body {
     padding: 1.1rem 1.25rem 0.75rem;
     background: var(--crema);
         border-radius: 0 0 24px 24px;
-    padding-bottom: 22%; 
 }
 
 /* ── Buscador ─────────────────────────────────────── */

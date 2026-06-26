@@ -66,7 +66,7 @@ export default function Home() {
           )}
         </div>
       </header>
-
+        <div className='inicioDiv'>
       <h2 className="saludo">
         {nombre ? `Hola, ${nombre} 🐾` : 'Bienvenido a LUMA 🐾'}
       </h2>
@@ -75,7 +75,7 @@ export default function Home() {
         placeholder="Buscar por nombre o refugio..."
         onBuscar={(query) => navigate(`/adoptante/buscar?q=${query}`)}
       />
-
+</div>
       <section className="banner-test-match">
         <p>Descubrí tu mascota ideal con nuestro test de compatibilidad</p>
         <button type="button" onClick={() => navigate('/adoptante/test-match')}>
