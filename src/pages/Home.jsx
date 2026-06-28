@@ -45,15 +45,15 @@ export default function Home() {
   return (
     <div className="pagina-inicio">
       <header className="inicio-header">
-        <Link to="/" className="logo"><img src="/cliente/public/assets/img/logo.png" alt="" /></Link>
+        <Link to="/" className="logo"><img src="/assets/img/logo.png" alt="" /></Link>
         <div className="inicio-header-iconos">
           {usuario ? (
             <>
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/cliente/public/assets/img/notificaciones.png" />
+              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" />
 </button>
         <img
   className="avatar"
-  src={usuario.foto_perfil || '/cliente/public/assets/img/perfil_default.jpg'}
+  src={usuario.foto_perfil || '/assets/img/perfil_default.jpg'}
   alt="perfil"
   onClick={() => navigate('/adoptante/perfil')}
 />

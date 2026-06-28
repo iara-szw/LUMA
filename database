@@ -1,0 +1,252 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.roles (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  nombre character varying NOT NULL UNIQUE,
+  CONSTRAINT roles_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.usuarios (
+  id uuid NOT NULL,
+  nombre character varying NOT NULL,
+  apellido character varying NOT NULL,
+  email character varying NOT NULL UNIQUE,
+  telefono character varying,
+  foto_url text,
+  direccion text,
+  ciudad character varying,
+  provincia character varying,
+  biografia text,
+  fecha_registro timestamp without time zone DEFAULT now(),
+  activo boolean DEFAULT true,
+  CONSTRAINT usuarios_pkey PRIMARY KEY (id),
+  CONSTRAINT usuarios_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.usuarios_roles (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  usuario_id uuid NOT NULL,
+  rol_id uuid NOT NULL,
+  CONSTRAINT usuarios_roles_pkey PRIMARY KEY (id),
+  CONSTRAINT usuarios_roles_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id),
+  CONSTRAINT usuarios_roles_rol_id_fkey FOREIGN KEY (rol_id) REFERENCES public.roles(id)
+);
+CREATE TABLE public.refugios (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  nombre character varying NOT NULL,
+  descripcion text,
+  email character varying,
+  telefono character varying,
+  direccion text,
+  ciudad character varying,
+  provincia character varying,
+  instagram character varying,
+  logo_url text,
+  portada_url text,
+  cantidad_voluntarios integer DEFAULT 0,
+  activo boolean DEFAULT true,
+  fecha_creacion timestamp without time zone DEFAULT now(),
+  CONSTRAINT refugios_pkey PRIMARY KEY (id),
+  CONSTRAINT refugios_id_fkey FOREIGN KEY (id) REFERENCES public.usuarios(id)
+);
+CREATE TABLE public.especies (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  nombre character varying NOT NULL UNIQUE,
+  CONSTRAINT especies_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.estados_mascota (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  nombre character varying NOT NULL UNIQUE,
+  CONSTRAINT estados_mascota_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.temperamentos (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  nombre character varying NOT NULL UNIQUE,
+  CONSTRAINT temperamentos_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.mascotas (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  refugio_id uuid NOT NULL,
+  especie_id uuid,
+  estado_id uuid,
+  nombre character varying NOT NULL,
+  edad character varying,
+  sexo character varying,
+  tamaño character varying,
+  descripcion text,
+  vacunado boolean DEFAULT false,
+  castrado boolean DEFAULT false,
+  desparasitado boolean DEFAULT false,
+  problemas_salud boolean DEFAULT false,
+  detalle_salud text,
+  urgente boolean DEFAULT false,
+  publicado boolean DEFAULT true,
+  fecha_rescate date,
+  fecha_publicacion timestamp without time zone DEFAULT now(),
+  fecha_adopcion timestamp without time zone,
+  requisitos text,
+  foto_url text,
+  CONSTRAINT mascotas_pkey PRIMARY KEY (id),
+  CONSTRAINT mascotas_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id),
+  CONSTRAINT mascotas_especie_id_fkey FOREIGN KEY (especie_id) REFERENCES public.especies(id),
+  CONSTRAINT mascotas_estado_id_fkey FOREIGN KEY (estado_id) REFERENCES public.estados_mascota(id)
+);
+CREATE TABLE public.fotos_mascota (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  mascota_id uuid NOT NULL,
+  url text NOT NULL,
+  principal boolean DEFAULT false,
+  CONSTRAINT fotos_mascota_pkey PRIMARY KEY (id),
+  CONSTRAINT fotos_mascota_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id)
+);
+CREATE TABLE public.mascota_temperamentos (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  mascota_id uuid NOT NULL,
+  temperamento_id uuid NOT NULL,
+  CONSTRAINT mascota_temperamentos_pkey PRIMARY KEY (id),
+  CONSTRAINT mascota_temperamentos_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id),
+  CONSTRAINT mascota_temperamentos_temperamento_id_fkey FOREIGN KEY (temperamento_id) REFERENCES public.temperamentos(id)
+);
+CREATE TABLE public.eventos (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  refugio_id uuid NOT NULL,
+  titulo character varying NOT NULL,
+  descripcion text,
+  lugar character varying,
+  direccion text,
+  imagen_url text,
+  fecha_evento timestamp without time zone NOT NULL,
+  activo boolean DEFAULT true,
+  fecha_creacion timestamp without time zone DEFAULT now(),
+  CONSTRAINT eventos_pkey PRIMARY KEY (id),
+  CONSTRAINT eventos_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id)
+);
+CREATE TABLE public.formularios (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  refugio_id uuid NOT NULL,
+  mascota_id uuid,
+  titulo character varying NOT NULL,
+  descripcion text,
+  activo boolean DEFAULT true,
+  fecha_creacion timestamp without time zone DEFAULT now(),
+  CONSTRAINT formularios_pkey PRIMARY KEY (id),
+  CONSTRAINT formularios_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id),
+  CONSTRAINT formularios_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id)
+);
+CREATE TABLE public.preguntas_formulario (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  formulario_id uuid NOT NULL,
+  pregunta text NOT NULL,
+  tipo character varying NOT NULL,
+  orden integer NOT NULL,
+  requerida boolean DEFAULT true,
+  CONSTRAINT preguntas_formulario_pkey PRIMARY KEY (id),
+  CONSTRAINT preguntas_formulario_formulario_id_fkey FOREIGN KEY (formulario_id) REFERENCES public.formularios(id)
+);
+CREATE TABLE public.opciones_pregunta (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  pregunta_id uuid NOT NULL,
+  texto character varying NOT NULL,
+  valor character varying,
+  CONSTRAINT opciones_pregunta_pkey PRIMARY KEY (id),
+  CONSTRAINT opciones_pregunta_pregunta_id_fkey FOREIGN KEY (pregunta_id) REFERENCES public.preguntas_formulario(id)
+);
+CREATE TABLE public.solicitudes (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  mascota_id uuid NOT NULL,
+  adoptante_id uuid NOT NULL,
+  formulario_id uuid,
+  estado character varying DEFAULT 'Pendiente'::character varying,
+  notas text,
+  fecha_solicitud timestamp without time zone DEFAULT now(),
+  ultima_actualizacion timestamp without time zone DEFAULT now(),
+  CONSTRAINT solicitudes_pkey PRIMARY KEY (id),
+  CONSTRAINT solicitudes_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id),
+  CONSTRAINT solicitudes_adoptante_id_fkey FOREIGN KEY (adoptante_id) REFERENCES public.usuarios(id),
+  CONSTRAINT solicitudes_formulario_id_fkey FOREIGN KEY (formulario_id) REFERENCES public.formularios(id)
+);
+CREATE TABLE public.respuestas_formulario (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  solicitud_id uuid NOT NULL,
+  pregunta_id uuid NOT NULL,
+  respuesta text NOT NULL,
+  CONSTRAINT respuestas_formulario_pkey PRIMARY KEY (id),
+  CONSTRAINT respuestas_formulario_solicitud_id_fkey FOREIGN KEY (solicitud_id) REFERENCES public.solicitudes(id),
+  CONSTRAINT respuestas_formulario_pregunta_id_fkey FOREIGN KEY (pregunta_id) REFERENCES public.preguntas_formulario(id)
+);
+CREATE TABLE public.entrevistas (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  solicitud_id uuid NOT NULL,
+  responsable_id uuid,
+  fecha timestamp without time zone NOT NULL,
+  modalidad character varying,
+  resultado character varying,
+  notas text,
+  CONSTRAINT entrevistas_pkey PRIMARY KEY (id),
+  CONSTRAINT entrevistas_solicitud_id_fkey FOREIGN KEY (solicitud_id) REFERENCES public.solicitudes(id),
+  CONSTRAINT entrevistas_responsable_id_fkey FOREIGN KEY (responsable_id) REFERENCES public.usuarios(id)
+);
+CREATE TABLE public.adopciones (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  solicitud_id uuid NOT NULL,
+  fecha_adopcion timestamp without time zone DEFAULT now(),
+  contrato_firmado boolean DEFAULT false,
+  seguimiento_activo boolean DEFAULT true,
+  miembro_encargado bigint,
+  CONSTRAINT adopciones_pkey PRIMARY KEY (id),
+  CONSTRAINT adopciones_solicitud_id_fkey FOREIGN KEY (solicitud_id) REFERENCES public.solicitudes(id),
+  CONSTRAINT adopciones_miembro_encargado_fkey FOREIGN KEY (miembro_encargado) REFERENCES public.miembro(id_miembro)
+);
+CREATE TABLE public.seguimientos (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  adopcion_id uuid NOT NULL,
+  estado character varying,
+  comentarios text,
+  fecha timestamp without time zone DEFAULT now(),
+  CONSTRAINT seguimientos_pkey PRIMARY KEY (id),
+  CONSTRAINT seguimientos_adopcion_id_fkey FOREIGN KEY (adopcion_id) REFERENCES public.adopciones(id)
+);
+CREATE TABLE public.notificaciones (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  usuario_id uuid NOT NULL,
+  titulo character varying,
+  mensaje text,
+  leida boolean DEFAULT false,
+  fecha timestamp without time zone DEFAULT now(),
+  CONSTRAINT notificaciones_pkey PRIMARY KEY (id),
+  CONSTRAINT notificaciones_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id)
+);
+CREATE TABLE public.favoritos (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  usuario_id uuid NOT NULL,
+  mascota_id uuid NOT NULL,
+  fecha timestamp without time zone DEFAULT now(),
+  CONSTRAINT favoritos_pkey PRIMARY KEY (id),
+  CONSTRAINT favoritos_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id),
+  CONSTRAINT favoritos_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id)
+);
+CREATE TABLE public.match_resultados (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  usuario_id uuid NOT NULL,
+  mascota_id uuid NOT NULL,
+  puntaje integer NOT NULL,
+  fecha timestamp without time zone DEFAULT now(),
+  CONSTRAINT match_resultados_pkey PRIMARY KEY (id),
+  CONSTRAINT match_resultados_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id),
+  CONSTRAINT match_resultados_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id)
+);
+CREATE TABLE public.documentos (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  refugio_id uuid NOT NULL,
+  titulo character varying,
+  tipo character varying,
+  archivo_url text,
+  fecha_subida timestamp without time zone DEFAULT now(),
+  CONSTRAINT documentos_pkey PRIMARY KEY (id),
+  CONSTRAINT documentos_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id)
+);
+CREATE TABLE public.miembro (
+  id_miembro bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  id_refugio bigint NOT NULL,
+  id_usuario bigint NOT NULL,
+  CONSTRAINT miembro_pkey PRIMARY KEY (id_miembro)
+);

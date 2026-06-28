@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Buscador from '../../components/Buscador'
+import Bandeja from '../../../cliente/public/assets/img/bandeja-entrada.png'
+import Animal from '../../../cliente/public/assets/img/animal.png'
 
-import Footer from '../../components/Footer'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
 import '../../styles/dashboard.css'
@@ -35,7 +36,7 @@ export default function Dashboard() {
       } finally {
         if (activo) {
           setCargandoMascotas(false)
-          
+
           setCargandoEventos(false)
         }
       }
@@ -61,15 +62,15 @@ export default function Dashboard() {
       {/* Header */}
       <header className="dash-header">
         <Link to="/" className="dash-logo">
-          <img src="/cliente/public/assets/img/logo.png" alt="LUMA" />
+          <img src="/assets/img/logo.png" alt="LUMA" />
         </Link>
         <div className="dash-header-iconos">
           <button className="dash-icono-campana" aria-label="Notificaciones">
-            <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
+            <img src="/assets/img/notificaciones.png" alt="" />
           </button>
           <img
             className="dash-avatar"
-            src={usuario?.foto_perfil || '/cliente/public/assets/img/perfil_default.jpg'}
+            src={usuario?.foto_perfil || '/assets/img/perfil_default.jpg'}
             alt="perfil"
             onClick={() => navigate('/refugio/perfil')}
           />
@@ -81,7 +82,7 @@ export default function Dashboard() {
 
       {/* Buscador */}
       <div className="dash-buscador">
-     <Buscador ></Buscador>
+        <Buscador ></Buscador>
 
       </div>
 
@@ -123,15 +124,15 @@ export default function Dashboard() {
       {/* Acciones rápidas */}
       <div className="dash-acciones">
         <button className="dash-accion-btn" onClick={() => navigate('/refugio/solicitudes')}>
-          <span className="dash-accion-icono">📋</span>
+          <span className="dash-accion-icono"><img src={Bandeja} alt="" style={{ filter: "invert(100%)" }} /></span>
           <span>Solicitudes</span>
         </button>
         <button className="dash-accion-btn dash-accion-btn--verde" onClick={() => navigate('/refugio/cargarMascota')}>
-          <span className="dash-accion-icono">＋</span>
+          <span className="dash-accion-icono">+</span>
           <span>Cargar</span>
         </button>
-        <button className="dash-accion-btn" onClick={() => navigate('/refugio/animales')}>
-          <span className="dash-accion-icono">🐾</span>
+        <button className="dash-accion-btn" onClick={() => navigate('/refugio/dashboard')}>
+          <span className="dash-accion-icono"><img src={Animal} alt="" style={{ filter: "invert(100%)" }} /></span>
           <span>Animales</span>
         </button>
       </div>
@@ -140,7 +141,7 @@ export default function Dashboard() {
       <section className="dash-seccion">
         <div className="dash-seccion-cabecera">
           <h3 className="dash-seccion-titulo">Mascotas publicadas</h3>
-          <button className="dash-ver-todos" onClick={() => navigate('/refugio/animales')}>
+          <button className="dash-ver-todos" onClick={() => navigate('/refugio/dashboard')}>
             Ver todos
           </button>
         </div>
@@ -210,13 +211,30 @@ export default function Dashboard() {
         <button
           type="button"
           className="dash-btn-ver-todos"
-          onClick={() => navigate('/refugio/eventos')}
+          onClick={() => navigate('/refugio/dashboard')}
         >
           Ver todos
         </button>
       </section>
 
-      <Footer />
+      <nav className="bottom-nav-refugio">
+        <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/dashboard')}>
+          <img src="/assets/img/home.png" alt="Inicio" />
+          <span>Inicio</span>
+        </button>
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
+          <img src="/assets/img/white-paw.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.7 }} />
+          <span>Cargar</span>
+        </button>
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
+          <img src="/assets/img/solicitudes.png" alt="Solicitudes" />
+          <span>Solicitudes</span>
+        </button>
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/perfil')}>
+          <img src="/assets/img/perfil.png" alt="Perfil" />
+          <span>Perfil</span>
+        </button>
+      </nav>
     </div>
   )
 }

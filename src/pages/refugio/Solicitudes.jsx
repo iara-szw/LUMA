@@ -132,20 +132,20 @@ export default function SolicitudesRefugio() {
 
       {/* Bottom Nav */}
       <nav className="bottom-nav-refugio">
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/inicio')}>
-          <img src="/cliente/public/assets/img/inicio.png" alt="" />
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/dashboard')}>
+          <img src="/assets/img/home.png" alt="" />
           <span>Inicio</span>
         </button>
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/mascotas')}>
-          <img src="/cliente/public/assets/img/mascotas.png" alt="" />
-          <span>Mascotas</span>
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
+          <img src="/assets/img/white-paw.png" alt="" style={{ width: '24px', height: '24px', opacity: 0.7 }} />
+          <span>Cargar</span>
         </button>
         <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/solicitudes')}>
-          <img src="/cliente/public/assets/img/solicitudes.png" alt="" />
+          <img src="/assets/img/solicitudes.png" alt="" />
           <span>Solicitudes</span>
         </button>
         <button className="nav-item-refugio" onClick={() => navigate('/refugio/perfil')}>
-          <img src="/cliente/public/assets/img/perfil.png" alt="" />
+          <img src="/assets/img/perfil.png" alt="" />
           <span>Perfil</span>
         </button>
       </nav>

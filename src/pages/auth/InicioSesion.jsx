@@ -30,7 +30,7 @@ export default function IniciarSesion() {
 
   return (
     <div className="pantalla-auth">
-<img src="../../../cliente/public/assets/img/logo.png" alt="LUMA" className="logo-img" />
+<img src="/assets/img/logo.png" alt="LUMA" className="logo-img" />
       <h2>Iniciar sesión</h2>
 
       <input

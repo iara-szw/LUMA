@@ -168,7 +168,7 @@ overflow-x: hidden;
   box-shadow: var(--dash-sombra);
   overflow: hidden;
   /* thumbnail-style top image via background */
-  background-image: url('/cliente/public/assets/img/dashboard_bg.jpg');
+  background-image: url('/assets/img/dashboard_bg.jpg');
   background-position: top right;
   background-repeat: no-repeat;
   background-size: 110px auto;

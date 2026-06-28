@@ -56,8 +56,8 @@ export default function Perfil() {
       <header className="perfil-header">
         <button onClick={() => navigate(-1)}>← Mi perfil</button>
         <div className="perfil-header-iconos">
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/cliente/public/assets/img/notificaciones.png"></img> </button>
-              <button className="icono-configuracion" aria-label="Configuración" onClick={() => navigate('/adoptante/editarUsuario')}><img src="/cliente/public/assets/img/configurar.png"></img> </button>
+              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png"></img> </button>
+              <button className="icono-configuracion" aria-label="Configuración" onClick={() => navigate('/adoptante/editarUsuario')}><img src="/assets/img/configurar.png"></img> </button>
         </div>
       </header>
 
@@ -65,7 +65,7 @@ export default function Perfil() {
         <div className="perfil-avatar-wrapper">
           <img
             className="perfil-avatar"
-            src={usuario.foto_url ||  '../cliente/public/assets/img/perfil_default.jpg'}
+            src={usuario.foto_url || '/assets/img/perfil_default.jpg'}
             alt={usuario.nombre}
           />
           <button className="perfil-avatar-editar" onClick={() => navigate('/adoptante/editarUsuario')}>

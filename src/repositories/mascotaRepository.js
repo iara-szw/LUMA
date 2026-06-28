@@ -12,8 +12,8 @@ export async function obtenerMascotasRecientes(cantidad) {
   const query = Supabase
     .from('mascotas')
     .select('id, nombre, foto_url, urgente, edad')
-    .eq('estado', 1)
-    .order('creado_en', { ascending: false })
+    .eq('estado_id', ESTADOS.publicada)
+    .order('fecha_publicacion', { ascending: false })
 
   return aplicarLimite(query, cantidad)
 }
@@ -21,9 +21,9 @@ export async function obtenerMascotasRecientes(cantidad) {
 export async function obtenerPerros(cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, tipo, edad, foto_url, urgente')
-    .eq('especie', ESPECIE_PERRO)
-    .eq('estado', 1)
+    .select('id, nombre, edad, foto_url, urgente')
+    .eq('especie_id', ESPECIE_PERRO)
+    .eq('estado_id', ESTADOS.publicada)
 
   return aplicarLimite(query, cantidad)
 }
@@ -31,9 +31,9 @@ export async function obtenerPerros(cantidad) {
 export async function obtenerGatos(cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, tipo, edad, foto_url, urgente')
-    .eq('especie', ESPECIE_GATO)
-    .eq('estado', 1)
+    .select('id, nombre, edad, foto_url, urgente')
+    .eq('especie_id', ESPECIE_GATO)
+    .eq('estado_id', ESTADOS.publicada)
 
   return aplicarLimite(query, cantidad)
 }
@@ -41,7 +41,7 @@ export async function obtenerGatos(cantidad) {
 export async function obtenerMascotasRefugio(refugioId, cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, edad, urgente')
+    .select('id, nombre, edad, urgente, foto_url, especie_id')
     .eq('refugio_id', refugioId)
     .eq('estado_id', ESTADOS.publicada)
     
@@ -66,6 +66,7 @@ export async function crearMascotaRefugio(refugioId, datos) {
     edad: datos.edad || null,
     sexo: datos.sexo || null,
     tamaño: datos.tamaño || null,
+    foto_url: datos.foto_url || null,
     descripcion: datos.tipo ? String(datos.tipo) : datos.descripcion || null,
     vacunado: datos.vacunado || false,
     castrado: datos.castrado || false,

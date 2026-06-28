@@ -10,7 +10,7 @@ function Buscador({ placeholder, onBuscar }) {
 
   return (
     <div className="buscador">
-      <img src="../../../cliente/public/assets/img/lupa.png"></img>
+      <img src="/assets/img/lupa.png"></img>
       <input
         type="text"
         placeholder={placeholder}

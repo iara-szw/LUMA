@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
-// import {
-//   obtenerMascotasDeRefugio,
-//   obtenerSolicitudesDeRefugio,
-//   obtenerEstadisticasDeRefugio,
-// } from '../../repositories/perfilRefugioRepository'
+import {
+  obtenerMascotasDeRefugio,
+  obtenerSolicitudesDeRefugio,
+  obtenerEstadisticasDeRefugio,
+} from '../../repositories/perfilRefugioRepository'
 import '../../styles/perfilRefugio.css'
 
 export default function Perfil() {
@@ -15,44 +15,41 @@ export default function Perfil() {
   const [mascotas, setMascotas] = useState([])
   const [solicitudes, setSolicitudes] = useState([])
   const [stats, setStats] = useState({ mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
+  const [cargandoDatos, setCargandoDatos] = useState(true)
 
-   // useEffect(() => {
-  //   if (!usuario) {
-  //     navigate('/login')
-  //     return
-  //   }
+  useEffect(() => {
+    if (!usuario) return
 
-  //   let activo = true
+    let activo = true
 
-  //   const obtenerDatos = async () => {
-  //     try {
-  //       const [mascotasRes, solicitudesRes, statsRes] = await Promise.all([
-  //         obtenerMascotasDeRefugio(usuario.id),
-  //         obtenerSolicitudesDeRefugio(usuario.id),
-  //         obtenerEstadisticasDeRefugio(usuario.id),
-  //       ])
+    const obtenerDatos = async () => {
+      try {
+        const [mascotasRes, solicitudesRes, statsRes] = await Promise.all([
+          obtenerMascotasDeRefugio(usuario.id),
+          obtenerSolicitudesDeRefugio(usuario.id),
+          obtenerEstadisticasDeRefugio(usuario.id),
+        ])
 
-  //       if (!activo) return
-  //       setMascotas(mascotasRes.data || [])
-  //       setSolicitudes(solicitudesRes.data || [])
-  //       setStats(statsRes.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
-  //     } finally {
-  //       if (activo) setCargando(false)
-  //     }
-  //   }
+        if (!activo) return
+        setMascotas(mascotasRes.data || [])
+        setSolicitudes(solicitudesRes.data || [])
+        setStats(statsRes.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
+      } finally {
+        if (activo) setCargandoDatos(false)
+      }
+    }
 
-  //   obtenerDatos()
-  //   return () => { activo = false }
-  // }, [usuario])
+    obtenerDatos()
+    return () => { activo = false }
+  }, [usuario])
 
-  
   useEffect(() => {
     if (!cargando && !usuario) {
       navigate('/login')
     }
   }, [cargando, usuario])
 
-  if (cargando) return <Loader />
+  if (cargando || (usuario && cargandoDatos)) return <Loader />
 
   return (
     <div className="pagina-perfil-refugio">
@@ -61,11 +58,11 @@ export default function Perfil() {
       <header className="perfil-refugio-header">
         <button onClick={() => navigate(-1)} aria-label="Volver">←</button>
         <div className="perfil-refugio-header-iconos">
-          <button aria-label="Notificaciones" onClick={() => navigate('/refugio/notificaciones')}>
-            <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
+          <button aria-label="Notificaciones" onClick={() => navigate('/refugio/dashboard')}>
+            <img src="/assets/img/notificaciones.png" alt="" />
           </button>
-          <button aria-label="Configuración" onClick={() => navigate('/refugio/editarRefugio')}>
-            <img src="/cliente/public/assets/img/configurar.png" alt="" />
+          <button aria-label="Configuración" onClick={() => navigate('/refugio/perfil')}>
+            <img src="/assets/img/configurar.png" alt="" />
           </button>
         </div>
       </header>
@@ -73,7 +70,7 @@ export default function Perfil() {
       {/* Foto de portada + avatar superpuesto */}
       <div className="perfil-refugio-portada">
         <img
-          src={usuario.foto_portada_url || '/cliente/public/assets/img/refugio_default.jpg'}
+          src={usuario.foto_portada_url || '/assets/img/refugio_default.jpg'}
           alt={usuario.nombre}
         />
         <div className="perfil-refugio-avatar">
@@ -90,7 +87,7 @@ export default function Perfil() {
         <h2>{usuario.nombre}</h2>
         {usuario.direccion && (
           <p className="perfil-refugio-ubicacion">
-            <img src="/cliente/public/assets/img/ubicacion.png" alt="" />
+            <img src="/assets/img/ubicacion.png" alt="" />
             {usuario.direccion}
           </p>
         )}
@@ -224,20 +221,20 @@ export default function Perfil() {
 
       {/* Bottom Nav */}
       <nav className="bottom-nav-refugio">
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/inicio')}>
-          <img src="/cliente/public/assets/img/inicio.png" alt="" />
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/dashboard')}>
+          <img src="/assets/img/home.png" alt="" />
           <span>Inicio</span>
         </button>
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/mascotas')}>
-          <img src="/cliente/public/assets/img/mascotas.png" alt="" />
-          <span>Mascotas</span>
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
+          <img src="/assets/img/white-paw.png" alt="" style={{ width: '24px', height: '24px', opacity: 0.7 }} />
+          <span>Cargar</span>
         </button>
         <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
-          <img src="/cliente/public/assets/img/solicitudes.png" alt="" />
+          <img src="/assets/img/solicitudes.png" alt="" />
           <span>Solicitudes</span>
         </button>
         <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/perfil')}>
-          <img src="/cliente/public/assets/img/perfil.png" alt="" />
+          <img src="/assets/img/perfil.png" alt="" />
           <span>Perfil</span>
         </button>
       </nav>

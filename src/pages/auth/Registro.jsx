@@ -32,9 +32,10 @@ setCargando(true)
 const { data, error: authError } = await registrarUsuario(email, password)
 
 if (authError) {
-  if(authError.message="User already registered"){
-  setEstado("Email ya en uso")
-
+  if (authError.message === "User already registered") {
+    setEstado("Email ya en uso")
+  } else {
+    setEstado(authError.message)
   }
   setCargando(false)
   return
@@ -62,7 +63,7 @@ setCargando(false)
 
   return (
     <div className="pantalla-auth">
-<img src="../../../cliente/public/assets/img/logo.png" alt="LUMA" className="logo-img" />
+<img src="/assets/img/logo.png" alt="LUMA" className="logo-img" />
       <div className="selector-rol">
         <button type="button" className={rol === 'adoptante' ? 'activo' : ''} onClick={() => setRol('adoptante')}>
           Quiero adoptar

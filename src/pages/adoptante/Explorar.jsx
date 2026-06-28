@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import NavBarAdoptante from '../../components/NavbarAdoptante'
+import Footer from '../../components/Footer'
 import { obtenerPerros, obtenerGatos } from '../../repositories/mascotaRepository'
 import { obtenerRefugios } from '../../repositories/refugioRepository'
 import '../../styles/style.css'
@@ -46,7 +46,7 @@ function Seccion({ titulo, animales, onVerMas, onClickAnimal }) {
 export default function Explorar() {
   const navigate = useNavigate()
   const [filtroActivo, setFiltroActivo] = useState('todos')
-  const [datos, setDatos] = useState(datosFalsos)
+  const [datos, setDatos] = useState({ perros: [], gatos: [], refugios: [] })
   const [busqueda, setBusqueda] = useState('')
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function Explorar() {
         />
       )}
 
-      <NavBarAdoptante activo="buscar" />
+      <Footer />
     </div>
   )
 }
