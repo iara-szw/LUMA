@@ -1,3 +1,16 @@
+html, body { width: 100%; background: #ffffff; overflow-x: hidden; margin: 0; }
+body { min-height: 100vh; }
+#root { width: 100%; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* Page container defaults */
+.pagina-inicio, .pagina-perfil, .pagina-editar, .pagina-perfil-refugio, .pagina-solicitudes, .cargar-pagina, .mascota-pagina, .exp-pagina {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 /* ─── EXPLORAR ───────────────────────────────────────────── */
 
 .exp-pagina {

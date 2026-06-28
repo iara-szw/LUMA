@@ -22,14 +22,7 @@
 /* ── Reset base ───────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  font-family: var(--font);
-  background: var(--crema-oscura);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.auth-page { font-family: var(--font); background: var(--crema-oscura); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 12px; box-sizing: border-box }
 
 /* ── Pantalla auth (contenedor) ───────────────────── */
 .pantalla-auth {

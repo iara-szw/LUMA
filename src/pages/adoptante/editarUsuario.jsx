@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { actualizarPerfil } from '../../repositories/usuarioRepository'
+import { subirAvatar } from '../../repositories/storageRepository'
 import '../../styles/editarUsuario.css'
 
 export default function EditarUsuario() {
@@ -15,13 +16,27 @@ export default function EditarUsuario() {
   const [ciudad, setCiudad] = useState(usuario?.ciudad || '')
   const [provincia, setProvincia] = useState(usuario?.provincia || '')
   const [biografia, setBiografia] = useState(usuario?.biografia || '')
+  const [fotoArchivo, setFotoArchivo] = useState(null)
+  const [previewFoto, setPreviewFoto] = useState(usuario?.foto_url || null)
 
   async function guardarCambios(e) {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const { error } = await actualizarPerfil(usuario.id, { nombre, apellido, telefono, ciudad, provincia, biografia })
+      let fotoUrl = null
+      if (fotoArchivo) {
+        const { url, error } = await subirAvatar(usuario.id, fotoArchivo)
+        if (error) {
+          alert('No se pudo subir la foto. Intenta de nuevo.')
+          setLoading(false)
+          return
+        }
+        fotoUrl = url
+      }
+      const payload = { nombre, apellido, telefono, ciudad, provincia, biografia }
+      if (fotoUrl) payload.foto_url = fotoUrl
+      const { error } = await actualizarPerfil(usuario.id, payload)
 
       if (error) {
         alert(error.message)
@@ -41,6 +56,22 @@ export default function EditarUsuario() {
       </header>
 
       <form onSubmit={guardarCambios}>
+        <div className="foto-campo">
+          <label>Foto de perfil</label>
+          <div className="foto-preview" onClick={() => document.getElementById('foto-input').click()}>
+            {previewFoto ? (
+              <img src={previewFoto} alt="preview" />
+            ) : (
+              <div className="placeholder">Agregar foto</div>
+            )}
+          </div>
+          <input id="foto-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+            const f = e.target.files?.[0]
+            if (!f) return
+            setFotoArchivo(f)
+            setPreviewFoto(URL.createObjectURL(f))
+          }} />
+        </div>
         <div>
           <label htmlFor="email">Email</label>
           <input id="email" type="text" value={usuario?.email || ''} disabled />

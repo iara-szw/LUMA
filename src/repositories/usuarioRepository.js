@@ -17,10 +17,19 @@ export async function obtenerPerfilConRol(uid) {
   return { ...perfil, rol }
 }
 
-export async function actualizarPerfil(uid, { nombre, apellido, telefono, ciudad, provincia, biografia }) {
+export async function actualizarPerfil(uid, { nombre, apellido, telefono, ciudad, provincia, biografia, foto_url } = {}) {
+  const payload = {}
+  if (typeof nombre !== 'undefined') payload.nombre = nombre
+  if (typeof apellido !== 'undefined') payload.apellido = apellido
+  if (typeof telefono !== 'undefined') payload.telefono = telefono
+  if (typeof ciudad !== 'undefined') payload.ciudad = ciudad
+  if (typeof provincia !== 'undefined') payload.provincia = provincia
+  if (typeof biografia !== 'undefined') payload.biografia = biografia
+  if (typeof foto_url !== 'undefined') payload.foto_url = foto_url
+
   return Supabase
     .from('usuarios')
-    .update({ nombre, apellido, telefono, ciudad, provincia, biografia })
+    .update(payload)
     .eq('id', uid)
 }
 

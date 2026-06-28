@@ -29,7 +29,8 @@ export default function IniciarSesion() {
   }
 
   return (
-    <div className="pantalla-auth">
+    <div className="auth-page">
+      <div className="pantalla-auth">
 <img src="/assets/img/logo.png" alt="LUMA" className="logo-img" />
       <h2>Iniciar sesión</h2>
 
@@ -61,5 +62,6 @@ export default function IniciarSesion() {
         <Link to="/">Volver al inicio</Link>
       </p>
     </div>
+  </div>
   )
 }

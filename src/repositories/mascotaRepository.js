@@ -101,3 +101,43 @@ export async function crearMascotaRefugio(refugioId, datos) {
     return { data: null, error: err }
   }
 }
+
+export async function obtenerMascotaPorId(id) {
+  if (!id) return { data: null, error: { message: 'id faltante' } }
+  try {
+    // Include related refugio (shelter) data via relationship
+    const res = await Supabase
+      .from('mascotas')
+      .select('*, refugios(*)')
+      .eq('id', id)
+      .single()
+
+    if (res.error) return res
+    return res
+  } catch (err) {
+    console.error('obtenerMascotaPorId exception:', err)
+    return { data: null, error: err }
+  }
+}
+
+export async function obtenerOtrasMascotas(excluirId, refugioId, cantidad = 6) {
+  if (!refugioId) return { data: [], error: null }
+  try {
+    let query = Supabase
+      .from('mascotas')
+      .select('id, nombre, edad, foto_url, urgente, especie_id')
+      .eq('refugio_id', refugioId)
+      .neq('id', excluirId)
+      .eq('estado_id', ESTADOS.publicada)
+      .order('fecha_publicacion', { ascending: false })
+
+    query = aplicarLimite(query, cantidad)
+
+    const res = await query
+    if (res.error) return res
+    return res
+  } catch (err) {
+    console.error('obtenerOtrasMascotas exception:', err)
+    return { data: null, error: err }
+  }
+}

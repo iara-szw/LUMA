@@ -198,7 +198,7 @@ export default function CargarMascota() {
             id="edad"
             type="text"
             className="cargar-input"
-            placeholder="Ej: 2 aÃ±os"
+            placeholder="Ej: 2 años, 6 meses..."
             value={form.edad}
             onChange={e => actualizarCampo('edad', e.target.value)}
           />

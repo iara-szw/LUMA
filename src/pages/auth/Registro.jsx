@@ -62,7 +62,8 @@ setCargando(false)
   }
 
   return (
-    <div className="pantalla-auth">
+    <div className="auth-page">
+      <div className="pantalla-auth">
 <img src="/assets/img/logo.png" alt="LUMA" className="logo-img" />
       <div className="selector-rol">
         <button type="button" className={rol === 'adoptante' ? 'activo' : ''} onClick={() => setRol('adoptante')}>
@@ -91,5 +92,6 @@ setCargando(false)
 
       <p><Link to="/">Volver al inicio</Link></p>
     </div>
+  </div>
   )
 }

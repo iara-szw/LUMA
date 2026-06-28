@@ -1,0 +1,41 @@
+/* Basic styling for Mascota detail page */
+.mascota-pagina { font-family: Inter, system-ui, Arial; color: #222; }
+.mascota-hero { position: relative; height: 320px; display:flex; align-items:center; justify-content:center; background-size:cover; background-position:center; background-repeat:no-repeat; }
+.mascota-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.14), rgba(255,255,255,0)); pointer-events: none; }
+.btn-back, .btn-fav { position: absolute; top:16px; background: rgba(255,255,255,0.85); border:none; padding:8px 12px; border-radius:8px; cursor:pointer; z-index:2 }
+.btn-back { left:16px }
+.btn-fav { right:16px }
+
+.mascota-contenido { display:flex; gap:24px; padding:20px; max-width:1100px; margin: -60px auto 40px; }
+.perfil { background: white; padding:20px; border-radius:12px; box-shadow:0 6px 24px rgba(16,24,40,0.08); flex:1; }
+.recomendadas { width:360px; }
+
+.perfil-encabezado { display:flex; align-items:center; justify-content:space-between; gap:12px }
+.badges .badge { margin-left:8px; padding:6px 10px; border-radius:999px; background: rgba(0,0,0,0.06); font-size:14px }
+.badge.urgente { background: linear-gradient(90deg,#ff6b6b,#ff9a6b); color:white }
+
+.meta { display:flex; gap:12px; margin-top:8px; color:#666 }
+.atributos { display:flex; gap:12px; margin-top:16px }
+.atributo-card { flex:1; background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(250,250,250,0.8)); padding:12px; border-radius:10px; text-align:center }
+
+.sobre { margin-top:18px }
+.salud { margin-top:12px }
+.salud-badges { display:flex; gap:8px; margin-top:8px }
+.badge.ok { background:#e6ffef; color:#056a3b; padding:6px 10px; border-radius:999px }
+.badge.no { background:#fff2f2; color:#9b2c2c; padding:6px 10px; border-radius:999px }
+
+.refugio { margin-top:12px }
+.acciones { margin-top:18px }
+.btn-primario { background:#3b82f6; color:white; padding:10px 16px; border:none; border-radius:8px; cursor:pointer }
+
+.scroll-horizontal { display:flex; gap:12px; overflow-x:auto; padding:8px 0 }
+.tarjeta-mascota { min-width:160px; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(16,24,40,0.06); padding:8px; cursor:pointer }
+.tarjeta-mascota img { width:100%; height:110px; object-fit:cover; border-radius:8px }
+.badge-urgente { display:inline-block; margin-top:6px; background:#ff6b6b; color:white; padding:4px 8px; border-radius:999px; font-size:12px }
+
+.vacio { color:#666 }
+
+@media (max-width:900px) {
+  .mascota-contenido { flex-direction:column; margin-top:0 }
+  .recomendadas { width:100% }
+}
