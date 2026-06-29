@@ -101,22 +101,18 @@ export default function Perfil() {
         </div>
         <div className="resumen-grid">
           <div className="resumen-stat">
-            <span className="resumen-stat-icono">🐶</span>
             <p className="resumen-stat-valor">{stats.mascotas}</p>
             <p className="resumen-stat-label">Mascotas</p>
           </div>
           <div className="resumen-stat">
-            <span className="resumen-stat-icono">🙋</span>
             <p className="resumen-stat-valor">{stats.voluntarios}</p>
             <p className="resumen-stat-label">Voluntarios</p>
           </div>
           <div className="resumen-stat">
-            <span className="resumen-stat-icono">🏠</span>
             <p className="resumen-stat-valor">{stats.adopciones}</p>
             <p className="resumen-stat-label">Adopciones</p>
           </div>
           <div className="resumen-stat">
-            <span className="resumen-stat-icono">📅</span>
             <p className="resumen-stat-valor">{stats.eventos}</p>
             <p className="resumen-stat-label">Eventos</p>
           </div>
