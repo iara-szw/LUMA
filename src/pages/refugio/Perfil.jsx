@@ -77,15 +77,7 @@ export default function Perfil() {
           src={(refugio && refugio.portada_url) || usuario.foto_portada_url || '/assets/img/refugio_default.jpg'}
           alt={refugio?.nombre || usuario.nombre}
         />
-        <div className="perfil-refugio-avatar">
-          {(refugio && refugio.logo_url) ? (
-            <img src={refugio.logo_url} alt={refugio?.nombre || usuario.nombre} />
-          ) : (usuario.logo_url ? (
-            <img src={usuario.logo_url} alt={usuario.nombre} />
-          ) : (
-            <span className="perfil-refugio-avatar-icono">🐾</span>
-          ))}
-        </div>
+        
       </div>
 
       {/* Nombre y ubicación */}
