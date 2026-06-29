@@ -1,5 +1,5 @@
 .cargar-pagina {
-  background: #FFFFFF;
+  background: #FAFAFA;
   min-height: 100vh;
   padding: 20px 16px 40px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -56,7 +56,7 @@
   width: 130px;
   height: 130px;
   border-radius: 18px;
-  background: #FFFFFF;
+  background: #F2EEE3;
   display: flex;
   align-items: center;
   justify-content: center;
