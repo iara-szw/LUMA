@@ -137,7 +137,7 @@ export default function SolicitudesRefugio() {
           <span>Inicio</span>
         </button>
         <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
-          <img src="/assets/img/white-paw.png" alt="" style={{ width: '24px', height: '24px', opacity: 0.7 }} />
+          <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
           <span>Cargar</span>
         </button>
         <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/solicitudes')}>
