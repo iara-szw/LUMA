@@ -4,7 +4,7 @@ import { ESTADOS } from '../services/authService'
 export async function obtenerMascotasDeRefugio(refugioId) {
   return Supabase
     .from('mascotas')
-    .select('id, nombre, edad, foto_url, urgente, especie_id')
+    .select('id, nombre, edad, foto_url, urgente, especie_id, especies(nombre)')
     .eq('refugio_id', refugioId)
     .eq('estado_id', ESTADOS.publicada)
     .order('fecha_publicacion', { ascending: false })
@@ -59,4 +59,53 @@ export async function obtenerEstadisticasDeRefugio(refugioId) {
       eventos: eventosRes.count || 0,
     },
   }
+}
+
+export async function actualizarRefugio(refugioId, {
+  nombre,
+  descripcion,
+  telefono,
+  direccion,
+  ciudad,
+  provincia,
+  instagram,
+  logo_url,
+  portada_url,
+} = {}) {
+  const payload = {}
+  if (typeof nombre !== 'undefined') payload.nombre = nombre
+  if (typeof descripcion !== 'undefined') payload.descripcion = descripcion
+  if (typeof telefono !== 'undefined') payload.telefono = telefono
+  if (typeof direccion !== 'undefined') payload.direccion = direccion
+  if (typeof ciudad !== 'undefined') payload.ciudad = ciudad
+  if (typeof provincia !== 'undefined') payload.provincia = provincia
+  if (typeof instagram !== 'undefined') payload.instagram = instagram
+  if (typeof logo_url !== 'undefined') payload.logo_url = logo_url
+  if (typeof portada_url !== 'undefined') payload.portada_url = portada_url
+
+  // Actualizamos la tabla `refugios` para mantener compatibilidad con el perfil en sesión
+  return Supabase
+    .from('refugios')
+    .update(payload)
+    .eq('id', refugioId)
+}
+
+export async function obtenerRefugio(refugioId) {
+  const result = await Supabase
+    .from('refugios')
+    .select('*')
+    .eq('id', refugioId)
+    .maybeSingle()
+
+  // Si no existe fila en refugios, crearla vacía
+  if (!result.data && !result.error) {
+    const insertRes = await Supabase
+      .from('refugios')
+      .insert({ id: refugioId })
+      .select()
+      .single()
+    return insertRes
+  }
+
+  return result
 }

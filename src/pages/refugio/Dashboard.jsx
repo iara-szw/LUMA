@@ -7,6 +7,7 @@ import Animal from '../../../cliente/public/assets/img/animal.png'
 
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
+import { obtenerRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/dashboard.css'
 
 export default function Dashboard() {
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [eventos, setEventos] = useState([])
   const [cargandoMascotas, setCargandoMascotas] = useState(true)
   const [cargandoEventos, setCargandoEventos] = useState(true)
+  const [refugio, setRefugio] = useState(null)
 
   const publicadas = mascotas.length
   const urgentes = mascotas.filter(m => m.urgente).length
@@ -26,17 +28,18 @@ export default function Dashboard() {
 
     const obtenerDatos = async () => {
       try {
-        const [mascotasRes, eventosRes] = await Promise.all([
+        const [refugioRes, mascotasRes, eventosRes] = await Promise.all([
+          obtenerRefugio(usuario?.id),
           obtenerMascotasRefugio(usuario?.id),
           obtenerEventosProximos(),
         ])
         if (!activo) return
-        setMascotas(mascotasRes.data || [])
-        setEventos(eventosRes.data || [])
+        setRefugio(refugioRes?.data || null)
+        setMascotas(mascotasRes?.data || [])
+        setEventos(eventosRes?.data || [])
       } finally {
         if (activo) {
           setCargandoMascotas(false)
-
           setCargandoEventos(false)
         }
       }
@@ -46,7 +49,7 @@ export default function Dashboard() {
     return () => { activo = false }
   }, [usuario])
 
-  const nombreRefugio = usuario?.nombre || 'Refugio'
+  const nombreRefugio = refugio?.nombre || usuario?.nombre || 'Refugio'
 
   const formatearFecha = (fechaStr) => {
     if (!fechaStr) return { mes: '', dia: '' }
@@ -70,7 +73,7 @@ export default function Dashboard() {
           </button>
           <img
             className="dash-avatar"
-            src={usuario?.foto_perfil || '/assets/img/perfil_default.jpg'}
+            src={refugio?.logo_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'}
             alt="perfil"
             onClick={() => navigate('/refugio/perfil')}
           />
@@ -167,8 +170,8 @@ export default function Dashboard() {
                   : <div className="dash-tarjeta-placeholder" />
                 }
                 <h4>{m.nombre}</h4>
-                {m.especie && m.edad && (
-                  <span className="dash-tarjeta-detalle">{m.especie} · {m.edad}</span>
+                {(m.especies?.nombre || m.especie) && m.edad && (
+                  <span className="dash-tarjeta-detalle">{m.especies?.nombre || m.especie} · {m.edad}</span>
                 )}
               </article>
             ))

@@ -6,6 +6,7 @@ import {
   obtenerMascotasDeRefugio,
   obtenerSolicitudesDeRefugio,
   obtenerEstadisticasDeRefugio,
+  obtenerRefugio,
 } from '../../repositories/perfilRefugioRepository'
 import '../../styles/perfilRefugio.css'
 
@@ -16,6 +17,7 @@ export default function Perfil() {
   const [solicitudes, setSolicitudes] = useState([])
   const [stats, setStats] = useState({ mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
   const [cargandoDatos, setCargandoDatos] = useState(true)
+  const [refugio, setRefugio] = useState(null)
 
   useEffect(() => {
     if (!usuario) return
@@ -24,16 +26,18 @@ export default function Perfil() {
 
     const obtenerDatos = async () => {
       try {
-        const [mascotasRes, solicitudesRes, statsRes] = await Promise.all([
+        const [refugioRes, mascotasRes, solicitudesRes, statsRes] = await Promise.all([
+          obtenerRefugio(usuario.id),
           obtenerMascotasDeRefugio(usuario.id),
           obtenerSolicitudesDeRefugio(usuario.id),
           obtenerEstadisticasDeRefugio(usuario.id),
         ])
 
         if (!activo) return
-        setMascotas(mascotasRes.data || [])
-        setSolicitudes(solicitudesRes.data || [])
-        setStats(statsRes.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
+        setRefugio(refugioRes?.data || null)
+        setMascotas(mascotasRes?.data || [])
+        setSolicitudes(solicitudesRes?.data || [])
+        setStats(statsRes?.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
       } finally {
         if (activo) setCargandoDatos(false)
       }
@@ -61,7 +65,7 @@ export default function Perfil() {
           <button aria-label="Notificaciones" onClick={() => navigate('/refugio/dashboard')}>
             <img src="/assets/img/notificaciones.png" alt="" />
           </button>
-          <button aria-label="Configuración" onClick={() => navigate('/refugio/perfil')}>
+          <button aria-label="Configuración" onClick={() => navigate('/refugio/editarRefugio')}>
             <img src="/assets/img/configurar.png" alt="" />
           </button>
         </div>
@@ -70,25 +74,27 @@ export default function Perfil() {
       {/* Foto de portada + avatar superpuesto */}
       <div className="perfil-refugio-portada">
         <img
-          src={usuario.foto_portada_url || '/assets/img/refugio_default.jpg'}
-          alt={usuario.nombre}
+          src={(refugio && refugio.portada_url) || usuario.foto_portada_url || '/assets/img/refugio_default.jpg'}
+          alt={refugio?.nombre || usuario.nombre}
         />
         <div className="perfil-refugio-avatar">
-          {usuario.logo_url ? (
+          {(refugio && refugio.logo_url) ? (
+            <img src={refugio.logo_url} alt={refugio?.nombre || usuario.nombre} />
+          ) : (usuario.logo_url ? (
             <img src={usuario.logo_url} alt={usuario.nombre} />
           ) : (
             <span className="perfil-refugio-avatar-icono">🐾</span>
-          )}
+          ))}
         </div>
       </div>
 
       {/* Nombre y ubicación */}
       <section className="perfil-refugio-info">
-        <h2>{usuario.nombre}</h2>
-        {usuario.direccion && (
+        <h2>{refugio?.nombre || usuario.nombre}</h2>
+        {(refugio?.direccion || usuario.direccion) && (
           <p className="perfil-refugio-ubicacion">
             <img src="/assets/img/ubicacion.png" alt="" />
-            {usuario.direccion}
+            {refugio?.direccion || usuario.direccion}
           </p>
         )}
       </section>
@@ -127,7 +133,7 @@ export default function Perfil() {
       <section className="seccion-refugio">
         <h3 className="seccion-refugio-titulo">Sobre nosotros</h3>
         <p className="sobre-nosotros-texto">
-          {usuario.descripcion || 'Sin descripción todavía.'}
+          {refugio?.descripcion || usuario?.descripcion || 'Sin descripción todavía.'}
         </p>
       </section>
 
@@ -149,7 +155,7 @@ export default function Perfil() {
                 )}
                 <div className="tarjeta-mascota-refugio-info">
                   <h4>{m.nombre}</h4>
-                  <p>{m.especie}</p>
+                  <p>{m.especies?.nombre || m.especie}</p>
                   {m.urgente && (
                     <span className="badge-urgente-refugio">Urgente</span>
                   )}

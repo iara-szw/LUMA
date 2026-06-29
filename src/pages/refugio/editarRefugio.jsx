@@ -1,48 +1,68 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
-import { actualizarPerfil } from '../../repositories/usuarioRepository'
+import { actualizarRefugio } from '../../repositories/perfilRefugioRepository'
 import { subirAvatar } from '../../repositories/storageRepository'
 import '../../styles/editarUsuario.css'
 
-export default function EditarUsuario() {
+export default function EditarRefugio() {
   const navigate = useNavigate()
   const { refrescarUsuario, usuario } = usarAuth()
 
   const [loading, setLoading] = useState(false)
   const [nombre, setNombre] = useState(usuario?.nombre || '')
-  const [apellido, setApellido] = useState(usuario?.apellido || '')
+  const [descripcion, setDescripcion] = useState(usuario?.descripcion || '')
   const [telefono, setTelefono] = useState(usuario?.telefono || '')
+  const [direccion, setDireccion] = useState(usuario?.direccion || '')
   const [ciudad, setCiudad] = useState(usuario?.ciudad || '')
   const [provincia, setProvincia] = useState(usuario?.provincia || '')
-  const [biografia, setBiografia] = useState(usuario?.biografia || '')
-  const [fotoArchivo, setFotoArchivo] = useState(null)
-  const [previewFoto, setPreviewFoto] = useState(usuario?.foto_url || null)
+  const [instagram, setInstagram] = useState(usuario?.instagram || '')
+
+  const [logoArchivo, setLogoArchivo] = useState(null)
+  const [previewLogo, setPreviewLogo] = useState(usuario?.logo_url || null)
+
+  const [portadaArchivo, setPortadaArchivo] = useState(null)
+  const [previewPortada, setPreviewPortada] = useState(usuario?.portada_url || usuario?.foto_portada_url || null)
 
   async function guardarCambios(e) {
     e.preventDefault()
     setLoading(true)
 
     try {
-      let fotoUrl = null
-      if (fotoArchivo) {
-        const { url, error } = await subirAvatar(usuario.id, fotoArchivo)
+      let logoUrl = null
+      let portadaUrl = null
+
+      if (logoArchivo) {
+        const { url, error } = await subirAvatar(usuario.id, logoArchivo)
         if (error) {
-          alert('No se pudo subir la foto. Intenta de nuevo.')
+          alert('No se pudo subir el logo. Intenta de nuevo.')
           setLoading(false)
           return
         }
-        fotoUrl = url
+        logoUrl = url
       }
-      const payload = { nombre, apellido, telefono, ciudad, provincia, biografia }
-      if (fotoUrl) payload.foto_url = fotoUrl
-      const { error } = await actualizarPerfil(usuario.id, payload)
+
+      if (portadaArchivo) {
+        const { url, error } = await subirAvatar(usuario.id, portadaArchivo)
+        if (error) {
+          alert('No se pudo subir la foto de portada. Intenta de nuevo.')
+          setLoading(false)
+          return
+        }
+        portadaUrl = url
+      }
+
+      const payload = { nombre, descripcion, telefono, direccion, ciudad, provincia, instagram }
+      if (logoUrl) payload.logo_url = logoUrl
+      if (portadaUrl) payload.portada_url = portadaUrl
+
+      const { error } = await actualizarRefugio(usuario.id, payload)
 
       if (error) {
-        alert(error.message)
+        alert(error.message || 'Error al actualizar perfil')
       } else {
         await refrescarUsuario()
-        navigate('/adoptante/perfil')
+        navigate('/refugio/perfil')
       }
     } finally {
       setLoading(false)
@@ -57,25 +77,44 @@ export default function EditarUsuario() {
 
       <form onSubmit={guardarCambios}>
         <div className="foto-campo">
-          <label>Foto de perfil</label>
-          <div className="foto-preview" onClick={() => document.getElementById('foto-input').click()}>
-            {previewFoto ? (
-              <img src={previewFoto} alt="preview" />
+          <label>Logo</label>
+          <div className="foto-preview" onClick={() => document.getElementById('logo-input').click()}>
+            {previewLogo ? (
+              <img src={previewLogo} alt="preview" />
             ) : (
-              <div className="placeholder">Agregar foto</div>
+              <div className="placeholder">Agregar logo</div>
             )}
           </div>
-          <input id="foto-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+          <input id="logo-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
             const f = e.target.files?.[0]
             if (!f) return
-            setFotoArchivo(f)
-            setPreviewFoto(URL.createObjectURL(f))
+            setLogoArchivo(f)
+            setPreviewLogo(URL.createObjectURL(f))
           }} />
         </div>
+
+        <div className="foto-campo">
+          <label>Foto de portada</label>
+          <div className="foto-preview" onClick={() => document.getElementById('portada-input').click()}>
+            {previewPortada ? (
+              <img src={previewPortada} alt="preview" />
+            ) : (
+              <div className="placeholder">Agregar portada</div>
+            )}
+          </div>
+          <input id="portada-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+            const f = e.target.files?.[0]
+            if (!f) return
+            setPortadaArchivo(f)
+            setPreviewPortada(URL.createObjectURL(f))
+          }} />
+        </div>
+
         <div>
           <label htmlFor="email">Email</label>
           <input id="email" type="text" value={usuario?.email || ''} disabled />
         </div>
+
         <div>
           <label htmlFor="nombre">Nombre</label>
           <input
@@ -86,16 +125,16 @@ export default function EditarUsuario() {
             onChange={(e) => setNombre(e.target.value)}
           />
         </div>
+
         <div>
-          <label htmlFor="apellido">Apellido</label>
-          <input
-            id="apellido"
-            type="text"
-            required
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
+          <label htmlFor="descripcion">Descripción</label>
+          <textarea
+            id="descripcion"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
           />
         </div>
+
         <div>
           <label htmlFor="telefono">Teléfono</label>
           <input
@@ -105,6 +144,17 @@ export default function EditarUsuario() {
             onChange={(e) => setTelefono(e.target.value)}
           />
         </div>
+
+        <div>
+          <label htmlFor="direccion">Dirección</label>
+          <input
+            id="direccion"
+            type="text"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+          />
+        </div>
+
         <div>
           <label htmlFor="ciudad">Ciudad</label>
           <input
@@ -114,6 +164,7 @@ export default function EditarUsuario() {
             onChange={(e) => setCiudad(e.target.value)}
           />
         </div>
+
         <div>
           <label htmlFor="provincia">Provincia</label>
           <input
@@ -123,12 +174,14 @@ export default function EditarUsuario() {
             onChange={(e) => setProvincia(e.target.value)}
           />
         </div>
+
         <div>
-          <label htmlFor="biografia">Sobre mí</label>
-          <textarea
-            id="biografia"
-            value={biografia}
-            onChange={(e) => setBiografia(e.target.value)}
+          <label htmlFor="instagram">Instagram</label>
+          <input
+            id="instagram"
+            type="text"
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
           />
         </div>
 

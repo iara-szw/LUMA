@@ -3,10 +3,12 @@ import '../styles/loader.css'
 
 export default function Loader() {
   return (
+    <section className='cargando'>
     <div className="loader-dots" role="status" aria-label="Cargando">
       <span className="dot" />
       <span className="dot" />
       <span className="dot" />
     </div>
+    </section>
   )
 }

@@ -1,6 +1,7 @@
 /* Basic styling for Mascota detail page */
 .mascota-pagina { font-family: Inter, system-ui, Arial; color: #222; }
-.mascota-hero { position: relative; height: 320px; display:flex; align-items:center; justify-content:center; background-size:cover; background-position:center; background-repeat:no-repeat; }
+.mascota-hero { position: relative; height: 320px; display:flex; align-items:center; justify-content:center; background-size:cover; background-position:center; background-repeat:no-repeat;     border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;}
 .mascota-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.14), rgba(255,255,255,0)); pointer-events: none; }
 .btn-back, .btn-fav { position: absolute; top:16px; background: rgba(255,255,255,0.85); border:none; padding:8px 12px; border-radius:8px; cursor:pointer; z-index:2 }
 .btn-back { left:16px }

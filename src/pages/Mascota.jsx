@@ -77,9 +77,9 @@ export default function Mascota() {
             </div>
           </div>
           <div className="meta">
-            {mascota.edad && <span>{mascota.edad}</span>}
-            {mascota.tamaño && <span>{mascota.tamaño}</span>}
-            {mascota.peso && <span>{mascota.peso} kg</span>}
+            {mascota.edad && <span> {mascota.edad}</span>}
+            {mascota.tamaño && <span> {mascota.tamaño}</span>}
+            {mascota.peso && <span> {mascota.peso} kg</span>}
           </div>
 
           <div className="atributos">
