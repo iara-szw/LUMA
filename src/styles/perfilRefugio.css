@@ -15,8 +15,11 @@
   font-family: 'Segoe UI', sans-serif;
   color: #2c2c2a;
   padding-bottom: 80px;
-  width: 160%;
-  margin-left: -30%;
+  max-width: 430px;
+  width: 100%;
+  margin: 0 auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* ── Header flotante ── */
@@ -83,12 +86,45 @@
   object-fit: cover;
 }
 
+/* ── Avatar / logo del refugio, superpuesto sobre el borde de la portada ── */
+.perfil-refugio-avatar {
+  position: absolute;
+  bottom: -28px;
+  left: 16px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.perfil-refugio-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.perfil-refugio-avatar-icono {
+  font-size: 26px;
+}
+
 /* ── Info principal ── */
 .perfil-refugio-info {
   background: #FAFAFA;
   padding: 18px 16px 16px;
   border-top:1px solid #e8e4dc;
-    border-radius: 35px 35px 0 0;
+  position: relative;
+  margin-top: -20px;
+  z-index: 0;
+  width: 100%;
+  margin-top: -8%;
+    border-radius: 35px 35px 0px 0px;
 
 }
 
