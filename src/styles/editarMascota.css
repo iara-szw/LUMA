@@ -1,0 +1,18 @@
+select{
+        border-radius: 15px;
+    padding: 2.5%;
+    border: none;
+}
+
+input[type="checkbox"] {
+    width: 10%;
+    padding: 4%;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+label{
+display: flex;
+    align-items: center;
+    gap: 10px;
+}

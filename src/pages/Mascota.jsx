@@ -10,10 +10,13 @@ import { obtenerMascotaPorId, obtenerOtrasMascotas } from '../repositories/masco
 export default function Mascota() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { usuario, esRefugio } = usarAuth()
+  const { usuario, esRefugio } = usarAuth()   // ✅ primero obtenemos usuario y esRefugio
   const [mascota, setMascota] = useState(null)
   const [recomendadas, setRecomendadas] = useState([])
   const [cargando, setCargando] = useState(true)
+
+  // ✅ calcular esDueño después de tener usuario y mascota
+  const esDueño = esRefugio && usuario && mascota && usuario.id === mascota.refugio_id
 
   useEffect(() => {
     let activo = true
@@ -47,15 +50,21 @@ export default function Mascota() {
 
   const handleAplicar = () => {
     if (esRefugio) {
+      if (usuario.id === mascota.refugio_id) {
+        return navigate(`/refugio/editarMascota/${mascota.id}`)
+      }
       return navigate('/refugio/perfil')
     }
 
-    if (!usuario) return navigate('/login')
-    // Mock apply flow: navigate to a placeholder form or show modal
+    if (!usuario) {
+      return navigate('/login')
+    }
+
     navigate(`/adoptante/solicitud/${mascota.id}`)
   }
 
   return (
+   
     <div className="mascota-pagina">
       <header
         className="mascota-hero"
@@ -115,12 +124,22 @@ export default function Mascota() {
             <h4>Refugio</h4>
             <p>{mascota.refugios?.nombre || mascota.refugio_nombre || '—'}</p>
           </div>
+        <div className="mascota-pagina">
+      <div className="acciones">
+        {!esRefugio && (
+          <button className="btn-primario" onClick={handleAplicar}>
+            Solicitar adopción
+          </button>
+        )}
 
-          <div className="acciones">
-            <button className="btn-primario" onClick={handleAplicar}>
-              {esRefugio ? 'Editar perfil' : 'Solicitar adopción'}
-            </button>
-          </div>
+        {esDueño && (
+          <button className="btn-primario" onClick={() => navigate(`/refugio/editarMascota/${mascota.id}`)}>
+            Editar mascota
+          </button>
+        )}
+      </div>
+
+    </div>
         </section>
 
         <aside className="recomendadas">
@@ -149,7 +168,7 @@ export default function Mascota() {
             <span>Inicio</span>
           </button>
           <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
-            <img src="/assets/img/white-paw.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.7 }} />
+          <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
             <span>Cargar</span>
           </button>
           <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>

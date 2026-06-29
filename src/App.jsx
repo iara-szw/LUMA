@@ -10,6 +10,7 @@ import Registro from './pages/auth/Registro'
 import Dashboard from './pages/refugio/Dashboard.jsx'
 import PerfilRefugio from './pages/refugio/Perfil.jsx'
 import CargarMascota from './pages/refugio/CargarMascota.jsx'
+import EditarMascota from './pages/refugio/editarMascota.jsx'
 import EditarRefugio from './pages/refugio/editarRefugio.jsx'
 import SolicitudesRefugio from './pages/refugio/Solicitudes.jsx'
 import Explorar from './pages/adoptante/Explorar.jsx'
@@ -82,6 +83,7 @@ export default function App() {
               </RutaProtegida>
             }
           />
+           
           <Route
             path="/refugio/editarRefugio"
             element={
@@ -129,6 +131,15 @@ export default function App() {
               </RutaProtegida>
             }
           />
+          <Route
+            path="/refugio/editarMascota/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <EditarMascota />
+              </RutaProtegida>
+            }
+          />
+
           <Route path="/mascota/:id" element={<Mascota />} />
 
           <Route path="/inicio" element={<Navigate to="/" replace />} />

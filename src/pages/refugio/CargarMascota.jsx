@@ -219,7 +219,7 @@ export default function CargarMascota() {
         </section>
 
         {errorEnvio && <p className="cargar-error cargar-error--general">{errorEnvio}</p>}
-        {exito && <p className="cargar-exito">Mascota publicada âœ“</p>}
+        {exito && <p className="cargar-exito">Mascota publicada“</p>}
 
         <button type="submit" className="cargar-btn-guardar" disabled={guardando}>
           {guardando ? 'Guardando...' : 'Publicar mascota'}
