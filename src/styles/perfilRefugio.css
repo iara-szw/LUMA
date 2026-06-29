@@ -85,16 +85,18 @@
 
 /* ── Info principal ── */
 .perfil-refugio-info {
-  background: #F7F3EA;
+  background: #FAFAFA;
   padding: 18px 16px 16px;
-  border-bottom: 1px solid #e8e4dc;
+  border-top:1px solid #e8e4dc;
+    border-radius: 35px 35px 0 0;
+
 }
 
 .perfil-refugio-info h2 {
   font-size: 22px;
   font-weight: 800;
   color: #3d2e1e;
-  margin: 0 0 6px;
+  margin: 1% 5% 6px;
 }
 
 .perfil-refugio-ubicacion {
@@ -115,10 +117,12 @@
 /* ── Secciones genéricas ── */
 .seccion-refugio {
   background: #F7F3EA;
-  margin: 10px 12px;
+  margin: 5% 7%;
   border-radius: 16px;
   padding: 16px;
-  border: 1px solid #e8e4dc;
+  border: 0px solid #e8e4dc;
+      box-shadow: 0 5px 10px rgba(92, 74, 58, 0.1);
+
 }
 
 .seccion-refugio-titulo {
@@ -160,8 +164,8 @@
 
 .resumen-stat {
   background: #f9f8f5;
-  border: 1px solid #e8e4dc;
-  border-radius: 12px;
+  border: 0px solid #e8e4dc;
+  border-radius: 20px;
   padding: 14px 12px;
 }
 
