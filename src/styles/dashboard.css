@@ -265,6 +265,7 @@ overflow-x: hidden;
 
 .dash-accion-btn--verde {
   background: var(--dash-verde);
+  width:25%;
   color: #ffffff;
 }
 

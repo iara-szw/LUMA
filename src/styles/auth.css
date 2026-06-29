@@ -30,7 +30,7 @@
   border-radius: var(--radio-card);
   box-shadow: var(--sombra-card);
   padding: 2.75rem 2.25rem 2.25rem;
-  width: 100%;
+  width: 80%;
   max-width: 380px;
   display: flex;
   flex-direction: column;

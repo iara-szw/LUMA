@@ -12,7 +12,7 @@
 
 .perfil-encabezado { display:flex; align-items:center; justify-content:space-between; gap:12px }
 .badges .badge { margin-left:8px; padding:6px 10px; border-radius:999px; background: rgba(0,0,0,0.06); font-size:14px }
-.badge.urgente { background: linear-gradient(90deg,#ff6b6b,#ff9a6b); color:white }
+.badge.urgente { background-color: #ff6b6b; color:white }
 
 .meta { display:flex; gap:12px; margin-top:8px; color:#666 }
 .atributos { display:flex; gap:12px; margin-top:16px }
@@ -26,7 +26,6 @@
 
 .refugio { margin-top:12px }
 .acciones { margin-top:18px }
-.btn-primario { background:#3b82f6; color:white; padding:10px 16px; border:none; border-radius:8px; cursor:pointer }
 
 .scroll-horizontal { display:flex; gap:12px; overflow-x:auto; padding:8px 0 }
 .tarjeta-mascota { min-width:160px; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(16,24,40,0.06); padding:8px; cursor:pointer }

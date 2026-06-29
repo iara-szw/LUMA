@@ -418,6 +418,7 @@ body {
     border-radius: 50px;
     padding: 0.7rem 1.5rem;
     font-family: var(--font);
+    border:none;
     font-size: 0.9375rem;
     font-weight: 700;
     text-decoration: none;
