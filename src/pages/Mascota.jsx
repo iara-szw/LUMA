@@ -64,7 +64,7 @@ export default function Mascota() {
         }}
       >
         <button className="btn-back" onClick={() => navigate(-1)}>←</button>
-        <button className="btn-fav" aria-label="Favorito">★</button>
+        <button className="btn-fav" aria-label="Favorito"><img src="/assets/img/corazon.png" alt="Favorito" /></button>
       </header>
 
       <main className="mascota-contenido">

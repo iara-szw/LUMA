@@ -1,71 +1,105 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
-import { actualizarRefugio } from '../../repositories/perfilRefugioRepository'
+import { actualizarRefugio, obtenerRefugio } from '../../repositories/perfilRefugioRepository'
 import { subirAvatar } from '../../repositories/storageRepository'
 import '../../styles/editarUsuario.css'
 
 export default function EditarRefugio() {
-  const navigate = useNavigate()
-  const { refrescarUsuario, usuario } = usarAuth()
+  const navigate = useNavigate();
+  const { refrescarUsuario, usuario } = usarAuth();
+  const [loading, setLoading] = useState(false);
+  const [refugio, setRefugio] = useState(null);
 
-  const [loading, setLoading] = useState(false)
-  const [nombre, setNombre] = useState(usuario?.nombre || '')
-  const [descripcion, setDescripcion] = useState(usuario?.descripcion || '')
-  const [telefono, setTelefono] = useState(usuario?.telefono || '')
-  const [direccion, setDireccion] = useState(usuario?.direccion || '')
-  const [ciudad, setCiudad] = useState(usuario?.ciudad || '')
-  const [provincia, setProvincia] = useState(usuario?.provincia || '')
-  const [instagram, setInstagram] = useState(usuario?.instagram || '')
+  const [logoArchivo, setLogoArchivo] = useState(null);
+  const [previewLogo, setPreviewLogo] = useState(null);
 
-  const [logoArchivo, setLogoArchivo] = useState(null)
-  const [previewLogo, setPreviewLogo] = useState(usuario?.logo_url || null)
+  const [portadaArchivo, setPortadaArchivo] = useState(null);
+  const [previewPortada, setPreviewPortada] = useState(null);
 
-  const [portadaArchivo, setPortadaArchivo] = useState(null)
-  const [previewPortada, setPreviewPortada] = useState(usuario?.portada_url || usuario?.foto_portada_url || null)
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [ciudad, setCiudad] = useState('');
+  const [provincia, setProvincia] = useState('');
+  const [instagram, setInstagram] = useState('');
+
+  const obtenerDatos = async () => {
+    setLoading(true);
+    try {
+      const [refugioRes] = await Promise.all([
+        obtenerRefugio(usuario.id),
+      ]);
+      setRefugio(refugioRes?.data || null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (usuario?.id) {
+      obtenerDatos();
+    }
+  }, [usuario?.id]);
+
+  // ✅ Sincronizar estados cuando se cargue el refugio
+  useEffect(() => {
+    if (refugio) {
+      setNombre(refugio.nombre || '');
+      setDescripcion(refugio.descripcion || '');
+      setTelefono(refugio.telefono || '');
+      setDireccion(refugio.direccion || '');
+      setCiudad(refugio.ciudad || '');
+      setProvincia(refugio.provincia || '');
+      setInstagram(refugio.instagram || '');
+      setPreviewLogo(refugio.logo_url || null);
+      setPreviewPortada(refugio.portada_url || refugio.foto_portada_url || null);
+    }
+  }, [refugio]);
 
   async function guardarCambios(e) {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      let logoUrl = null
-      let portadaUrl = null
+      let logoUrl = null;
+      let portadaUrl = null;
 
       if (logoArchivo) {
-        const { url, error } = await subirAvatar(usuario.id, logoArchivo)
+        const { url, error } = await subirAvatar(usuario.id, logoArchivo);
         if (error) {
-          alert('No se pudo subir el logo. Intenta de nuevo.')
-          setLoading(false)
-          return
+          alert('No se pudo subir el logo. Intenta de nuevo.');
+          setLoading(false);
+          return;
         }
-        logoUrl = url
+        logoUrl = url;
       }
 
       if (portadaArchivo) {
-        const { url, error } = await subirAvatar(usuario.id, portadaArchivo)
+        const { url, error } = await subirAvatar(usuario.id, portadaArchivo);
         if (error) {
-          alert('No se pudo subir la foto de portada. Intenta de nuevo.')
-          setLoading(false)
-          return
+          alert('No se pudo subir la foto de portada. Intenta de nuevo.');
+          setLoading(false);
+          return;
         }
-        portadaUrl = url
+        portadaUrl = url;
       }
 
-      const payload = { nombre, descripcion, telefono, direccion, ciudad, provincia, instagram }
-      if (logoUrl) payload.logo_url = logoUrl
-      if (portadaUrl) payload.portada_url = portadaUrl
+      const payload = { nombre, descripcion, telefono, direccion, ciudad, provincia, instagram };
+      if (logoUrl) payload.logo_url = logoUrl;
+      if (portadaUrl) payload.portada_url = portadaUrl;
 
-      const { error } = await actualizarRefugio(usuario.id, payload)
+      const { error } = await actualizarRefugio(usuario.id, payload);
 
       if (error) {
-        alert(error.message || 'Error al actualizar perfil')
+        alert(error.message || 'Error al actualizar perfil');
       } else {
-        await refrescarUsuario()
-        navigate('/refugio/perfil')
+        await refrescarUsuario();
+        navigate('/refugio/perfil');
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -76,6 +110,7 @@ export default function EditarRefugio() {
       </header>
 
       <form onSubmit={guardarCambios}>
+        {/* Logo */}
         <div className="foto-campo">
           <label>Logo</label>
           <div className="foto-preview" onClick={() => document.getElementById('logo-input').click()}>
@@ -86,13 +121,14 @@ export default function EditarRefugio() {
             )}
           </div>
           <input id="logo-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
-            const f = e.target.files?.[0]
-            if (!f) return
-            setLogoArchivo(f)
-            setPreviewLogo(URL.createObjectURL(f))
+            const f = e.target.files?.[0];
+            if (!f) return;
+            setLogoArchivo(f);
+            setPreviewLogo(URL.createObjectURL(f));
           }} />
         </div>
 
+        {/* Portada */}
         <div className="foto-campo">
           <label>Foto de portada</label>
           <div className="foto-preview" onClick={() => document.getElementById('portada-input').click()}>
@@ -103,86 +139,53 @@ export default function EditarRefugio() {
             )}
           </div>
           <input id="portada-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
-            const f = e.target.files?.[0]
-            if (!f) return
-            setPortadaArchivo(f)
-            setPreviewPortada(URL.createObjectURL(f))
+            const f = e.target.files?.[0];
+            if (!f) return;
+            setPortadaArchivo(f);
+            setPreviewPortada(URL.createObjectURL(f));
           }} />
         </div>
 
+        {/* Email */}
         <div>
           <label htmlFor="email">Email</label>
           <input id="email" type="text" value={usuario?.email || ''} disabled />
         </div>
 
+        {/* Campos de texto */}
         <div>
           <label htmlFor="nombre">Nombre</label>
-          <input
-            id="nombre"
-            type="text"
-            required
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-          />
+          <input id="nombre" type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="descripcion">Descripción</label>
-          <textarea
-            id="descripcion"
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-          />
+          <textarea id="descripcion" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="telefono">Teléfono</label>
-          <input
-            id="telefono"
-            type="text"
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-          />
+          <input id="telefono" type="text" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="direccion">Dirección</label>
-          <input
-            id="direccion"
-            type="text"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
-          />
+          <input id="direccion" type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="ciudad">Ciudad</label>
-          <input
-            id="ciudad"
-            type="text"
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
-          />
+          <input id="ciudad" type="text" value={ciudad} onChange={(e) => setCiudad(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="provincia">Provincia</label>
-          <input
-            id="provincia"
-            type="text"
-            value={provincia}
-            onChange={(e) => setProvincia(e.target.value)}
-          />
+          <input id="provincia" type="text" value={provincia} onChange={(e) => setProvincia(e.target.value)} />
         </div>
 
         <div>
           <label htmlFor="instagram">Instagram</label>
-          <input
-            id="instagram"
-            type="text"
-            value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
-          />
+          <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} />
         </div>
 
         <button type="submit" disabled={loading}>
@@ -190,5 +193,5 @@ export default function EditarRefugio() {
         </button>
       </form>
     </div>
-  )
+  );
 }

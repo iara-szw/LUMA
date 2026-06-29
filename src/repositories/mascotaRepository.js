@@ -141,3 +141,38 @@ export async function obtenerOtrasMascotas(excluirId, refugioId, cantidad = 6) {
     return { data: null, error: err }
   }
 }
+
+export async function actualizarMascota(id, datos) {
+  if (!id) {
+    return {
+      data: null,
+      error: { message: 'Id faltante' }
+    }
+  }
+
+  const payload = {
+    nombre: datos.nombre,
+    edad: datos.edad,
+    sexo: datos.sexo,
+    tamaño: datos.tamaño,
+    descripcion: datos.descripcion,
+    vacunado: datos.vacunado,
+    castrado: datos.castrado,
+    desparasitado: datos.desparasitado,
+    problemas_salud: datos.problemas_salud,
+    detalle_salud: datos.detalle_salud,
+    urgente: datos.urgente,
+    publicado: datos.publicado,
+    fecha_rescate: datos.fecha_rescate,
+    fecha_adopcion: datos.fecha_adopcion,
+    requisitos: datos.requisitos,
+    foto_url: datos.foto_url
+  }
+
+  return Supabase
+    .from('mascotas')
+    .update(payload)
+    .eq('id', id)
+    .select()
+    .single()
+}
