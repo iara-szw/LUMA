@@ -45,6 +45,12 @@
   right: 16px
 }
 
+.btn-fav img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
 .mascota-contenido {
   display: flex;
   gap: 24px;
@@ -105,6 +111,8 @@
 }
 
 .atributo-card {
+      display: flex;
+    flex-direction: column;
   flex: 1;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(250, 250, 250, 0.8));
   padding: 12px;

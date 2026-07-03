@@ -53,3 +53,31 @@ export async function insertarRolUsuario(uid, rolId) {
     .from('usuarios_roles')
     .insert({ usuario_id: uid, rol_id: rolId })
 }
+
+// Favoritos (guardados)
+export async function agregarFavorito(usuarioId, mascotaId) {
+  return Supabase
+    .from('favoritos')
+    .insert({ usuario_id: usuarioId, mascota_id: mascotaId, fecha: new Date().toISOString() })
+    .select()
+    .single()
+}
+
+export async function eliminarFavorito(usuarioId, mascotaId) {
+  return Supabase
+    .from('favoritos')
+    .delete()
+    .eq('usuario_id', usuarioId)
+    .eq('mascota_id', mascotaId)
+    .select()
+    .maybeSingle()
+}
+
+export async function esFavorito(usuarioId, mascotaId) {
+  return Supabase
+    .from('favoritos')
+    .select('id')
+    .eq('usuario_id', usuarioId)
+    .eq('mascota_id', mascotaId)
+    .maybeSingle()
+}

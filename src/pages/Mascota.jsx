@@ -6,6 +6,7 @@ import { usarAuth } from '../hooks/UsarAuth'
 import Footer from '../components/Footer'
 import Loader from '../components/Loader'
 import { obtenerMascotaPorId, obtenerOtrasMascotas } from '../repositories/mascotaRepository'
+import { agregarFavorito, eliminarFavorito, esFavorito } from '../repositories/usuarioRepository'
 
 export default function Mascota() {
   const { id } = useParams()
@@ -13,7 +14,11 @@ export default function Mascota() {
   const { usuario, esRefugio } = usarAuth()   // ✅ primero obtenemos usuario y esRefugio
   const [mascota, setMascota] = useState(null)
   const [recomendadas, setRecomendadas] = useState([])
+    const [refugio, setRefugio] = useState(null)
+
   const [cargando, setCargando] = useState(true)
+  const [favorito, setFavorito] = useState(false)
+  const [cargandoFavorito, setCargandoFavorito] = useState(false)
 
   // ✅ calcular esDueño después de tener usuario y mascota
   const esDueño = esRefugio && usuario && mascota && usuario.id === mascota.refugio_id
@@ -26,8 +31,9 @@ export default function Mascota() {
         const res = await obtenerMascotaPorId(id)
         if (!activo) return
         setMascota(res.data || null)
+        setRefugio(res.data?.refugios || res.data?.refugio || null)
 
-        const refugioId = res.data?.refugio_id || res.data?.refugios?.id
+        const refugioId = res.data?.refugio_id || res.data?.refugios?.id || res.data?.refugio?.id
         const otras = await obtenerOtrasMascotas(id, refugioId, 6)
         if (!activo) return
         setRecomendadas(otras.data || [])
@@ -39,6 +45,24 @@ export default function Mascota() {
     cargar()
     return () => { activo = false }
   }, [id])
+
+  // comprobar si la mascota está en guardados cuando tengamos usuario y mascota
+  useEffect(() => {
+    let vivo = true
+    const check = async () => {
+      if (!usuario || !mascota) return setFavorito(false)
+      try {
+        const res = await esFavorito(usuario.id, mascota.id)
+        if (!vivo) return
+        const existe = Array.isArray(res.data) ? res.data.length > 0 : (res.data ? true : false)
+        setFavorito(!!existe)
+      } catch (err) {
+        setFavorito(false)
+      }
+    }
+    check()
+    return () => { vivo = false }
+  }, [usuario, mascota])
 
   if (cargando) return <Loader />
   if (!mascota) return (
@@ -73,7 +97,42 @@ export default function Mascota() {
         }}
       >
         <button className="btn-back" onClick={() => navigate(-1)}>←</button>
-        <button className="btn-fav" aria-label="Favorito"><img src="/assets/img/corazon.png" alt="Favorito" /></button>
+        <button
+          className={`btn-fav ${favorito ? 'activo' : ''}`}
+          aria-label="Favorito"
+          aria-pressed={favorito}
+          onClick={async () => {
+            if (!usuario) return navigate('/login')
+            if (cargandoFavorito) return
+            setCargandoFavorito(true)
+            try {
+              if (favorito) {
+                const res = await eliminarFavorito(usuario.id, mascota.id)
+                if (res.error) {
+                  console.error('Error eliminando favorito:', res.error)
+                } else {
+                  setFavorito(false)
+                }
+              } else {
+                const res = await agregarFavorito(usuario.id, mascota.id)
+                if (res.error) {
+                  console.error('Error agregando favorito:', res.error)
+                } else {
+                  setFavorito(true)
+                }
+              }
+            } catch (err) {
+              console.error('Error toggle favorito', err)
+            } finally {
+              setCargandoFavorito(false)
+            }
+          }}
+        >
+          <img
+            src={favorito ? '/assets/img/corazon-seleccionado.png' : '/assets/img/corazon.png'}
+            alt="Favorito"
+          />
+        </button>
       </header>
 
       <main className="mascota-contenido">
@@ -85,16 +144,10 @@ export default function Mascota() {
               {mascota.urgente && <span className="badge urgente">Urgente</span>}
             </div>
           </div>
-          <div className="meta">
-            {mascota.edad && <span> {mascota.edad}</span>}
-            {mascota.tamaño && <span> {mascota.tamaño}</span>}
-            {mascota.peso && <span> {mascota.peso} kg</span>}
-          </div>
-
           <div className="atributos">
             <div className="atributo-card">
-              <strong>Peso</strong>
-              <span>{mascota.peso || '—'}</span>
+              <strong>Edad</strong>
+              <span>{mascota.edad || '—'}</span>
             </div>
             <div className="atributo-card">
               <strong>Tamaño</strong>
@@ -122,7 +175,7 @@ export default function Mascota() {
 
           <div className="refugio">
             <h4>Refugio</h4>
-            <p>{mascota.refugios?.nombre || mascota.refugio_nombre || '—'}</p>
+            <p>{refugio?.nombre || '—'}</p>
           </div>
         <div className="mascota-pagina">
       <div className="acciones">

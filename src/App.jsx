@@ -117,11 +117,7 @@ export default function App() {
           {/* Detalle de mascota (público y rutas con rol) */}
           <Route
             path="/adoptante/mascota/:id"
-            element={
-              <RutaProtegida rol="adoptante">
-                <Mascota />
-              </RutaProtegida>
-            }
+            element={<Mascota />}
           />
           <Route
             path="/refugio/mascota/:id"

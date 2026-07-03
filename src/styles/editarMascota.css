@@ -8,9 +8,13 @@ input[type="checkbox"] {
     width: 10%;
     padding: 4%;
     border-radius: 4px;
+    border:2px solid #b8956a;
     box-sizing: border-box;
 }
 
+input[type="checkbox"]:checked{
+   background-color: #b8956a    ;
+}
 label{
 display: flex;
     align-items: center;

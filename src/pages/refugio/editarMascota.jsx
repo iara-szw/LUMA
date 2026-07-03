@@ -151,7 +151,7 @@ console.log({
 
         <label>Edad</label>
         <input value={edad} onChange={(e) => setEdad(e.target.value)} />
-
+            
         <label>Sexo</label>
         <select value={sexo} onChange={(e) => setSexo(e.target.value)}>
           <option value="">Seleccionar</option>
