@@ -6,6 +6,7 @@ import { usarAuth } from '../hooks/UsarAuth'
 import Footer from '../components/Footer'
 import Loader from '../components/Loader'
 import { obtenerMascotaPorId, obtenerOtrasMascotas } from '../repositories/mascotaRepository'
+import { obtenerRefugioPorMascota } from '../repositories/refugioRepository'
 import { agregarFavorito, eliminarFavorito, esFavorito } from '../repositories/usuarioRepository'
 
 export default function Mascota() {
@@ -30,10 +31,25 @@ export default function Mascota() {
       try {
         const res = await obtenerMascotaPorId(id)
         if (!activo) return
-        setMascota(res.data || null)
-        setRefugio(res.data?.refugios || res.data?.refugio || null)
 
-        const refugioId = res.data?.refugio_id || res.data?.refugios?.id || res.data?.refugio?.id
+        const mascotaData = res.data || null
+        const refugioAnidado = Array.isArray(mascotaData?.refugios)
+          ? mascotaData.refugios[0]
+          : mascotaData?.refugios || mascotaData?.refugio || null
+
+        setMascota(mascotaData)
+        setRefugio(refugioAnidado)
+
+        const refugioId = mascotaData?.refugio_id || refugioAnidado?.id || null
+
+        if (!refugioAnidado?.nombre && refugioId) {
+          const refugioRes = await obtenerRefugioPorMascota(id)
+          if (!activo) return
+          if (refugioRes?.data) {
+            setRefugio(refugioRes.data)
+          }
+        }
+
         const otras = await obtenerOtrasMascotas(id, refugioId, 6)
         if (!activo) return
         setRecomendadas(otras.data || [])
@@ -71,6 +87,10 @@ export default function Mascota() {
       <button onClick={() => navigate(-1)}>Volver</button>
     </div>
   )
+
+  const nombreRefugio = Array.isArray(mascota?.refugios)
+    ? mascota.refugios[0]?.nombre
+    : mascota?.refugios?.nombre || mascota?.refugio?.nombre || refugio?.nombre || '—'
 
   const handleAplicar = () => {
     if (esRefugio) {
@@ -175,7 +195,7 @@ export default function Mascota() {
 
           <div className="refugio">
             <h4>Refugio</h4>
-            <p>{refugio?.nombre || '—'}</p>
+            <p>{nombreRefugio}</p>
           </div>
         <div className="mascota-pagina">
       <div className="acciones">
@@ -220,9 +240,9 @@ export default function Mascota() {
             <img src="/assets/img/home.png" alt="Inicio" />
             <span>Inicio</span>
           </button>
-          <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
+          <button className="nav-item-refugio" >
           <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
-            <span>Cargar</span>
+            <span>Animales</span>
           </button>
           <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
             <img src="/assets/img/solicitudes.png" alt="Solicitudes" />

@@ -225,9 +225,9 @@ export default function Dashboard() {
           <img src="/assets/img/home.png" alt="Inicio" />
           <span>Inicio</span>
         </button>
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/cargarMascota')}>
+        <button className="nav-item-refugio" >
           <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
-          <span>Cargar</span>
+          <span>Animales</span>
         </button>
         <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
           <img src="/assets/img/solicitudes.png" alt="Solicitudes" />

@@ -6,14 +6,18 @@ import Buscador from '../components/Buscador'
 import Footer from '../components/Footer'
 import { obtenerMascotasRecientes } from '../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../repositories/eventoRepository'
+import { agregarFavorito, eliminarFavorito } from '../repositories/usuarioRepository'
+import { obtenerGuardadosDeUsuario } from '../repositories/perfilRepository'
 
 export default function Home() {
   const navigate = useNavigate()
   const { usuario } = usarAuth()
   const [mascotas, setMascotas] = useState([])
   const [eventos, setEventos] = useState([])
+  const [favoritos, setFavoritos] = useState(new Set())
   const [cargandoMascotas, setCargandoMascotas] = useState(true)
   const [cargandoEventos, setCargandoEventos] = useState(true)
+  const [cargandoFavoritos, setCargandoFavoritos] = useState(false)
 
   useEffect(() => {
     let activo = true
@@ -36,11 +40,45 @@ export default function Home() {
       }
     }
 
+    const obtenerFavoritos = async () => {
+      if (!usuario) return setFavoritos(new Set())
+      const guardadosRes = await obtenerGuardadosDeUsuario(usuario.id)
+      if (!activo) return
+      const ids = new Set((guardadosRes.data || []).map(item => item.mascotas?.id).filter(Boolean))
+      setFavoritos(ids)
+    }
+
     obtenerDatos()
+    obtenerFavoritos()
     return () => { activo = false }
-  }, [])
+  }, [usuario])
 
   const nombre = usuario?.nombre?.split(' ')[0]
+
+  const toggleFavorito = async (mascotaId) => {
+    if (!usuario) return navigate('/login')
+    if (cargandoFavoritos) return
+    setCargandoFavoritos(true)
+    try {
+      if (favoritos.has(mascotaId)) {
+        const res = await eliminarFavorito(usuario.id, mascotaId)
+        if (!res.error) {
+          const next = new Set(favoritos)
+          next.delete(mascotaId)
+          setFavoritos(next)
+        }
+      } else {
+        const res = await agregarFavorito(usuario.id, mascotaId)
+        if (!res.error) {
+          const next = new Set(favoritos)
+          next.add(mascotaId)
+          setFavoritos(next)
+        }
+      }
+    } finally {
+      setCargandoFavoritos(false)
+    }
+  }
 
   return (
     <div className="pagina-inicio">
@@ -95,6 +133,17 @@ export default function Home() {
                 className="tarjeta-mascota"
                 onClick={() => navigate(`/adoptante/mascota/${m.id}`)}
               >
+                <button
+                  type="button"
+                  className="tarjeta-favorito"
+                  aria-label={`${favoritos.has(m.id) ? 'Remover' : 'Guardar'} ${m.nombre}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleFavorito(m.id)
+                  }}
+                >
+                  <img src={favoritos.has(m.id) ? '/assets/img/corazon-seleccionado.png' : '/assets/img/corazon.png'} alt="" />
+                </button>
                 {m.foto_url && <img src={m.foto_url} alt={m.nombre} />}
                 <h4>{m.nombre}</h4>
                 {m.edad && <span>{m.edad}</span>}

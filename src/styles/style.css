@@ -18,72 +18,38 @@ img { max-width: 100%; height: auto; display: block; }
   background: var(--fondo);
   display: flex;
   flex-direction: column;
-  padding: 1.25rem 1.25rem 5rem;
+  padding: 0 0 5rem;
   max-width: 420px;
   margin: 0 auto;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font);
 }
 
-.exp-header {
+.exp-seccion-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.exp-logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--marron-dark);
-  letter-spacing: 0.08em;
-}
-
-.exp-logo span { color: var(--sage); }
-
-.exp-header-icons {
-  display: flex;
-  align-items: center;
   gap: 0.75rem;
+  padding: 0 1.25rem 0.85rem;
 }
 
-.exp-campana { font-size: 1.2rem; cursor: pointer; }
-
-.exp-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--marron);
-}
-
-.exp-buscador {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--blanco);
-  border-radius: 999px;
-  padding: 0.65rem 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-
-.exp-buscador input {
+.exp-ver-mas {
+  font-size: 0.8rem;
+  color: var(--verde-oscuro);
+  background: none;
   border: none;
-  outline: none;
-  background: transparent;
-  font-size: 0.9rem;
-  color: var(--texto);
-  width: 100%;
+  cursor: pointer;
+  font-weight: 700;
 }
-
-.exp-buscador input::placeholder { color: var(--marron); }
 
 .exp-filtros {
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
   scrollbar-width: none;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.25rem;
+  padding: 1rem 1.25rem 0.5rem;
+  background: var(--fondo);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .exp-filtros::-webkit-scrollbar { display: none; }
@@ -92,114 +58,19 @@ img { max-width: 100%; height: auto; display: block; }
   flex-shrink: 0;
   padding: 0.45rem 1rem;
   border-radius: 999px;
-  border: 1.5px solid var(--marron);
+  border: 1.5px solid var(--arena);
   background: transparent;
-  color: var(--texto-light);
+  color: var(--texto-suave);
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: var(--font);
 }
 
 .exp-filtro.activo {
-  background-color: var(--marron);
+  background: var(--arena);
   color: var(--blanco);
-  font-weight: 600;
-}
-
-.exp-seccion { margin-bottom: 1.5rem; }
-
-.exp-seccion-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.exp-seccion-titulo {
-  font-size: 1rem;
   font-weight: 700;
-  color: var(--texto);
-}
-
-.exp-ver-mas {
-  font-size: 0.8rem;
-  color: var(--marron-dark);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.exp-scroll {
-  display: flex;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  scrollbar-width: none;
-}
-
-.exp-scroll::-webkit-scrollbar { display: none; }
-
-.exp-card {
-  position: relative;
-  min-width: 140px;
-  background-color: var(--blanco);
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
-  transition: transform 0.15s;
-}
-
-.exp-card:hover { transform: translateY(-2px); }
-
-.exp-card-img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-}
-
-.exp-card-nombre {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--texto);
-  padding: 0.4rem 0.6rem 0.1rem;
-}
-
-.exp-card-info {
-  font-size: 0.78rem;
-  color: var(--texto-light);
-  padding: 0 0.6rem 0.5rem;
-}
-
-.exp-urgente {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  background-color: #e07b5a;
-  color: white;
-  font-size: 0.62rem;
-  font-weight: 700;
-  padding: 0.2rem 0.45rem;
-  border-radius: 999px;
-  letter-spacing: 0.05em;
-}
-
-.exp-fav {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
-  background: rgba(255,255,255,0.85);
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* ─── NAVBAR ─────────────────────────────────────────────── */

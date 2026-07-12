@@ -21,10 +21,19 @@ export async function obtenerRefugioPorMascota(mascotaId) {
     return mascotaRes
   }
 
+  const usuarioRes = await Supabase
+    .from('usuarios')
+    .select('id, nombre, foto_url')
+    .eq('id', mascotaRes.data.refugio_id)
+    .maybeSingle()
+
+  if (usuarioRes.data) {
+    return usuarioRes
+  }
+
   return Supabase
     .from('refugios')
     .select('id, nombre')
     .eq('id', mascotaRes.data.refugio_id)
     .maybeSingle()
-    
- }
+}

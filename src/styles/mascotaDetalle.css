@@ -172,7 +172,7 @@
   cursor: pointer
 }
 
-.tarjeta-mascota img {
+.tarjeta-mascota > img {
   width: 100%;
   height: 110px;
   object-fit: cover;

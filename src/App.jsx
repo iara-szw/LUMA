@@ -11,10 +11,13 @@ import Dashboard from './pages/refugio/Dashboard.jsx'
 import PerfilRefugio from './pages/refugio/Perfil.jsx'
 import CargarMascota from './pages/refugio/CargarMascota.jsx'
 import EditarMascota from './pages/refugio/editarMascota.jsx'
+import EditarFormularioMascota from './pages/refugio/editarFormularioMascota.jsx'
 import EditarRefugio from './pages/refugio/editarRefugio.jsx'
 import SolicitudesRefugio from './pages/refugio/Solicitudes.jsx'
 import Explorar from './pages/adoptante/Explorar.jsx'
+import FormularioAdopcion from './pages/adoptante/formularioAdopcion.jsx'
 import Mascota from './pages/Mascota.jsx'
+import SolicitudFormulario from './pages/refugio/solicitudFormulario.jsx'
 
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
@@ -76,6 +79,14 @@ export default function App() {
             }
           />
           <Route
+            path="/refugio/solicitud/:id/formulario"
+            element={
+              <RutaProtegida rol="refugio">
+                <SolicitudFormulario />
+              </RutaProtegida>
+            }
+          />
+          <Route
             path="/refugio/cargarMascota"
             element={
               <RutaProtegida rol="refugio">
@@ -113,6 +124,14 @@ export default function App() {
             path="/adoptante/buscar"
             element={<Explorar />}
           />
+          <Route
+            path="/adoptante/solicitud/:id"
+            element={
+              <RutaProtegida rol="adoptante">
+                <FormularioAdopcion />
+              </RutaProtegida>
+            }
+          />
 
           {/* Detalle de mascota (público y rutas con rol) */}
           <Route
@@ -132,6 +151,14 @@ export default function App() {
             element={
               <RutaProtegida rol="refugio">
                 <EditarMascota />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/editarFormulario/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <EditarFormularioMascota />
               </RutaProtegida>
             }
           />

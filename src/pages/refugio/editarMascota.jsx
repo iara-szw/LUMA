@@ -31,14 +31,9 @@ export default function EditarMascota() {
   const [urgente, setUrgente] = useState(false)
   const [fechaRescate, setFechaRescate] = useState('')
   const [fechaAdopcion, setFechaAdopcion] = useState('')
-  const [requisitos, setRequisitos] = useState('')
 
   const [fotoArchivo, setFotoArchivo] = useState(null)
   const [previewFoto, setPreviewFoto] = useState(null)
-
-  useEffect(() => {
-    cargar()
-  }, [])
 
   async function cargar() {
     setCargando(true)
@@ -67,11 +62,14 @@ export default function EditarMascota() {
     setUrgente(data.urgente === true)
     setFechaRescate(data.fecha_rescate || '')
     setFechaAdopcion(data.fecha_adopcion || '')
-    setRequisitos(data.requisitos || '')
     setPreviewFoto(data.foto_url)
 
     setCargando(false)
   }
+
+  useEffect(() => {
+    void cargar()
+  }, [id, usuario?.id, navigate])
 
   async function guardar(e) {
     e.preventDefault()
@@ -83,24 +81,24 @@ export default function EditarMascota() {
       foto = url
     }
 
-   const { error } = await actualizarMascota(id, {
-  nombre,
-  edad,
-  sexo,
-  tamaño,
-  descripcion,
-  vacunado: Boolean(vacunado),
-  castrado: Boolean(castrado),
-  desparasitado: Boolean(desparasitado),
-  problemas_salud: Boolean(problemasSalud),
-  detalle_salud: detalleSalud,
-  urgente: Boolean(urgente),
-  fecha_rescate: fechaRescate || null,
-  fecha_adopcion: fechaAdopcion || null,
-  requisitos,
-  foto_url: foto || previewFoto
-})
+    const payload = {
+      nombre,
+      edad,
+      sexo,
+      tamaño,
+      descripcion,
+      vacunado: Boolean(vacunado),
+      castrado: Boolean(castrado),
+      desparasitado: Boolean(desparasitado),
+      problemas_salud: Boolean(problemasSalud),
+      detalle_salud: detalleSalud,
+      urgente: Boolean(urgente),
+      fecha_rescate: fechaRescate || null,
+      fecha_adopcion: fechaAdopcion || null,
+      foto_url: foto || previewFoto,
+    }
 
+    const { error } = await actualizarMascota(id, payload)
 
     if (error) {
       alert(error.message)
@@ -112,12 +110,7 @@ export default function EditarMascota() {
   }
 
   if (cargando) return <Loader />
-console.log({
-  vacunado,
-  castrado,
-  desparasitado,
-  problemasSalud
-})
+
   return (
     <div className="pagina-editar">
       <header className="perfil-header">
@@ -173,8 +166,11 @@ console.log({
         <label>Detalle de salud</label>
         <textarea value={detalleSalud} onChange={(e) => setDetalleSalud(e.target.value)} />
 
-        <label>Requisitos</label>
-        <textarea value={requisitos} onChange={(e) => setRequisitos(e.target.value)} />
+        <div className="formulario-bloque-acciones">
+          <button type="button" className="btn-formulario" onClick={() => navigate(`/refugio/editarFormulario/${id}`)}>
+            Editar formulario
+          </button>
+        </div>
 
         <label>Fecha rescate</label>
         <input type="date" value={fechaRescate || ''} onChange={(e) => setFechaRescate(e.target.value)} />

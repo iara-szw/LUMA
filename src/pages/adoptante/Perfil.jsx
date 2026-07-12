@@ -7,6 +7,7 @@ import {
   obtenerCursosDeUsuario,
   obtenerGuardadosDeUsuario,
 } from '../../repositories/perfilRepository'
+import { agregarFavorito, eliminarFavorito } from '../../repositories/usuarioRepository'
 import '../../styles/perfil.css'
 
 export default function Perfil() {
@@ -16,6 +17,7 @@ export default function Perfil() {
   const [cursos, setCursos] = useState([])
   const [guardados, setGuardados] = useState([])
   const [cargando, setCargando] = useState(true)
+  const [cargandoFavorito, setCargandoFavorito] = useState(false)
 
   useEffect(() => {
     if (!usuario) {
@@ -139,6 +141,24 @@ export default function Perfil() {
                 className="tarjeta-mascota"
                 onClick={() => navigate(`/adoptante/mascota/${g.mascotas?.id}`)}
               >
+                <button
+                  type="button"
+                  className="tarjeta-favorito"
+                  aria-label={`Remover ${g.mascotas?.nombre}`}
+                  onClick={async (e) => {
+                    e.stopPropagation()
+                    if (!usuario || cargandoFavorito) return
+                    setCargandoFavorito(true)
+                    try {
+                      await eliminarFavorito(usuario.id, g.mascotas?.id)
+                      setGuardados(prev => prev.filter(item => item.mascotas?.id !== g.mascotas?.id))
+                    } finally {
+                      setCargandoFavorito(false)
+                    }
+                  }}
+                >
+                  <img src="/assets/img/corazon-seleccionado.png" alt="" />
+                </button>
                 {g.mascotas?.foto_url && (
                   <img src={g.mascotas.foto_url} alt={g.mascotas.nombre} />
                 )}
