@@ -17,7 +17,7 @@ const PASO_LABEL = {
 function tiempoRelativo(fecha) {
   const ahora = new Date()
   const diff = Math.floor((ahora - new Date(fecha)) / (1000 * 60 * 60 * 24))
-  if (diff === 0) return 'hoy'
+  if (diff < 1) return 'hoy'
   if (diff === 1) return 'ayer'
   return `hace ${diff} días`
 }

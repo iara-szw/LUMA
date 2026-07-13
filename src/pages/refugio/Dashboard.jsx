@@ -7,7 +7,7 @@ import Animal from '../../../cliente/public/assets/img/animal.png'
 
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
-import { obtenerRefugio } from '../../repositories/perfilRefugioRepository'
+import { obtenerRefugio,obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/dashboard.css'
 
 export default function Dashboard() {
@@ -16,31 +16,38 @@ export default function Dashboard() {
 
   const [mascotas, setMascotas] = useState([])
   const [eventos, setEventos] = useState([])
+    const [forms, setforms] = useState([])
+
   const [cargandoMascotas, setCargandoMascotas] = useState(true)
+  const [cargandoFormularios, setCargandoFormularios] = useState(true)
   const [cargandoEventos, setCargandoEventos] = useState(true)
   const [refugio, setRefugio] = useState(null)
 
   const publicadas = mascotas.length
   const urgentes = mascotas.filter(m => m.urgente).length
+  const formularios = forms.length
 
   useEffect(() => {
     let activo = true
 
     const obtenerDatos = async () => {
       try {
-        const [refugioRes, mascotasRes, eventosRes] = await Promise.all([
+        const [refugioRes, mascotasRes, eventosRes,formsRes] = await Promise.all([
           obtenerRefugio(usuario?.id),
           obtenerMascotasRefugio(usuario?.id),
           obtenerEventosProximos(),
+          obtenerMascotasDeRefugio(usuario?.id)
         ])
         if (!activo) return
         setRefugio(refugioRes?.data || null)
         setMascotas(mascotasRes?.data || [])
         setEventos(eventosRes?.data || [])
+        setforms(formsRes?.data || [])
       } finally {
         if (activo) {
           setCargandoMascotas(false)
           setCargandoEventos(false)
+          setCargandoFormularios(false)
         }
       }
     }
@@ -110,10 +117,10 @@ export default function Dashboard() {
             </div>
             <div className="dash-stat-item">
               <span className="dash-stat-label">Solicitudes nuevas</span>
-              <span className="dash-stat-valor">–</span>
+              <span className="dash-stat-valor">{cargandoFormularios ? '-':formularios}</span>
             </div>
             <div className="dash-stat-item">
-              <span className="dash-stat-label">Formularios</span>
+              <span className="dash-stat-label">Eventos proximos</span>
               <span className="dash-stat-valor">–</span>
             </div>
             <div className="dash-stat-item">

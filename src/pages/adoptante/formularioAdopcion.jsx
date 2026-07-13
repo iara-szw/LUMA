@@ -42,7 +42,7 @@ export default function FormularioAdopcion() {
       if (mascotaRes.data) setMascota(mascotaRes.data)
       if (formularioRes.data?.bloques?.length) setBloques(formularioRes.data.bloques)
       if (solicitudRes.data?.notas && Object.keys(solicitudRes.data.notas).length > 0) {
-        setRespuestas(solicitudRes.data.notas)
+        setRespuestas(solicitudRes.data.info)
       }
 
       setCargando(false)

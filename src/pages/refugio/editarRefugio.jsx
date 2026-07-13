@@ -23,6 +23,7 @@ export default function EditarRefugio() {
   const [direccion, setDireccion] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [provincia, setProvincia] = useState('');
+  const [voluntarios, setVoluntarios]=useState('')
   const [instagram, setInstagram] = useState('');
 
   const obtenerDatos = async () => {
@@ -52,6 +53,7 @@ export default function EditarRefugio() {
       setDireccion(refugio.direccion || '');
       setCiudad(refugio.ciudad || '');
       setProvincia(refugio.provincia || '');
+      setVoluntarios(refugio.cantidad_voluntarios || '')
       setInstagram(refugio.instagram || '');
       setPreviewLogo(refugio.logo_url || null);
       setPreviewPortada(refugio.portada_url || refugio.foto_portada_url || null);
@@ -86,7 +88,7 @@ export default function EditarRefugio() {
         portadaUrl = url;
       }
 
-      const payload = { nombre, descripcion, telefono, direccion, ciudad, provincia, instagram };
+      const payload = { nombre, descripcion, telefono, direccion, ciudad, provincia,voluntarios, instagram };
       if (logoUrl) payload.logo_url = logoUrl;
       if (portadaUrl) payload.portada_url = portadaUrl;
 
@@ -187,7 +189,10 @@ export default function EditarRefugio() {
           <label htmlFor="instagram">Instagram</label>
           <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} />
         </div>
-
+        <div>
+          <label htmlFor="voluntarios">Cant.Voluntarios</label>
+          <input id="voluntarios" type="number" value={voluntarios} onChange={(e) => setVoluntarios(e.target.value)} />
+        </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Guardando...' : 'Guardar cambios'}
         </button>

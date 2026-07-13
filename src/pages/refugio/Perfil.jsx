@@ -15,7 +15,7 @@ export default function Perfil() {
   const { usuario, cerrarSesion, cargando } = usarAuth()
   const [mascotas, setMascotas] = useState([])
   const [solicitudes, setSolicitudes] = useState([])
-  const [stats, setStats] = useState({ mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
+  const [stats, setStats] = useState({ mascotas: 0, cantidad_voluntarios: 0, adopciones: 0, eventos: 0 })
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [refugio, setRefugio] = useState(null)
 
@@ -37,7 +37,7 @@ export default function Perfil() {
         setRefugio(refugioRes?.data || null)
         setMascotas(mascotasRes?.data || [])
         setSolicitudes(solicitudesRes?.data || [])
-        setStats(statsRes?.data || { mascotas: 0, voluntarios: 0, adopciones: 0, eventos: 0 })
+        setStats(statsRes?.data || { mascotas: 0, adopciones: 0, cantidad_voluntarios: 0, eventos: 0 })
       } finally {
         if (activo) setCargandoDatos(false)
       }
@@ -103,7 +103,7 @@ export default function Perfil() {
             <p className="resumen-stat-label">Mascotas</p>
           </div>
           <div className="resumen-stat">
-            <p className="resumen-stat-valor">{stats.voluntarios}</p>
+            <p className="resumen-stat-valor">{stats.cantidad_voluntarios}</p>
             <p className="resumen-stat-label">Voluntarios</p>
           </div>
           <div className="resumen-stat">

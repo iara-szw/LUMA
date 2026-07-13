@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
 import '../../styles/formularios.css'
-import { obtenerSolicitudFormularioPorId } from '../../repositories/formularioRepository'
+import { obtenerSolicitudFormularioPorId,obtenerInfo } from '../../repositories/formularioRepository'
 
 export default function SolicitudFormulario() {
   const { id } = useParams()
@@ -22,6 +22,7 @@ export default function SolicitudFormulario() {
 
       setCargando(true)
       const { data, error } = await obtenerSolicitudFormularioPorId(id)
+      console.log(data)
 
       if (error) {
         alert(error.message)

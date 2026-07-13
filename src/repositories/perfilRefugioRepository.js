@@ -14,7 +14,7 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
   const { data, error } = await Supabase
     .from('solicitudes')
     .select(
-      'id, estado, fecha_solicitud, notas, usuarios:adoptante_id(id, nombre, foto_url), mascotas!inner(id, nombre, foto_url, refugio_id)'
+      'id, estado, fecha_solicitud, info, usuarios:adoptante_id(id, nombre, foto_url), mascotas!inner(id, nombre, foto_url, refugio_id)'
     )
     .eq('mascotas.refugio_id', refugioId)
     .order('fecha_solicitud', { ascending: false })
@@ -35,7 +35,7 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
 }
 
 export async function obtenerEstadisticasDeRefugio(refugioId) {
-  const [mascotasRes, solicitudesRes, eventosRes] = await Promise.all([
+  const [mascotasRes, solicitudesRes,voluntariosRes, eventosRes] = await Promise.all([
     Supabase
       .from('mascotas')
       .select('id', { count: 'exact', head: true })
@@ -45,6 +45,10 @@ export async function obtenerEstadisticasDeRefugio(refugioId) {
       .select('id, mascotas!inner(refugio_id)', { count: 'exact', head: true })
       .eq('estado', 'Aprobada')
       .eq('mascotas.refugio_id', refugioId),
+       Supabase
+      .from('refugios')
+      .select('cantidad_voluntarios')
+      .eq('id', refugioId),
     Supabase
       .from('eventos')
       .select('id', { count: 'exact', head: true })
@@ -54,7 +58,7 @@ export async function obtenerEstadisticasDeRefugio(refugioId) {
   return {
     data: {
       mascotas: mascotasRes.count || 0,
-      voluntarios: 0,
+      cantidad_voluntarios: voluntariosRes.count || 1,
       adopciones: solicitudesRes.count || 0,
       eventos: eventosRes.count || 0,
     },

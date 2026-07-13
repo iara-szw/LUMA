@@ -166,12 +166,6 @@ export default function EditarMascota() {
         <label>Detalle de salud</label>
         <textarea value={detalleSalud} onChange={(e) => setDetalleSalud(e.target.value)} />
 
-        <div className="formulario-bloque-acciones">
-          <button type="button" className="btn-formulario" onClick={() => navigate(`/refugio/editarFormulario/${id}`)}>
-            Editar formulario
-          </button>
-        </div>
-
         <label>Fecha rescate</label>
         <input type="date" value={fechaRescate || ''} onChange={(e) => setFechaRescate(e.target.value)} />
 
@@ -204,7 +198,11 @@ export default function EditarMascota() {
           Adopción urgente
         </label>
 
-   
+     <div className="formulario-bloque-acciones">
+          <button type="button" className="btn-formulario" onClick={() => navigate(`/refugio/editarFormulario/${id}`)}>
+            Editar formulario
+          </button>
+        </div>
 
         <button type="submit" disabled={guardando}>
           {guardando ? 'Guardando...' : 'Guardar cambios'}

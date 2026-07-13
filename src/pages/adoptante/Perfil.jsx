@@ -101,9 +101,9 @@ export default function Perfil() {
                 <span className={`badge-estado badge-${p.estado}`}>{p.estado}</span>
               </div>
               <div className="postulacion-pasos">
-                <p>✅ Formulario enviado · {new Date(p.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                <p>✓ Formulario enviado · {new Date(p.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                 {p.estado === 'en_revision' && (
-                  <p>🔄 En proceso de revisión — te notificaremos cuando el refugio termine de revisar.</p>
+                  <p>↻ En proceso de revisión — te notificaremos cuando el refugio termine de revisar.</p>
                 )}
               </div>
             </article>

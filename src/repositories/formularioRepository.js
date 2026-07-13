@@ -90,7 +90,7 @@ export async function guardarFormularioMascota(mascotaId, bloques) {
 export async function obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, adoptanteId) {
   const { data, error } = await Supabase
     .from('solicitudes')
-    .select('id, estado, notas, fecha_solicitud')
+    .select('id, estado, info, fecha_solicitud')
     .eq('mascota_id', mascotaId)
     .eq('adoptante_id', adoptanteId)
     .order('fecha_solicitud', { ascending: false })
@@ -104,19 +104,19 @@ export async function obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, 
     data: {
       id: fila?.id || null,
       estado: fila?.estado || 'Pendiente',
-      notas: normalizarRespuestas(fila?.notas),
+      info: normalizarRespuestas(fila?.info),
       fecha_solicitud: fila?.fecha_solicitud || null,
     },
     error: null,
   }
 }
 
-export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, respuestas, estado = 'Pendiente' }) {
+export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, info, estado = 'Pendiente' }) {
   const registro = await obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, adoptanteId)
 
   const payload = {
     estado,
-    notas: JSON.stringify(respuestas || {}),
+    info: JSON.stringify(info || {}),
   }
 
   if (registro.data?.id) {
@@ -141,7 +141,7 @@ export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, respues
       mascota_id: mascotaId,
       estado,
       fecha_solicitud: new Date().toISOString(),
-      notas: JSON.stringify(respuestas || {}),
+      info: JSON.stringify(info || {}),
     })
     .select()
 
@@ -156,7 +156,7 @@ export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, respues
 export async function obtenerSolicitudFormularioPorId(solicitudId) {
   const { data, error } = await Supabase
     .from('solicitudes')
-    .select('id, estado, fecha_solicitud, notas, usuarios:adoptante_id(id, nombre, foto_url), mascotas(id, nombre, foto_url)')
+    .select('id, estado, fecha_solicitud, info:  info->info, usuarios:adoptante_id(id, nombre, foto_url), mascotas(id, nombre, foto_url)')
     .eq('id', solicitudId)
     .limit(1)
 
@@ -169,10 +169,19 @@ export async function obtenerSolicitudFormularioPorId(solicitudId) {
       id: fila?.id,
       estado: fila?.estado,
       fecha_solicitud: fila?.fecha_solicitud,
-      respuestas: normalizarRespuestas(fila?.notas),
+      info: normalizarRespuestas(fila?.info),
       usuarios: fila?.usuarios,
       mascotas: fila?.mascotas,
     },
     error: null,
   }
+}
+
+export async function obtenerInfo(){
+  const{data,error}=await Supabase
+  .from('solicitudes')
+  .select('infos:  metadata->info')
+    if (error) return { data: null, error }
+
+    return data
 }
