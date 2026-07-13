@@ -1,6 +1,12 @@
+/* =========================================================
+   Formulario de adopción — Luma
+   Paleta base del proyecto: tan #b8956a, sage #9CA788,
+   crema #faf7f2 / #f8f2ea, texto #5f5f5f
+   ========================================================= */
+
 .pagina-formulario-adopcion {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8f2ea 0%, #fff 100%);
+  background: linear-gradient(180deg, #f8f2ea 0%, #fff 45%);
   padding: 20px 16px 96px;
 }
 
@@ -10,15 +16,30 @@
   background: #fff;
   border-radius: 24px;
   box-shadow: 0 12px 36px rgba(30, 30, 30, 0.08);
-  padding: 18px;
+  padding: 20px;
 }
+
+/* ---------- Topbar ---------- */
 
 .formulario-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0e4d3;
 }
+
+.formulario-topbar strong {
+  font-size: 1rem;
+  color: #3f3a33;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Steps ---------- */
 
 .formulario-steps {
   display: flex;
@@ -32,6 +53,7 @@
   height: 10px;
   border-radius: 999px;
   background: #d8c5ae;
+  transition: width 0.25s ease, background 0.25s ease;
 }
 
 .formulario-step.activo {
@@ -39,22 +61,31 @@
   width: 28px;
 }
 
+/* ---------- Card ---------- */
+
 .formulario-card {
   background: #faf7f2;
+  border: 1px solid #f0e4d3;
   border-radius: 18px;
-  padding: 16px;
+  padding: 20px 18px;
   margin-bottom: 16px;
 }
 
 .formulario-card h2 {
-  margin: 0 0 8px;
-  font-size: 1.1rem;
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  color: #3f3a33;
+  letter-spacing: -0.01em;
 }
 
 .formulario-card p {
-  margin: 0 0 14px;
-  color: #5f5f5f;
+  margin: 0 0 18px;
+  color: #7a7a7a;
+  line-height: 1.5;
+  font-size: 0.92rem;
 }
+
+/* ---------- Inputs ---------- */
 
 .formulario-input,
 .formulario-textarea,
@@ -64,8 +95,30 @@
   border-radius: 14px;
   padding: 12px 14px;
   font: inherit;
+  color: #3f3a33;
+  background: #fff;
   box-sizing: border-box;
   margin-bottom: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario-input::placeholder,
+.formulario-textarea::placeholder {
+  color: #b3ab9f;
+}
+
+.formulario-input:hover,
+.formulario-textarea:hover,
+.formulario-select:hover {
+  border-color: #c9ac80;
+}
+
+.formulario-input:focus,
+.formulario-textarea:focus,
+.formulario-select:focus {
+  outline: none;
+  border-color: #b8956a;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
 }
 
 .formulario-textarea {
@@ -73,26 +126,104 @@
   resize: vertical;
 }
 
-.formulario-bloque-acciones {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 14px;
+select {
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid #d9c6a8;
+  background: #fff;
+  color: #3f3a33;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #b8956a 50%),
+    linear-gradient(135deg, #b8956a 50%, transparent 50%);
+  background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+select:hover {
+  border-color: #c9ac80;
+}
+
+select:focus {
+  outline: none;
+  border-color: #b8956a;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
+}
+
+/* ---------- Checkbox ---------- */
+
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 6px;
+  border: 2px solid #b8956a;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  background: #fff;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+input[type='checkbox']:hover {
+  border-color: #9c7a51;
+}
+
+input[type='checkbox']:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.25);
+}
+
+input[type='checkbox']:checked {
+  background-color: #b8956a;
+  border-color: #b8956a;
+}
+
+input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: #4a4a4a;
+}
+
+/* ---------- Botones ---------- */
 
 .btn-formulario,
 .btn-guardar-formulario,
 .btn-anadir-bloque {
   border: none;
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   cursor: pointer;
   font-weight: 600;
+  font: inherit;
+  font-size: 0.92rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
 }
 
 .btn-formulario {
   background: #b8956a;
-  color: white;
+  color: #fff;
+}
+
+.btn-formulario:hover {
+  background: #a5814f;
 }
 
 .btn-formulario.ghost {
@@ -101,23 +232,65 @@
   color: #7b5730;
 }
 
+.btn-formulario.ghost:hover {
+  background: #f5ebdc;
+}
+
 .btn-guardar-formulario,
 .btn-anadir-bloque {
-  background: #9CA788;
-  color: white;
+  background: #9ca788;
+  color: #fff;
 }
+
+.btn-guardar-formulario:hover,
+.btn-anadir-bloque:hover {
+  background: #889374;
+}
+
+.btn-guardar-formulario:active,
+.btn-anadir-bloque:active,
+.btn-formulario:active {
+  transform: scale(0.98);
+}
+
+.btn-guardar-formulario:disabled {
+  background: #c3cab5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-formulario:focus-visible,
+.btn-guardar-formulario:focus-visible,
+.btn-anadir-bloque:focus-visible {
+  outline: 2px solid #7b5730;
+  outline-offset: 2px;
+}
+
+.btn-anadir-bloque {
+  width: 100%;
+  border: 1px dashed rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+/* ---------- Editor de bloques ---------- */
 
 .formulario-editor-lista {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .formulario-editor-bloque {
-  padding: 14px;
+  padding: 16px;
   background: #faf7f2;
   border: 1px solid #ecdcc2;
   border-radius: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario-editor-bloque:focus-within {
+  border-color: #d9c6a8;
+  box-shadow: 0 4px 14px rgba(184, 149, 106, 0.12);
 }
 
 .formulario-editor-bloque .row {
@@ -126,45 +299,76 @@
   gap: 10px;
 }
 
+.formulario-editor-bloque label {
+  flex-direction: column;
+  align-items: stretch;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b6259;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
 .formulario-editor-bloque button {
   margin-top: 10px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  background: transparent;
+  border: 1px solid #d99a7c;
+  color: #a15c3f;
 }
+
+.formulario-editor-bloque button:hover {
+  background: #fbe9e1;
+}
+
+.formulario-bloque-acciones {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #f0e4d3;
+}
+
+/* ---------- Resumen de solicitud ---------- */
 
 .solicitud-resumen {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-select{
-        border-radius: 15px;
-    padding: 2.5%;
-    border: none;
-}
 
-input[type="checkbox"] {
-    width: 10%;
-    padding: 4%;
-    border-radius: 4px;
-    border:2px solid #b8956a;
-    box-sizing: border-box;
-}
-
-input[type="checkbox"]:checked{
-   background-color: #b8956a    ;
-}
-label{
-display: flex;
-    align-items: center;
-    gap: 10px;
-}
 .solicitud-resumen-item {
   background: #faf7f2;
+  border: 1px solid #f0e4d3;
   border-radius: 12px;
-  padding: 12px;
+  padding: 14px;
 }
 
+/* ---------- Responsive ---------- */
+
 @media (max-width: 640px) {
+  .formulario-shell {
+    border-radius: 18px;
+    padding: 16px;
+  }
+
   .formulario-editor-bloque .row {
     grid-template-columns: 1fr;
+  }
+
+  .formulario-bloque-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .formulario-bloque-acciones button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
   }
 }
