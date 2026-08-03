@@ -1,27 +1,44 @@
 import { Supabase } from '../services/supabase'
 
 export const FORMULARIO_DEFAULT = [
+ 
   {
-    id: 'foto_hogar',
-    titulo: 'Foto del hogar',
-    tipo: 'photo',
-    placeholder: 'Subí una foto del espacio donde viviría la mascota',
-    obligatorio: true,
-  },
-  {
-    id: 'tipo_vivienda',
-    titulo: '¿Qué tipo de vivienda tenés?',
-    tipo: 'textarea',
-    placeholder: 'Contanos si es casa, departamento, jardín, etc.',
-    obligatorio: true,
-  },
-  {
-    id: 'tiempo',
-    titulo: '¿Cuánto tiempo podés dedicarle?',
-    tipo: 'text',
-    placeholder: 'Ej: 2 horas por día',
-    obligatorio: true,
-  },
+    id: 'seccion_disponibilidad',
+    titulo: 'Disponibilidad',
+    preguntas: [
+      {
+        id: 'tiempo',
+        titulo: '¿Cuánto tiempo podés dedicarle?',
+        tipo: 'text',
+        placeholder: 'Ej: 2 horas por día',
+        obligatorio: true,
+      },{
+        id: 'tiempoDisponible',
+        titulo: '¿Cuánto tiempo podés dedicarle?',
+        tipo: 'text',
+        placeholder: 'Ej: 2 horas por día',
+        obligatorio: true,
+      }
+    ],
+  }, {
+    id: 'a',
+    titulo: 'a',
+    preguntas: [
+      {
+        id: 'a',
+        titulo: '¿Cuánto tiempo podés dedicarle?',
+        tipo: 'text',
+        placeholder: 'Ej: 2 horas por día',
+        obligatorio: true,
+      },{
+        id: 'a',
+        titulo: '¿Cuánto tiempo podés dedicarle?',
+        tipo: 'text',
+        placeholder: 'Ej: 2 horas por día',
+        obligatorio: true,
+      }
+    ],
+  }
 ]
 
 function normalizarBloques(valor) {
@@ -29,18 +46,21 @@ function normalizarBloques(valor) {
 
   try {
     const parsed = JSON.parse(valor)
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed
-    }
-  } catch {
-    // si viene texto libre, se cae al default
-  }
+    if (!Array.isArray(parsed) || parsed.length === 0) return FORMULARIO_DEFAULT
 
-  return FORMULARIO_DEFAULT
+    // Formato nuevo: ya viene como secciones con .preguntas
+    if (parsed[0]?.preguntas) return parsed
+
+    // Formato viejo: array plano de preguntas -> migramos a una sola sección
+    return [{ id: 'seccion_1', titulo: 'Preguntas', preguntas: parsed }]
+  } catch {
+    return FORMULARIO_DEFAULT
+  }
 }
 
 function normalizarRespuestas(valor) {
   if (!valor) return {}
+  if (typeof valor === 'object') return valor
 
   try {
     const parsed = JSON.parse(valor)
@@ -99,7 +119,6 @@ export async function obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, 
   if (error) return { data: null, error }
 
   const fila = Array.isArray(data) ? data[0] || null : data
-
   return {
     data: {
       id: fila?.id || null,
@@ -112,37 +131,17 @@ export async function obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, 
 }
 
 export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, info, estado = 'Pendiente' }) {
-  const registro = await obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, adoptanteId)
-
-  const payload = {
-    estado,
-    info: JSON.stringify(info || {}),
-  }
-
-  if (registro.data?.id) {
-    const { data, error } = await Supabase
-      .from('solicitudes')
-      .update(payload)
-      .eq('id', registro.data.id)
-      .select()
-
-    if (error) return { data: null, error }
-
-    return {
-      data: Array.isArray(data) ? data[0] || null : data,
-      error: null,
-    }
-  }
-
   const { data, error } = await Supabase
     .from('solicitudes')
-    .insert({
-      adoptante_id: adoptanteId,
-      mascota_id: mascotaId,
-      estado,
-      fecha_solicitud: new Date().toISOString(),
-      info: JSON.stringify(info || {}),
-    })
+    .upsert(
+      {
+        adoptante_id: adoptanteId,
+        mascota_id: mascotaId,
+        estado,
+        info: info || {},
+      },
+      { onConflict: 'mascota_id,adoptante_id' }
+    )
     .select()
 
   if (error) return { data: null, error }
@@ -156,14 +155,13 @@ export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, info, e
 export async function obtenerSolicitudFormularioPorId(solicitudId) {
   const { data, error } = await Supabase
     .from('solicitudes')
-    .select('id, estado, fecha_solicitud, info:  info->info, usuarios:adoptante_id(id, nombre, foto_url), mascotas(id, nombre, foto_url)')
+    .select('id, estado, info, fecha_solicitud,info, usuarios:adoptante_id(id, nombre, foto_url), mascotas(id, nombre, foto_url)')
     .eq('id', solicitudId)
     .limit(1)
 
   if (error) return { data: null, error }
 
   const fila = Array.isArray(data) ? data[0] || null : data
-
   return {
     data: {
       id: fila?.id,

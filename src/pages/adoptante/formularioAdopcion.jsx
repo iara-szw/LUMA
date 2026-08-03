@@ -19,7 +19,7 @@ export default function FormularioAdopcion() {
 
   const [cargando, setCargando] = useState(true)
   const [bloques, setBloques] = useState(DEFAULT_BLOQUES)
-  const [respuestas, setRespuestas] = useState({})
+  const [info, setInfo] = useState({})
   const [pagina, setPagina] = useState(0)
   const [guardando, setGuardando] = useState(false)
   const [mascota, setMascota] = useState(null)
@@ -42,7 +42,7 @@ export default function FormularioAdopcion() {
       if (mascotaRes.data) setMascota(mascotaRes.data)
       if (formularioRes.data?.bloques?.length) setBloques(formularioRes.data.bloques)
       if (solicitudRes.data?.notas && Object.keys(solicitudRes.data.notas).length > 0) {
-        setRespuestas(solicitudRes.data.info)
+        setInfo(solicitudRes.data.info)
       }
 
       setCargando(false)
@@ -51,33 +51,29 @@ export default function FormularioAdopcion() {
     cargar()
   }, [mascotaId, usuario, navigate])
 
-  const bloqueActual = bloques[pagina]
-  const haySiguiente = pagina < bloques.length - 1
-  const hayAnterior = pagina > 0
+const seccionActual = bloques[pagina]
+const haySiguiente = pagina < bloques.length - 1
+const hayAnterior = pagina > 0
 
-  const valorActual = respuestas[bloqueActual?.id] || ''
+function actualizarRespuesta(preguntaId, valor) {
+  setInfo(prev => ({ ...prev, [preguntaId]: valor }))
+}
 
-  function actualizarRespuesta(valor) {
-    setRespuestas(prev => ({ ...prev, [bloqueActual.id]: valor }))
+function actualizarFotoArchivo(preguntaId, file) {
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    actualizarRespuesta(preguntaId, String(reader.result || ''))
   }
-
-  function actualizarFotoArchivo(file) {
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = () => {
-      actualizarRespuesta(String(reader.result || ''))
-    }
-    reader.readAsDataURL(file)
-  }
-
+  reader.readAsDataURL(file)
+}
   async function guardarAvance(nextPagina) {
     setGuardando(true)
     try {
       const res = await guardarProgresoSolicitud({
         mascotaId,
         adoptanteId: usuario.id,
-        respuestas,
+        info,
         estado: 'Pendiente',
       })
 
@@ -93,11 +89,12 @@ export default function FormularioAdopcion() {
 
   async function enviarFormulario() {
     setGuardando(true)
+    console.log(info)
     try {
       const res = await guardarProgresoSolicitud({
         mascotaId,
         adoptanteId: usuario.id,
-        respuestas,
+        info,
         estado: 'en_revision',
       })
 
@@ -128,46 +125,47 @@ export default function FormularioAdopcion() {
           ))}
         </div>
 
-        <section className="formulario-card">
-          <h2>{bloqueActual?.titulo}</h2>
-          <p>{bloqueActual?.placeholder || 'Completá este bloque para continuar.'}</p>
+      <section className="formulario-card">
+  <h2>{seccionActual?.titulo}</h2>
 
-          {bloqueActual?.tipo === 'textarea' ? (
-            <textarea
-              className="formulario-textarea"
-              value={valorActual}
-              onChange={(e) => actualizarRespuesta(e.target.value)}
-            />
-          ) : bloqueActual?.tipo === 'photo' ? (
-            <div className="solicitud-resumen">
-              <div className="solicitud-resumen-item">
-                <strong>Foto del hogar</strong>
-                <p>Subí una foto del espacio donde viviría la mascota.</p>
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                className="formulario-input"
-                onChange={(e) => actualizarFotoArchivo(e.target.files?.[0])}
-              />
-              {valorActual && (
-                <img
-                  src={valorActual}
-                  alt="Vista previa de la foto"
-                  style={{ width: '100%', maxHeight: '260px', objectFit: 'cover', borderRadius: 12, marginTop: 8 }}
-                />
-              )}
-            </div>
-          ) : (
+  {seccionActual?.preguntas?.map((pregunta) => {
+    const valor = info[pregunta.id] || ''
+
+    return (
+      <div key={pregunta.id} className="formulario-pregunta">
+        <label>{pregunta.titulo}</label>
+        {pregunta.placeholder && <p>{pregunta.placeholder}</p>}
+
+        {pregunta.tipo === 'textarea' ? (
+          <textarea
+            className="formulario-textarea"
+            value={valor}
+            onChange={(e) => actualizarRespuesta(pregunta.id, e.target.value)}
+          />
+        ) : pregunta.tipo === 'photo' ? (
+          <div className="solicitud-resumen">
             <input
+              type="file"
+              accept="image/*"
               className="formulario-input"
-              type="text"
-              value={valorActual}
-              placeholder={bloqueActual?.placeholder}
-              onChange={(e) => actualizarRespuesta(e.target.value)}
+              onChange={(e) => actualizarFotoArchivo(pregunta.id, e.target.files?.[0])}
             />
-          )}
-
+            {valor && (
+              <img src={valor} alt="Vista previa" style={{ width: '100%', maxHeight: 260, objectFit: 'cover', borderRadius: 12, marginTop: 8 }} />
+            )}
+          </div>
+        ) : (
+          <input
+            className="formulario-input"
+            type="text"
+            value={valor}
+            placeholder={pregunta.placeholder}
+            onChange={(e) => actualizarRespuesta(pregunta.id, e.target.value)}
+          />
+        )}
+      </div>
+    )
+  })}
           <div className="formulario-bloque-acciones">
             <button
               type="button"

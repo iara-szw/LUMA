@@ -22,7 +22,6 @@ export default function SolicitudFormulario() {
 
       setCargando(true)
       const { data, error } = await obtenerSolicitudFormularioPorId(id)
-      console.log(data)
 
       if (error) {
         alert(error.message)
@@ -37,7 +36,7 @@ export default function SolicitudFormulario() {
     cargar()
   }, [id, usuario, navigate])
 
-  const respuestas = useMemo(() => Object.entries(solicitud?.respuestas || {}), [solicitud])
+  const respuestas = useMemo(() => Object.entries(solicitud?.info || {}), [solicitud])
 
   if (cargando) return <Loader />
 
