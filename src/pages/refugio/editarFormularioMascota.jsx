@@ -188,11 +188,11 @@ function quitarSeccion(indexSeccion) {
       </div>
     ))}
 
-    <button type="button" className="btn-anadir-bloque" onClick={() => agregarPregunta(indexSeccion)}>
+    <button type="button" className="btn-anadir-pregunta" onClick={() => agregarPregunta(indexSeccion)}>
       + Agregar pregunta a esta sección
     </button>
 
-    <button type="button" className="btn-formulario ghost" onClick={() => quitarSeccion(indexSeccion)}>
+    <button type="button" className="btn-formulario quitar" onClick={() => quitarSeccion(indexSeccion)}>
       Quitar sección
     </button>
   </div>

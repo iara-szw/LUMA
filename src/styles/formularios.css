@@ -204,9 +204,36 @@ label {
 
 /* ---------- Botones ---------- */
 
+.btn-anadir-pregunta,
+.btn-anadir-bloque  {
+  margin-top: 7.5%;
+  margin-bottom: 7.5%;
+  width: 75%;
+  margin-left: 13%;
+  padding: 3%;
+    border-radius: 12px;
+background-color: #bea67f;
+border: 0px solid #534536;
+color: #ffffff;
+}
+
+.btn-anadir-bloque 
+{
+ margin-top: 7.5%;
+  margin-bottom: 7.5%;
+  width: 50%;
+  margin-left: 0%;
+  padding: 10px 16px;
+}
+
+.btn-anadir-pregunta:hover,
+.btn-anadir-bloque:hover{
+  background-color: #9c7a51;
+}
+
+
 .btn-formulario,
-.btn-guardar-formulario,
-.btn-anadir-bloque {
+.btn-guardar-formulario{
   border: none;
   border-radius: 12px;
   padding: 10px 16px;
@@ -226,8 +253,15 @@ label {
   background: #a5814f;
 }
 
-.btn-formulario.ghost {
+.btn-formulario.quitar {
   background: transparent;
+  border: 1px solid #b8956a;
+  color: #7b5730;
+  margin-left: 27%;
+}
+
+.btn-formulario.ghost {
+    background: transparent;
   border: 1px solid #b8956a;
   color: #7b5730;
 }
@@ -236,14 +270,12 @@ label {
   background: #f5ebdc;
 }
 
-.btn-guardar-formulario,
-.btn-anadir-bloque {
+.btn-guardar-formulario {
   background: #9ca788;
   color: #fff;
 }
 
-.btn-guardar-formulario:hover,
-.btn-anadir-bloque:hover {
+.btn-guardar-formulario:hover {
   background: #889374;
 }
 
@@ -268,7 +300,6 @@ label {
 
 .btn-anadir-bloque {
   width: 100%;
-  border: 1px dashed rgba(255, 255, 255, 0.6);
   text-align: center;
 }
 
