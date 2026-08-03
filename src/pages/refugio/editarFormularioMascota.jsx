@@ -94,6 +94,9 @@ function agregarPregunta(indexSeccion) {
 }
 
 function quitarPregunta(indexSeccion, indexPregunta) {
+  const confirmar = window.confirm('¿Estás seguro que querés eliminar esta pregunta?')
+  if (!confirmar) return
+
   setBloquesFormulario(prev =>
     prev.map((s, i) => {
       if (i !== indexSeccion) return s
@@ -103,6 +106,9 @@ function quitarPregunta(indexSeccion, indexPregunta) {
 }
 
 function quitarSeccion(indexSeccion) {
+  const confirmar = window.confirm('¿Estás seguro que querés eliminar esta sección?')
+  if (!confirmar) return
+
   setBloquesFormulario(prev => prev.filter((_, i) => i !== indexSeccion))
 } 
 
