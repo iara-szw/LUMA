@@ -219,7 +219,7 @@ export default function Perfil() {
           <img src="/assets/img/home.png" alt="" />
           <span>Inicio</span>
         </button>
-        <button className="nav-item-refugio" >
+        <button className="nav-item-refugio" onClick={()=>navigate('/refugio/mismascotas')} >
           <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
           <span>Animales</span>
         </button>

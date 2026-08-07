@@ -11,7 +11,9 @@ input[type="checkbox"] {
     border:2px solid #b8956a;
     box-sizing: border-box;
 }
-
+input{
+    border: 1px solid #d9c6a8;
+}
 input[type="checkbox"]:checked{
    background-color: #b8956a    ;
 }

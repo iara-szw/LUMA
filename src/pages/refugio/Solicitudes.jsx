@@ -136,7 +136,7 @@ export default function SolicitudesRefugio() {
           <img src="/assets/img/home.png" alt="" />
           <span>Inicio</span>
         </button>
-        <button className="nav-item-refugio" >
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/mismascotas')}>
           <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
           <span>Animales</span>
         </button>
@@ -161,6 +161,7 @@ function TarjetaSolicitud({ solicitud: s, onVerFormulario, onVerPerfil, onCoordi
   const paso = PASO_LABEL[s.paso_actual] || s.paso_actual || ''
 
   return (
+    <>
     <article className="tarjeta-solicitud-refugio">
       {esNueva && <span className="punto-nuevo" aria-label="Nueva solicitud" />}
 
@@ -205,5 +206,24 @@ function TarjetaSolicitud({ solicitud: s, onVerFormulario, onVerPerfil, onCoordi
         </button>
       </div>
     </article>
+     <nav className="bottom-nav-refugio">
+        <button className="nav-item-refugio " onClick={() => navigate('/refugio/dashboard')}>
+          <img src="/assets/img/home.png" alt="Inicio" />
+          <span>Inicio</span>
+        </button>
+       <button className="nav-item-refugio" onClick={()=>navigate('/refugio/MisMascotas')} >
+          <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
+          <span>Animales</span>
+        </button>
+        <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/solicitudes')}>
+          <img src="/assets/img/solicitudes.png" alt="Solicitudes" />
+          <span>Solicitudes</span>
+        </button>
+        <button className="nav-item-refugio" onClick={() => navigate('/refugio/perfil')}>
+          <img src="/assets/img/perfil.png" alt="Perfil" /> 
+          <span>Perfil</span>
+        </button>
+      </nav>
+      </>
   )
 }

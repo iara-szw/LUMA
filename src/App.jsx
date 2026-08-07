@@ -14,6 +14,8 @@ import EditarMascota from './pages/refugio/editarMascota.jsx'
 import EditarFormularioMascota from './pages/refugio/editarFormularioMascota.jsx'
 import EditarRefugio from './pages/refugio/editarRefugio.jsx'
 import SolicitudesRefugio from './pages/refugio/Solicitudes.jsx'
+import MisMascotas from './pages/refugio/MisMascotas.jsx'
+import SolicitudesMascota from './pages/refugio/SolicitudesMascota.jsx'
 import Explorar from './pages/adoptante/Explorar.jsx'
 import FormularioAdopcion from './pages/adoptante/formularioAdopcion.jsx'
 import Mascota from './pages/Mascota.jsx'
@@ -75,6 +77,30 @@ export default function App() {
             element={
               <RutaProtegida rol="refugio">
                 <SolicitudesRefugio />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/mismascotas"
+            element={
+              <RutaProtegida rol="refugio">
+                <MisMascotas />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/mascotas"
+            element={
+              <RutaProtegida rol="refugio">
+                <MisMascotas />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/mascota/:id/postulaciones"
+            element={
+              <RutaProtegida rol="refugio">
+                <SolicitudesMascota />
               </RutaProtegida>
             }
           />

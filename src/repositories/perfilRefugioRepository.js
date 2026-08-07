@@ -18,19 +18,30 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
     )
     .eq('mascotas.refugio_id', refugioId)
     .order('fecha_solicitud', { ascending: false })
-
   if (data) {
-    const mapped = data.map(s => ({
-      id: s.id,
-      estado: s.estado === 'Pendiente' ? 'en_revision' : s.estado.toLowerCase(),
-      creado_en: s.fecha_solicitud,
-      es_nueva: s.estado === 'Pendiente',
-      paso_actual: s.estado === 'Pendiente' ? 'formulario_completo' : s.estado === 'Aprobada' ? 'entrevista_sugerida' : 'en_revision',
-      usuarios: s.usuarios,
-      mascotas: s.mascotas,
-    }))
+    const mapped = data.map(s => {
+      let info = {}
+      try {
+        if (s.info && typeof s.info === 'string') info = JSON.parse(s.info)
+        else if (s.info && typeof s.info === 'object') info = s.info
+      } catch (e) {
+        info = {}
+      }
+
+      return {
+        id: s.id,
+        estado: s.estado === 'Pendiente' ? 'en_revision' : s.estado.toLowerCase(),
+        creado_en: s.fecha_solicitud,
+        es_nueva: s.estado === 'Pendiente',
+        paso_actual: s.estado === 'Pendiente' ? 'formulario_completo' : s.estado === 'Aprobada' ? 'entrevista_sugerida' : 'en_revision',
+        usuarios: s.usuarios,
+        mascotas: s.mascotas,
+        info,
+      }
+    })
     return { data: mapped, error }
   }
+
   return { data, error }
 }
 

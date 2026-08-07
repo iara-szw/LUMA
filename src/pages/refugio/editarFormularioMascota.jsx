@@ -63,9 +63,18 @@ function actualizarPregunta(indexSeccion, indexPregunta, campo, valor) {
       if (i !== indexSeccion) return s
       return {
         ...s,
-        preguntas: s.preguntas.map((p, j) =>
-          j === indexPregunta ? { ...p, [campo]: valor } : p
-        ),
+        preguntas: s.preguntas.map((p, j) => {
+          if (j !== indexPregunta) return p
+          // Si se cambia el tipo a multiple y no hay opciones, inicializar
+          if (campo === 'tipo' && valor === 'multiple') {
+            return { ...p, tipo: valor, opciones: p.opciones && p.opciones.length ? p.opciones : ['Opción 1', 'Opción 2'] }
+          }
+          // Actualizar opciones completos cuando se pasa un array
+          if (campo === 'opciones') {
+            return { ...p, opciones: Array.isArray(valor) ? valor : p.opciones }
+          }
+          return { ...p, [campo]: valor }
+        }),
       }
     })
   )
@@ -175,6 +184,7 @@ function quitarSeccion(indexSeccion) {
               <option value="text">Texto corto</option>
               <option value="textarea">Texto largo</option>
               <option value="photo">Foto</option>
+              <option value="multiple">Multiple choice</option>
             </select>
           </label>
         </div>
@@ -187,6 +197,30 @@ function quitarSeccion(indexSeccion) {
             onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'placeholder', e.target.value)}
           />
         </label>
+
+        {pregunta.tipo === 'multiple' && (
+          <div className="editor-opciones">
+            <label>Opciones</label>
+            {(pregunta.opciones || []).map((op, idx) => (
+              <div key={idx} className="row" style={{ gap: 8, alignItems: 'center' }}>
+                <input
+                  className="formulario-input"
+                  value={op}
+                  onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'opciones', (pregunta.opciones || []).map((o, i) => i === idx ? e.target.value : o))}
+                />
+                <button type="button" className="btn-formulario quitar" onClick={() => {
+                  const nueva = (pregunta.opciones || []).filter((_, i) => i !== idx)
+                  actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
+                }}>Eliminar</button>
+              </div>
+            ))}
+
+            <button type="button" className="btn-anadir-pregunta" onClick={() => {
+              const nueva = [ ...(pregunta.opciones || []), `Opción ${(pregunta.opciones || []).length + 1}` ]
+              actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
+            }}>+ Añadir opción</button>
+          </div>
+        )}
 
         <button type="button" className="btn-formulario ghost" onClick={() => quitarPregunta(indexSeccion, indexPregunta)}>
           Quitar pregunta

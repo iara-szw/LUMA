@@ -41,7 +41,7 @@ export default function FormularioAdopcion() {
 
       if (mascotaRes.data) setMascota(mascotaRes.data)
       if (formularioRes.data?.bloques?.length) setBloques(formularioRes.data.bloques)
-      if (solicitudRes.data?.notas && Object.keys(solicitudRes.data.notas).length > 0) {
+      if (solicitudRes.data?.info && Object.keys(solicitudRes.data.info).length > 0) {
         setInfo(solicitudRes.data.info)
       }
 
@@ -153,6 +153,21 @@ function actualizarFotoArchivo(preguntaId, file) {
             {valor && (
               <img src={valor} alt="Vista previa" style={{ width: '100%', maxHeight: 260, objectFit: 'cover', borderRadius: 12, marginTop: 8 }} />
             )}
+          </div>
+        ) : pregunta.tipo === 'multiple' ? (
+          <div className="formulario-opciones">
+            {(pregunta.opciones || []).map((op, idx) => (
+              <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  type="radio"
+                  name={pregunta.id}
+                  value={op}
+                  checked={valor === op}
+                  onChange={(e) => actualizarRespuesta(pregunta.id, e.target.value)}
+                />
+                <span>{op}</span>
+              </label>
+            ))}
           </div>
         ) : (
           <input

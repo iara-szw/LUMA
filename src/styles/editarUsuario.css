@@ -68,6 +68,7 @@
   padding: 0.85rem 1.1rem;
   font-family: var(--font);
   font-size: 0.9375rem;
+  border: 1px solid #d9c6a8;
   color: var(--texto);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;

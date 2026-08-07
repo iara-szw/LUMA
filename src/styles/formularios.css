@@ -202,6 +202,16 @@ label {
   color: #4a4a4a;
 }
 
+/* Opciones multiple-choice dentro del formulario */
+.formulario-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.formulario-opciones label { gap: 12px; }
+
 /* ---------- Botones ---------- */
 
 .btn-anadir-pregunta,
@@ -316,6 +326,7 @@ color: #ffffff;
   background: #faf7f2;
   border: 1px solid #ecdcc2;
   border-radius: 14px;
+  margin-bottom:10px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -377,6 +388,9 @@ color: #ffffff;
   padding: 14px;
 }
 
+.formulario-seccion-resumen{
+  margin-bottom:10px;
+}
 /* ---------- Responsive ---------- */
 
 @media (max-width: 640px) {
@@ -394,7 +408,12 @@ color: #ffffff;
   }
 
   .formulario-bloque-acciones button {
-    width: 100%;
+            width: 80%;
+        font-weight: 600;
+        border-radius: 20px;
+        margin-left: 10%;
+        margin-right: 10%;
+        font-family: var(--font);;
   }
 }
 
