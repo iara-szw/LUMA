@@ -6,8 +6,10 @@
 
 .pagina-formulario-adopcion {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8f2ea 0%, #fff 45%);
+  background-color: #f8f1e4;
   padding: 20px 16px 96px;
+  border: 0px;
+
 }
 
 .formulario-shell {
@@ -17,6 +19,7 @@
   border-radius: 24px;
   box-shadow: 0 12px 36px rgba(30, 30, 30, 0.08);
   padding: 20px;
+  border: 0px;
 }
 
 /* ---------- Topbar ---------- */
@@ -64,8 +67,8 @@
 /* ---------- Card ---------- */
 
 .formulario-card {
-  background: #faf7f2;
-  border: 1px solid #f0e4d3;
+  background: #fff;
+  border: 0px solid #f0e4d3;
   border-radius: 18px;
   padding: 20px 18px;
   margin-bottom: 16px;
@@ -210,26 +213,27 @@ label {
   margin-bottom: 12px;
 }
 
-.formulario-opciones label { gap: 12px; }
+.formulario-opciones label {
+  gap: 12px;
+}
 
 /* ---------- Botones ---------- */
 
 .btn-anadir-pregunta,
-.btn-anadir-bloque  {
+.btn-anadir-bloque {
   margin-top: 7.5%;
   margin-bottom: 7.5%;
   width: 75%;
   margin-left: 13%;
   padding: 3%;
-    border-radius: 12px;
-background-color: #bea67f;
-border: 0px solid #534536;
-color: #ffffff;
+  border-radius: 12px;
+  background-color: #bea67f;
+  border: 0px solid #534536;
+  color: #ffffff;
 }
 
-.btn-anadir-bloque 
-{
- margin-top: 7.5%;
+.btn-anadir-bloque {
+  margin-top: 7.5%;
   margin-bottom: 7.5%;
   width: 50%;
   margin-left: 0%;
@@ -237,13 +241,13 @@ color: #ffffff;
 }
 
 .btn-anadir-pregunta:hover,
-.btn-anadir-bloque:hover{
+.btn-anadir-bloque:hover {
   background-color: #9c7a51;
 }
 
 
 .btn-formulario,
-.btn-guardar-formulario{
+.btn-guardar-formulario {
   border: none;
   border-radius: 12px;
   padding: 10px 16px;
@@ -263,17 +267,23 @@ color: #ffffff;
   background: #a5814f;
 }
 
-.btn-formulario.quitar {
+.btn-formulario.quitar,
+.btn-formulario-eliminar {
+  background: transparent;
+  color: #7b5730;
+  border: 1px solid #b8956a;
+  margin-left: 27%;
+  margin-bottom: 5%;
+  margin-top: -2%;
+}
+
+
+
+.btn-formulario.ghost {
   background: transparent;
   border: 1px solid #b8956a;
   color: #7b5730;
-  margin-left: 27%;
-}
-
-.btn-formulario.ghost {
-    background: transparent;
-  border: 1px solid #b8956a;
-  color: #7b5730;
+  margin-left: 25%;
 }
 
 .btn-formulario.ghost:hover {
@@ -321,12 +331,18 @@ color: #ffffff;
   gap: 14px;
 }
 
+.formulario-editor-seccion {
+
+  border-bottom: 1px solid #f0e4d3;
+  margin-bottom: 5%;
+}
+
 .formulario-editor-bloque {
   padding: 16px;
   background: #faf7f2;
   border: 1px solid #ecdcc2;
   border-radius: 14px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -356,7 +372,7 @@ color: #ffffff;
   padding: 8px 14px;
   font-size: 0.85rem;
   background: transparent;
-  border: 1px solid #d99a7c;
+  border: 1px solid #ad8877;
   color: #a15c3f;
 }
 
@@ -371,6 +387,13 @@ color: #ffffff;
   margin-top: 18px;
   padding-top: 16px;
   border-top: 1px solid #f0e4d3;
+}
+
+.btn-formulario-eliminar {
+  border-radius: 15px;
+  margin-left: 0%;
+  border: 1px solid #aa9479;
+
 }
 
 /* ---------- Resumen de solicitud ---------- */
@@ -388,9 +411,10 @@ color: #ffffff;
   padding: 14px;
 }
 
-.formulario-seccion-resumen{
-  margin-bottom:10px;
+.formulario-seccion-resumen {
+  margin-bottom: 10px;
 }
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 640px) {
@@ -408,12 +432,13 @@ color: #ffffff;
   }
 
   .formulario-bloque-acciones button {
-            width: 80%;
-        font-weight: 600;
-        border-radius: 20px;
-        margin-left: 10%;
-        margin-right: 10%;
-        font-family: var(--font);;
+    width: 80%;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-family: var(--font);
+    ;
   }
 }
 

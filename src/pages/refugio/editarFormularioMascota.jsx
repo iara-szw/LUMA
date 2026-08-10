@@ -208,7 +208,7 @@ function quitarSeccion(indexSeccion) {
                   value={op}
                   onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'opciones', (pregunta.opciones || []).map((o, i) => i === idx ? e.target.value : o))}
                 />
-                <button type="button" className="btn-formulario quitar" onClick={() => {
+                <button type="button" className="btn-formulario-eliminar" onClick={() => {
                   const nueva = (pregunta.opciones || []).filter((_, i) => i !== idx)
                   actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
                 }}>Eliminar</button>
