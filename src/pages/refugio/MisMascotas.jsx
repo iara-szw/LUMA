@@ -35,15 +35,7 @@ export default function MisMascotas() {
     <>
     <div className="pagina-mis-mascotas">
       <div className="mis-header">
-        <div className="mis-header-inner">
-<Link to="/" className="logo">
-  <img src="/assets/img/logo.png" alt="Logo" />
-</Link>          {usuario?.foto_url ? (
-            <img className="mis-avatar" src={usuario.foto_url} alt={usuario.nombre} />
-          ) : (
-            <div className="mis-avatar-placeholder">🐾</div>
-          )}
-        </div>
+       
         <div className="mis-saludo">Mis mascotas</div>
               <div className="mis-filtros">
         <button className="filtro-btn activo">Todas </button>
