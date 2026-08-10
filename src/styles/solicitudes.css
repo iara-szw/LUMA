@@ -168,12 +168,13 @@
 
 /* ── Badges de estado ── */
 .badge-estado-sol {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-right: -8%;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .badge-en_revision {
@@ -221,7 +222,15 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-
+button#aprobada:active {
+    background: #82ff2769;
+}
+button#revision:active{
+    background: #f0ece3;
+}
+button#rechazada:active {
+    background: #ff272769;
+}
 .btn-accion-primaria:active {
   background: #f0ece3;
 }

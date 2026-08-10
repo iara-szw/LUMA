@@ -95,7 +95,7 @@ function actualizarFotoArchivo(preguntaId, file) {
         mascotaId,
         adoptanteId: usuario.id,
         info,
-        estado: 'en_revision',
+        estado: 'revision',
       })
 
       if (res.error) {

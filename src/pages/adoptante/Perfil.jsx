@@ -102,8 +102,14 @@ export default function Perfil() {
               </div>
               <div className="postulacion-pasos">
                 <p>✓ Formulario enviado · {new Date(p.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                {p.estado === 'en_revision' && (
+                {p.estado === 'Revision' && (
                   <p>↻ En proceso de revisión — te notificaremos cuando el refugio termine de revisar.</p>
+                )}
+                {p.estado === 'Aprobada' && (
+                  <p>Tu solicitud fue aprobada para la siguiente etapa - el refugio se contactara para coordinar la entrevista.</p>
+                )}
+                 {p.estado === 'Rechazada' && (
+                  <p>Tu solicitud fue rechazada. Tu perfil no encajaba con las necesidades del animal</p>
                 )}
               </div>
             </article>

@@ -3,16 +3,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
 import '../../styles/formularios.css'
-import { obtenerSolicitudFormularioPorId, obtenerFormularioMascota } from '../../repositories/formularioRepository'
+import { obtenerSolicitudFormularioPorId, obtenerFormularioMascota, guardarProgresoSolicitud } from '../../repositories/formularioRepository'
 
 export default function SolicitudFormulario() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { usuario } = usarAuth()
+    const [estado,SetEstado] = useState('revision')
 
   const [cargando, setCargando] = useState(true)
   const [solicitud, setSolicitud] = useState(null)
   const [secciones, setSecciones] = useState([])
+  const [guardandoEstado, setGuardandoEstado] = useState(false)
+  const [mostrarOverlay, setMostrarOverlay] = useState(false)
 
   useEffect(() => {
     async function cargar() {
@@ -31,7 +34,7 @@ export default function SolicitudFormulario() {
       }
 
       setSolicitud(data)
-
+      SetEstado(data?.estado || 'revision')
       // Traemos la estructura del formulario de esa mascota para saber
       // en qué sección va cada pregunta y cuál es su título legible.
       if (data?.mascotas?.id) {
@@ -72,6 +75,26 @@ export default function SolicitudFormulario() {
     return Object.entries(solicitud.info || {}).filter(([key]) => !idsConSeccion.has(key))
   }, [solicitud, idsConSeccion])
 
+  const cambiarEstadoSolicitud = async (nuevoEstado) => {
+    if (!solicitud?.mascotas?.id || !solicitud?.usuarios?.id) return
+    setGuardandoEstado(true)
+    const { data, error } = await guardarProgresoSolicitud({
+      mascotaId: solicitud.mascotas.id,
+      adoptanteId: solicitud.usuarios.id,
+      info: solicitud.info || {},
+      estado: nuevoEstado,
+    })
+    SetEstado(nuevoEstado)
+    setGuardandoEstado(false)
+
+    if (error) {
+      alert(error.message || 'Error al cambiar el estado de la solicitud')
+      return
+    }
+
+    setSolicitud(prev => ({ ...prev, estado: nuevoEstado }))
+  }
+
   if (cargando) return <Loader />
 
   const hayRespuestas = seccionesConRespuestas.length > 0 || respuestasSinSeccion.length > 0
@@ -81,12 +104,18 @@ export default function SolicitudFormulario() {
       <div className="formulario-shell">
         <header className="formulario-topbar">
           <button className="btn-formulario ghost" onClick={() => navigate(-1)}>← Volver</button>
-          <strong>Formulario recibido</strong>
+          <button className="btn-formulario ghost" type="button" onClick={() => setMostrarOverlay(true)}>
+            {estado == 'revision' ? <strong>Formulario recibido</strong> : (<strong>{estado}</strong>)}
+          </button>
         </header>
 
         <section className="formulario-card">
-          <h2>{solicitud?.mascotas?.nombre || 'Solicitud'}</h2>
-          <p>El adoptante completó este formulario y la solicitud llegó al refugio.</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <div>
+              <h2>{solicitud?.mascotas?.nombre || 'Solicitud'}</h2>
+              <p>El adoptante completó este formulario y la solicitud llegó al refugio.</p>
+            </div>
+          </div>
 
           {!hayRespuestas ? (
             <div className="solicitud-resumen">
@@ -135,6 +164,74 @@ export default function SolicitudFormulario() {
           )}
         </section>
       </div>
+
+      {mostrarOverlay && (
+        <div
+          className="filtro-overlay"
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200,
+          }}
+          onClick={() => setMostrarOverlay(false)}
+        >
+          <div
+            className="filtro-panel"
+            style={{
+              background: '#fff', borderRadius: 12, padding: 18,
+              width: 'min(92vw, 420px)', boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Cambiar estado de la solicitud</h3>
+            <p>Seleccioná el nuevo estado para esta solicitud.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
+              <button
+                type="button"
+                className="btn-formulario ghost"
+                id='aprobada'
+                disabled={guardandoEstado}
+                onClick={() => {
+                  cambiarEstadoSolicitud('Aprobada')
+                  setMostrarOverlay(false)
+                }}
+              >
+                {guardandoEstado ? 'Guardando...' : 'Coordinar entrevista'}
+              </button>
+               <button
+                type="button"
+                className="btn-formulario ghost"
+                id='revision'
+                disabled={guardandoEstado}
+                onClick={() => {
+                  cambiarEstadoSolicitud('Revision')
+                  setMostrarOverlay(false)
+                }}
+              >
+                {guardandoEstado ? 'Guardando...' : 'En revisión'}
+              </button>
+              <button
+                type="button"
+                className="btn-formulario ghost"
+                id='rechazada'
+                disabled={guardandoEstado}
+                onClick={() => {
+                  cambiarEstadoSolicitud('Rechazada')
+                  setMostrarOverlay(false)
+                }}
+              >
+                {guardandoEstado ? 'Guardando...' : 'Rechazar'}
+              </button>
+              <button
+                type="button"
+                className="btn-formulario ghost"
+                onClick={() => setMostrarOverlay(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
