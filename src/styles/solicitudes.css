@@ -1,111 +1,133 @@
-/* ===========================
-   Solicitudes Refugio – solicitudesRefugio.css
-   =========================== */
+/* =====================
+   solicitudes.css — LUMA
+   ===================== */
 
+* {
+  box-sizing: border-box;
+}
+.nav {
+  background-color: #F2EBE0;
+    padding: 20px 20px 16px;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+}
 .pagina-solicitudes {
   min-height: 100vh;
-  background-color: #f5f3ee;
-  font-family: 'Segoe UI', sans-serif;
+  background-color: #FAFAFA;
   color: #2c2c2a;
-  padding-bottom: 80px;
+  padding-bottom: 90px;
+
 }
 
-/* ── Contenedor principal con fondo blanco redondeado ── */
 .solicitudes-contenedor {
-  background: #fff;
-  border-radius: 24px;
-  margin: 12px 12px 0;
-  padding: 24px 16px 20px;
+  padding-bottom: 8px;
 }
 
+/* ---------- Header crema ---------- */
 .solicitudes-titulo {
+  margin: 0;
+  padding: 22px 20px 18px;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 800;
   color: #2c2c2a;
-  margin: 0 0 18px;
 }
 
-/* ── Filtros ── */
+/* Los tabs quedan pegados al header, pisando levemente el borde
+   redondeado de abajo para que se vean "flotando" como en el mockup */
 .solicitudes-filtros {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
+  gap: 10px;
+  padding: 0 16px;
+  margin-top: -20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filtro-btn{
+margin-top: 4%;
+margin-top: 2%;
+
+}
+.solicitudes-filtros::-webkit-scrollbar {
+  display: none;
 }
 
-.filtro-btn {
-  position: relative;
-  background: transparent;
-  border: 1.5px solid #d6d2c9;
+.solicitudes-filtros .filtro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  background: #fff;
+  border: none;
   border-radius: 20px;
-  padding: 7px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #5a5a57;
+  padding: 10px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #6b6b68;
   cursor: pointer;
-  transition: all 0.15s;
+  box-shadow: 0 4px 14px rgba(44, 44, 42, 0.06);
+  white-space: nowrap;
 }
 
-.filtro-btn.activo {
-  background: #4a3f35;
-  border-color: #4a3f35;
+.solicitudes-filtros .filtro-btn.activo {
+  background: #8b7355;
   color: #fff;
+  box-shadow: none;
 }
 
-.filtro-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #7a9e6e;
-  color: #fff;
-  font-size: 10px;
+.solicitudes-filtros .filtro-badge {
+  background: #d6e0c8;
+  color: #3e5236;
+  font-size: 11px;
   font-weight: 700;
+  padding: 1px 7px;
   border-radius: 10px;
-  padding: 1px 5px;
-  line-height: 1.4;
 }
 
-/* ── Resumen de cantidad ── */
+.solicitudes-filtros .filtro-btn.activo .filtro-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+/* ---------- Resumen ---------- */
 .solicitudes-resumen {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
-}
-
-.solicitudes-resumen span {
-  font-size: 13px;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 16px 4px;
+  font-size: 13.5px;
   color: #6b6b68;
 }
 
 .solicitudes-resumen .nuevas {
-  color: #7a9e6e;
-  font-weight: 600;
+  color: #5c7a52;
+  font-weight: 700;
 }
 
-/* ── Lista de tarjetas ── */
+/* ---------- Lista de solicitudes ---------- */
 .solicitudes-lista {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 14px 16px 0;
 }
 
-/* ── Tarjeta individual ── */
+.vacio-solicitudes {
+  color: #8a8a86;
+  font-size: 14px;
+  padding: 20px 4px;
+}
+
 .tarjeta-solicitud-refugio {
+  position: relative;
   background: #fff;
   border: 1px solid #e8e4dc;
-  border-radius: 16px;
-  padding: 14px 14px 12px;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.15s;
+  border-radius: 18px;
+  padding: 16px;
 }
 
-.tarjeta-solicitud-refugio:active {
-  background: #faf9f6;
-}
-
-/* Punto indicador de novedad */
 .punto-nuevo {
   position: absolute;
   top: 14px;
@@ -113,35 +135,32 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #7a9e6e;
+  background: #8fc47a;
 }
 
-/* Fila superior: avatar + nombre/mascota + badge estado */
 .solicitud-fila-superior {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-  padding-right: 20px;
+  gap: 12px;
 }
 
 .solicitud-avatar {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .solicitud-avatar-placeholder {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #e8f0e4;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 
@@ -151,145 +170,109 @@
 }
 
 .solicitud-datos h4 {
+  margin: 0 0 2px;
   font-size: 15px;
   font-weight: 700;
   color: #2c2c2a;
-  margin: 0 0 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .solicitud-datos p {
-  font-size: 12px;
-  color: #8a8a86;
   margin: 0;
+  font-size: 12.5px;
+  color: #8a8a86;
 }
 
-/* ── Badges de estado ── */
 .badge-estado-sol {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin-right: -8%;
-    white-space: nowrap;
-    flex-shrink: 0;
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 16px;
+  white-space: nowrap;
 }
 
 .badge-en_revision {
-  background: #f0ece3;
-  color: #7a6a55;
+  background: #EFE1CC;
+  color: #8a5a2b;
 }
 
 .badge-aprobada {
-  background: #7a9e6e;
-  color: #fff;
+  background: #cfe0c4;
+  color: #3e5236;
 }
 
 .badge-rechazada {
-  background: #fdecea;
-  color: #c0392b;
+  background: #f0d4d0;
+  color: #8a3a30;
 }
 
-.badge-pendiente {
-  background: #fef9ec;
-  color: #a07000;
+.badge-Pendiente {
+  background: #ece8de;
+  color: #6b6b68;
 }
 
-/* ── Paso actual ── */
 .solicitud-paso {
+  margin: 10px 0 0;
   font-size: 13px;
   color: #6b6b68;
-  margin: 0 0 10px;
 }
 
-/* ── Acciones ── */
 .solicitud-acciones {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .btn-accion-primaria {
-  background: transparent;
-  border: 1.5px solid #c8c1b4;
+  background: #EFE7DA;
+  border: none;
   border-radius: 20px;
-  padding: 7px 14px;
+  padding: 9px 16px;
   font-size: 13px;
-  font-weight: 500;
-  color: #4a4a47;
+  font-weight: 600;
+  color: #5C4A3A;
   cursor: pointer;
-  transition: background 0.15s;
-}
-button#aprobada:active {
-    background: #82ff2769;
-}
-button#revision:active{
-    background: #f0ece3;
-}
-button#rechazada:active {
-    background: #ff272769;
-}
-.btn-accion-primaria:active {
-  background: #f0ece3;
 }
 
 .btn-accion-verde {
-  background: #7a9e6e;
+  background: #8CA97D;
   border: none;
   border-radius: 20px;
-  padding: 8px 14px;
+  padding: 9px 16px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
   cursor: pointer;
-  transition: background 0.15s;
-}
-
-.btn-accion-verde:active {
-  background: #6a8e5f;
 }
 
 .btn-ver-perfil {
   background: none;
   border: none;
   font-size: 13px;
-  font-weight: 600;
-  color: #4a4a47;
+  font-weight: 700;
+  color: #2c2c2a;
   cursor: pointer;
-  padding: 0;
+  padding: 6px 2px;
+  white-space: nowrap;
 }
 
-/* ── Botón ver todos ── */
+/* ---------- Ver todos ---------- */
 .btn-ver-todos {
   display: block;
-  margin: 16px auto 0;
-  background: transparent;
-  border: 1.5px solid #c8c1b4;
+  margin: 18px auto 8px;
+  background: #EFE7DA;
+  border: none;
   border-radius: 20px;
-  padding: 10px 28px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #4a4a47;
+  padding: 11px 28px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #5C4A3A;
   cursor: pointer;
-  transition: background 0.15s;
 }
 
-.btn-ver-todos:hover {
-  background: #f0ece3;
-}
-
-/* ── Vacío ── */
-.vacio-solicitudes {
-  font-size: 13px;
-  color: #a0a09c;
-  text-align: center;
-  padding: 20px 0 8px;
-  margin: 0;
-}
-
-/* ── Bottom nav ── */
+/* ---------- Bottom nav ---------- */
 .bottom-nav-refugio {
   position: fixed;
   bottom: 0;
@@ -316,7 +299,6 @@ button#rechazada:active {
   color: #a0a09c;
   font-size: 10px;
   font-weight: 500;
-  transition: color 0.15s;
 }
 
 .nav-item-refugio img {
@@ -334,24 +316,14 @@ button#rechazada:active {
   filter: invert(50%) sepia(30%) saturate(500%) hue-rotate(60deg);
 }
 
-/* Filtro modal */
-.filtro-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-}
-
-.filtro-panel {
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  width: calc(100% - 40px);
-  max-width: 420px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+/* ---------- Responsive ---------- */
+@media (min-width: 480px) {
+  .solicitudes-filtros,
+  .solicitudes-resumen,
+  .solicitudes-lista {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }
 
 .filtro-panel h3 { margin: 0 0 10px }

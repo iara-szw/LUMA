@@ -73,13 +73,17 @@ export default function SolicitudesRefugio() {
   const hayMas = solicitudesFiltradas.length > 3 && !mostrarTodas
 
   return (
-    <div className="pagina-solicitudes">
+
+<div className="pagina-solicitudes">
 
       <div className="solicitudes-contenedor">
+        <div className="nav">
+
         <h1 className="solicitudes-titulo">Solicitudes</h1>
 
         {/* Filtros */}
         <div className="solicitudes-filtros">
+          
           {FILTROS.map(f => (
             <button
               key={f}
@@ -93,7 +97,7 @@ export default function SolicitudesRefugio() {
             </button>
           ))}
         </div>
-
+</div>
         {/* Resumen */}
         <div className="solicitudes-resumen">
           <span>Tenés {solicitudesFiltradas.length} solicitudes</span>
