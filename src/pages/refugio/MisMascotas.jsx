@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
+import { Link } from 'react-router-dom'
+
 import { obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/misMascotas.css'
 
@@ -34,21 +36,23 @@ export default function MisMascotas() {
     <div className="pagina-mis-mascotas">
       <div className="mis-header">
         <div className="mis-header-inner">
-          <div className="mis-logo">LUMA</div>
-          {usuario?.foto_url ? (
+<Link to="/" className="logo">
+  <img src="/assets/img/logo.png" alt="Logo" />
+</Link>          {usuario?.foto_url ? (
             <img className="mis-avatar" src={usuario.foto_url} alt={usuario.nombre} />
           ) : (
             <div className="mis-avatar-placeholder">🐾</div>
           )}
         </div>
         <div className="mis-saludo">Mis mascotas</div>
-      </div>
-
-      <div className="mis-filtros">
+              <div className="mis-filtros">
         <button className="filtro-btn activo">Todas </button>
         <button className="filtro-btn">Activas</button>
         <button className="filtro-btn">Adoptadas</button>
       </div>
+      </div>
+
+
 
       <div className="lista-mascotas-refugio">
         {mascotas.length === 0 ? (
