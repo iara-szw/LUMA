@@ -277,15 +277,28 @@ label {
   margin-top: -2%;
 }
 
-
-
-.btn-formulario.ghost {
+.btn-formulario-volver
+ {
   background: transparent;
   border: 1px solid #b8956a;
   color: #7b5730;
   margin-left: 25%;
 }
+.btn-formulario.ghost
+ {
+  background: transparent;
+  border: 1px solid #b8956a;
+  color: #7b5730;
+  margin-left: 10%;
+}
 
+.btn-formulario.quitar
+ {
+  background: transparent;
+  border: 1px solid #b8956a;
+  color: #7b5730;
+  margin-left: 25%;
+}
 .btn-formulario.ghost:hover {
   background: #f5ebdc;
 }

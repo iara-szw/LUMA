@@ -142,7 +142,7 @@ function quitarSeccion(indexSeccion) {
     <div className="pagina-formulario-adopcion">
       <div className="formulario-shell">
         <header className="formulario-topbar">
-          <button className="btn-formulario ghost" onClick={() => navigate(-1)}>← Volver</button>
+          <button className="btn-formulario volver" onClick={() => navigate(-1)}>← Volver</button>
           <strong>{mascota?.nombre || 'Formulario'}</strong>
         </header>
 
@@ -222,7 +222,7 @@ function quitarSeccion(indexSeccion) {
           </div>
         )}
 
-        <button type="button" className="btn-formulario ghost" onClick={() => quitarPregunta(indexSeccion, indexPregunta)}>
+        <button type="button" className="btn-formulario quitar" onClick={() => quitarPregunta(indexSeccion, indexPregunta)}>
           Quitar pregunta
         </button>
       </div>
