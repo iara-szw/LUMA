@@ -54,7 +54,7 @@ export async function obtenerEstadisticasDeRefugio(refugioId) {
     Supabase
       .from('solicitudes')
       .select('id, mascotas!inner(refugio_id)', { count: 'exact', head: true })
-      .eq('estado', 'Aprobada')
+      .eq('estado', 'Adopcion')
       .eq('mascotas.refugio_id', refugioId),
        Supabase
       .from('refugios')

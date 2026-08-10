@@ -22,14 +22,19 @@ export default function SolicitudesMascota() {
   const [solicitudes, setSolicitudes] = useState([])
   const [mascota, setMascota] = useState(null)
   const [preguntasMC, setPreguntasMC] = useState([])
-  const [filtro, setFiltro] = useState({ preguntaId: null, opcion: null })
+  const [filtros, setFiltros] = useState({})
+  const [filtrosTemp, setFiltrosTemp] = useState({})
   const [mostrarFiltro, setMostrarFiltro] = useState(false)
   const [cargando, setCargando] = useState(true)
 
   const solicitudesVisibles = useMemo(() => {
-    if (!filtro.preguntaId || !filtro.opcion) return solicitudes
-    return solicitudes.filter(s => (s.info || {})[filtro.preguntaId] === filtro.opcion)
-  }, [solicitudes, filtro])
+    if (!Object.keys(filtros).length) return solicitudes
+    return solicitudes.filter(s =>
+      Object.entries(filtros).every(([preguntaId, opcion]) =>
+        (s.info || {})[preguntaId] === opcion
+      )
+    )
+  }, [solicitudes, filtros])
 
   useEffect(() => {
     if (!usuario) return
@@ -71,7 +76,7 @@ export default function SolicitudesMascota() {
       <div className="solicitudes-contenedor">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h1 className="solicitudes-titulo">Postulaciones {mascota ? `para ${mascota.nombre}` : ''}</h1>
-          <button className="btn-accion-primaria" onClick={() => setMostrarFiltro(true)}>Filtrar respuestas</button>
+          <button className="btn-accion-primaria" onClick={() => { setFiltrosTemp(filtros); setMostrarFiltro(true) }}>Filtrar respuestas</button>
         </div>
 
         <div className="solicitudes-lista">
@@ -90,7 +95,7 @@ export default function SolicitudesMascota() {
           <span>Inicio</span>
         </button>
         <button className="nav-item-refugio" onClick={() => navigate('/refugio/mascotas')}>
-          <img src="/assets/img/animal.png" alt="" />
+          <img src="/assets/img/animal.png" alt="" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
           <span>Animales</span>
         </button>
         <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
@@ -104,7 +109,7 @@ export default function SolicitudesMascota() {
       </nav>
 
       {mostrarFiltro && (
-        <div className="filtro-overlay" onClick={() => setMostrarFiltro(false)}>
+        <div className="filtro-overlay">
           <div className="filtro-panel" onClick={(e) => e.stopPropagation()}>
             <h3>Filtrar por pregunta</h3>
             {preguntasMC.length === 0 ? (
@@ -114,22 +119,36 @@ export default function SolicitudesMascota() {
                 <div key={p.id} style={{ marginBottom: 12 }}>
                   <strong>{p.titulo}</strong>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                    {(p.opciones || []).map((op, idx) => (
-                      <button
-                        key={idx}
-                        className={`filtro-opcion ${filtro.preguntaId === p.id && filtro.opcion === op ? 'activo' : ''}`}
-                        onClick={() => { setFiltro({ preguntaId: p.id, opcion: op }); setMostrarFiltro(false) }}
-                      >
-                        {op}
-                      </button>
-                    ))}
+                    {(p.opciones || []).map((op, idx) => {
+                      const seleccionado = filtrosTemp[p.id] === op
+                      return (
+                        <button
+                          key={idx}
+                          className={`filtro-opcion ${seleccionado ? 'activo' : ''}`}
+                          onClick={() => {
+                            setFiltrosTemp(prev => {
+                              const actual = prev[p.id]
+                              if (actual === op) {
+                                const next = { ...prev }
+                                delete next[p.id]
+                                return next
+                              }
+                              return { ...prev, [p.id]: op }
+                            })
+                          }}
+                        >
+                          {op}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
               ))
             )}
 
-            <div style={{ marginTop: 12 }}>
-              <button className="btn-formulario ghost" onClick={() => { setFiltro({ preguntaId: null, opcion: null }); setMostrarFiltro(false) }}>Limpiar filtro</button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 16 }}>
+              <button className="btn-formulario ghost" onClick={() => { setFiltros({}); setFiltrosTemp({}); }}>Limpiar filtro</button>
+              <button className="btn-accion-verde" onClick={() => { setFiltros(filtrosTemp); setMostrarFiltro(false) }}>Guardar filtros</button>
             </div>
           </div>
         </div>
