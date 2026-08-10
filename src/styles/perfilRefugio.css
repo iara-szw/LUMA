@@ -339,31 +339,26 @@
 
 /* ── Badges de estado ── */
 .badge-estado {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 20px;
-  white-space: nowrap;
+font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
 }
 
-.badge-pendiente {
+.badge-Revision {
   background: #fef9ec;
   color: #a07000;
 }
 
-.badge-en_revision {
-  background: #eef4fd;
-  color: #1a5fa8;
+.badge-Aprobada {
+  background: var(--verde);
+  color: var(--crema);
 }
 
-.badge-aprobada {
-  background: #eaf6ee;
-  color: #1e7e3a;
-}
-
-.badge-rechazada {
-  background: #fdecea;
-  color: #c0392b;
+.badge-Rechazada {
+  background: var(--rojo);
+  color: var(--crema);
 }
 
 /* ── Botón editar perfil ── */

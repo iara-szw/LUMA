@@ -318,6 +318,9 @@ label {
   transform: scale(0.98);
 }
 
+.pagina-formulario-adopcion .btn-formulario.ghost{
+  margin:0%
+}
 .btn-guardar-formulario:disabled {
   background: #c3cab5;
   cursor: not-allowed;
