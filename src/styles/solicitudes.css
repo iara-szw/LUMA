@@ -327,7 +327,42 @@ margin-top: 2%;
 }
 
 .filtro-panel h3 { margin: 0 0 10px }
+.filtro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
 
+.filtro-panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  width: calc(100% - 40px);
+  max-width: 420px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.filtro-panel h3 { margin: 0 0 10px }
+
+.filtro-opcion {
+  background: transparent;
+  border: 1px solid #d6d2c9;
+  border-radius: 18px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.filtro-panel .btn-formulario.ghost{
+  margin:0%;
+}
+.filtro-opcion.activo {
+  background: #7a9e6e;
+  color: #fff;
+  border-color: #7a9e6e;
+}
 .filtro-opcion {
   background: transparent;
   border: 1px solid #d6d2c9;
