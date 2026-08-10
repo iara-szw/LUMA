@@ -55,7 +55,19 @@ export default function MisMascotas() {
           <p>No tenés mascotas publicadas.</p>
         ) : (
           mascotas.map(m => (
-            <article key={m.id} className="tarjeta-mascota-refugio">
+            <article
+              key={m.id}
+              className="tarjeta-mascota-refugio tarjeta-mascota-clickeable"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(`/refugio/mascota/${m.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  navigate(`/refugio/mascota/${m.id}`)
+                }
+              }}
+            >
               <div className="foto-mascota">
                 {m.foto_url ? (
                   <img src={m.foto_url} alt={m.nombre} />
@@ -68,9 +80,24 @@ export default function MisMascotas() {
                 <h3>{m.nombre}</h3>
                 <p>Edad: {m.edad || 'N/D'}</p>
                 <div className="acciones-mascota">
-                  <button onClick={() => navigate(`/refugio/mascota/${m.id}/postulaciones`)} className="btn-accion-primaria">Ver postulaciones</button>
-                  <button onClick={() => navigate(`/refugio/editarFormulario/${m.id}`)} className="btn-accion-secundaria">Editar form</button>
-                  <button onClick={() => navigate(`/refugio/mascota/${m.id}`)} className="btn-ver-perfil">Ver perfil</button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      navigate(`/refugio/mascota/${m.id}/postulaciones`)
+                    }}
+                    className="btn-accion-primaria"
+                  >
+                    Ver postulaciones
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      navigate(`/refugio/editarFormulario/${m.id}`)
+                    }}
+                    className="btn-accion-secundaria"
+                  >
+                    Editar form
+                  </button>
                 </div>
               </div>
             </article>
