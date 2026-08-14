@@ -20,6 +20,8 @@ import Explorar from './pages/adoptante/Explorar.jsx'
 import FormularioAdopcion from './pages/adoptante/formularioAdopcion.jsx'
 import Mascota from './pages/Mascota.jsx'
 import SolicitudFormulario from './pages/refugio/solicitudFormulario.jsx'
+import PerfilAdoptanteRefugio from './pages/refugio/PerfilUsuario.jsx'
+import PerfilPublicoRefugio from './pages/refugio/PerfilPublico.jsx'
 
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
@@ -101,6 +103,14 @@ export default function App() {
             element={
               <RutaProtegida rol="refugio">
                 <SolicitudesMascota />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/solicitud/:id/perfil"
+            element={
+              <RutaProtegida rol="refugio">
+                <PerfilAdoptanteRefugio />
               </RutaProtegida>
             }
           />
@@ -187,6 +197,10 @@ export default function App() {
                 <EditarFormularioMascota />
               </RutaProtegida>
             }
+          />
+          <Route
+            path="/refugio/:id"
+            element={<PerfilPublicoRefugio />}
           />
 
           <Route path="/mascota/:id" element={<Mascota />} />
