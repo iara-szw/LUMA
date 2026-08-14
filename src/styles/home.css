@@ -1,19 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
-:root {
-    --crema: #F2EBE0;
-    --fondo: #FAFAFA;
-    --verde: #9CA788;
-    --verde-oscuro: #7A8A6A;
-    --arena: #BAA392;
-    --arena-hover: #A08878;
-    --texto: #5C4A3A;
-    --texto-suave: #8C7A6A;
-    --blanco: #FFFFFF;
-    --rojo: #E8726A;
-    --font: 'Nunito', sans-serif;
-}
-
 *,
 *::before,
 *::after {

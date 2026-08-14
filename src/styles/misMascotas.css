@@ -15,7 +15,7 @@
 
 /* ---------- Header crema ---------- */
 .mis-header {
-  background-color: #F7F3EA;
+  background-color:var(--crema);
   padding: 20px 20px 16px;
   border-bottom-left-radius: 28px;
   border-bottom-right-radius: 28px;
@@ -67,7 +67,6 @@
 .mis-filtros {
   display: flex;
   gap: 10px;
-  padding: 14px 16px 0;
 }
 
 .mis-filtros .filtro-btn {

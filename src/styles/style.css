@@ -1,4 +1,42 @@
-html, body { width: 100%; background: #ffffff; overflow-x: hidden; margin: 0; }
+:root {
+  --crema: #F2EBE0;
+  --crema-oscura: #E8DDD0;
+  --fondo: #FAFAFA;
+  --verde: #9CA788;
+  --verde-oscuro: #7A8A6A;
+  --verde-claro: #D6E0C8;
+  --verde-suave: #E8F0E4;
+  --arena: #B8956A;
+  --arena-hover: #A07D57;
+  --arena-claro: #D4B896;
+  --marron: #8B7355;
+  --marron-dark: #5C4A3A;
+  --marron-oscuro: #2C2C2A;
+  --texto: #5C4A3A;
+  --texto-suave: #8C7A6A;
+  --texto-light: #A0A09C;
+  --rojo: #E8726A;
+  --rojo-claro: #F0D4D0;
+  --rojo-oscuro: #8A3A30;
+  --beige: #EFE7DA;
+  --beige-suave: #ECE8DE;
+  --beige-calido: #EFE1CC;
+  --gris: #8A8A86;
+  --gris-oscuro: #6B6B68;
+  --linea: #E8E4DC;
+  --blanco: #FFFFFF;
+  --error: #C0392B;
+  --error-claro: #FDECEA;
+  --exito: #6B8F5E;
+  --exito-claro: #EEF5EB;
+  --marron-estado: #8A5A2B;
+  --verde-estado: #8FC47A;
+  --sombra: rgba(92, 74, 58, 0.10);
+  --sombra-strong: rgba(0, 0, 0, 0.12);
+  --font: 'Nunito', sans-serif;
+}
+
+html, body { width: 100%; background: var(--fondo); color: var(--texto); overflow-x: hidden; margin: 0; }
 body { min-height: 100vh; }
 #root { width: 100%; }
 img { max-width: 100%; height: auto; display: block; }

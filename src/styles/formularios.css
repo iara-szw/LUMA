@@ -421,12 +421,11 @@ label {
 }
 
 .solicitud-resumen-item {
-  background: #faf7f2;
-  border: 1px solid #f0e4d3;
-  border-radius: 12px;
-  padding: 14px;
+    background: #faf7f2;
+    border: 2px solid #f0e4d3;
+    border-radius: 12px;
+    padding: 14px;
 }
-
 .formulario-seccion-resumen {
   margin-bottom: 10px;
 }

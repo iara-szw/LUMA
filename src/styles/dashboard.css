@@ -7,17 +7,15 @@
     font-family: var(--font);
 }
 :root {
-  --dash-bg: #FAFAFA;
-  --dash-card: #ffffff;
-  --dash-primario: #8b7355;
-  --dash-verde: #9CA788;
-  --dash-texto: #3d2e1e;
-  --dash-texto-suave: #8a7a6a;
-  --dash-borde: #e5ddd0;
-  --dash-urgente: #e07b5a;
+  --dash-bg: var(--fondo);
+  --dash-card: var(--blanco);
+  --dash-primario: var(--marron);
+  --dash-verde: var(--verde);
+  --dash-texto: var(--texto);
+  --dash-texto-suave: var(--texto-suave);
+  --dash-borde: var(--linea);
+  --dash-urgente: var(--rojo);
   --dash-radius: 16px;
-    --font: 'Nunito', sans-serif;
-
   --dash-radius-sm: 10px;
   --dash-sombra: 0 2px 10px rgba(0, 0, 0, 0.07);
 }
@@ -47,7 +45,7 @@ overflow-x: hidden;
   position: sticky;
   top: 0;
   z-index: 10; 
-      background-color: #F7F3EA;
+      background-color: var(--crema);
 
 }
 
@@ -58,7 +56,7 @@ overflow-x: hidden;
     letter-spacing: 0.06em;
     text-decoration: none;
     margin-bottom: -10%;
-    margin-left: -5%;
+    margin-left: -15%;
 }
 
 .dash-header-iconos {
@@ -72,11 +70,6 @@ overflow-x: hidden;
   border: none;
   cursor: pointer;
   padding: 4px;
-}
-
-.dash-icono-campana img {
-  width: 24px;
-  height: 24px;
 }
 
 .dash-avatar {
@@ -95,7 +88,7 @@ overflow-x: hidden;
     color: #5C4A3A;
     padding: 1.1rem 1.25rem 0.75rem;
     margin-top:-3%;
-  background-color: #F7F3EA;
+  background-color: var(--crema);
 }
 
 /* ── Buscador ── */
@@ -121,7 +114,7 @@ overflow-x: hidden;
     
 }
 .dash-buscador{
-  background-color: #F7F3EA;
+  background-color: var(--crema);
   padding:5%;
   margin-bottom:2%;
     padding: 1.25rem 1.25rem 1rem;
@@ -162,8 +155,9 @@ overflow-x: hidden;
 
 /* ── Stats card ── */
 .dash-stats-card {
-  background: var(--dash-card);
+  background: var(--fondo);
   border-radius: var(--dash-radius);
+      border: 2px solid var(--beige-suave);
   padding: 16px;
   box-shadow: var(--dash-sombra);
   overflow: hidden;
@@ -212,14 +206,14 @@ overflow-x: hidden;
 }
 
 .dash-stat-item {
-  background: var(--dash-bg);
-  border-radius: var(--dash-radius-sm);
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    background: var(--beige-suave);
+    border-radius: var(--dash-radius-sm);
+    padding: 12px 14px;
+    border: 2px solid var(--beige-suave);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
-
 .dash-stat-label {
   font-size: 11px;
   color: var(--dash-texto-suave);
@@ -246,7 +240,7 @@ overflow-x: hidden;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  background: var(--dash-card);
+  background: #edeae3;
   border: none;
   border-radius: var(--dash-radius);
   padding: 14px 20px;
