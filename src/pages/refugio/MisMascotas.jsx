@@ -96,9 +96,14 @@ export default function MisMascotas() {
                   </button>
                 </div>
               </div>
+              
             </article>
           ))
+          
         )}
+        <button className="agregar" onClick={() => navigate('/refugio/cargarMascota')}>
+          <span className="dash-accion-icono">+</span>
+        </button>
       </div>
     </div>
     <nav className="bottom-nav-refugio">

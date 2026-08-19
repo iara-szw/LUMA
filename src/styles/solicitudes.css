@@ -26,13 +26,14 @@
 
 /* ---------- Header crema ---------- */
 .solicitudes-titulo {
-  margin: 0;
-  padding: 22px 20px 18px 0px;
-  border-bottom-left-radius: 28px;
-  border-bottom-right-radius: 28px;
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--marron-oscuro);
+    margin: 0;
+    margin-left: 3%;
+    padding: 22px 20px 18px 0px;
+    border-bottom-left-radius: 28px;
+    border-bottom-right-radius: 28px;
+    font-size: 23px;
+    font-weight: 800;
+    color: var(--marron-oscuro);
 }
 
 /* Los tabs quedan pegados al header, pisando levemente el borde
@@ -53,6 +54,19 @@ margin-top: 2%;
   display: none;
 }
 
+.volver{
+      background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 50%;
+    width: 15%;
+    height: 36px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2c2c2a;
+}
 .solicitudes-filtros .filtro-btn {
   display: inline-flex;
   align-items: center;

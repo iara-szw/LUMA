@@ -34,6 +34,10 @@
   --sombra: rgba(92, 74, 58, 0.10);
   --sombra-strong: rgba(0, 0, 0, 0.12);
   --font: 'Nunito', sans-serif;
+  --radio-card:15px;
+    --radio-input:25px;
+    --radio-boton:25px;
+
 }
 
 html, body { width: 100%; background: var(--fondo); color: var(--texto); overflow-x: hidden; margin: 0; }

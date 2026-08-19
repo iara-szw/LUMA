@@ -20,7 +20,26 @@
   border-bottom-left-radius: 28px;
   border-bottom-right-radius: 28px;
 }
+.agregar span{
+  color:#ffffff;
+  background-color: var(--dash-verde);
+    font-size: 20px;
+}
+.agregar{
+     background-color: var(--dash-verde);
+    border: none;
+    border-radius: 35px;
+    width: 15%;
+    padding: 4%;
+    padding-left: 5%;
+    padding-right: 5%;
+        margin-left: 78%;
+    margin-right: 22%;
+    position: fixed;
+    margin-bottom: 5%;
+    margin-top: 135%;
 
+}
 .mis-header-inner {
   display: flex;
   align-items: center;

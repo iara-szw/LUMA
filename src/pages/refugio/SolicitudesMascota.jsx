@@ -74,7 +74,10 @@ export default function SolicitudesMascota() {
   return (
     <div className="pagina-solicitudes">
       <div className="solicitudes-contenedor">
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '0px 0px 15px 15px', backgroundColor: 'var(--crema)', padding: '3%' }}>
+                      <button className="volver" onClick={() => navigate(-1)} aria-label="Volver">←</button>
+
           <h1 className="solicitudes-titulo">Postulaciones {mascota ? `para ${mascota.nombre}` : ''}</h1>
           <button className="btn-accion-primaria" onClick={() => { setFiltrosTemp(filtros); setMostrarFiltro(true) }}>Filtrar respuestas</button>
         </div>
