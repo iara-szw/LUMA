@@ -78,10 +78,10 @@ export default function SolicitudesMascota() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '0px 0px 15px 15px', backgroundColor: 'var(--crema)', padding: '3%' }}>
                       <button className="volver" onClick={() => navigate(-1)} aria-label="Volver">←</button>
 
-          <h1 className="solicitudes-titulo">Postulaciones {mascota ? `para ${mascota.nombre}` : ''}</h1>
+          <h1 className="solicitudes-titulo">Postulaciones </h1>
           <button className="btn-accion-primaria" onClick={() => { setFiltrosTemp(filtros); setMostrarFiltro(true) }}>Filtrar respuestas</button>
         </div>
-
+<h1 className="nombre">{mascota ? ` ${mascota.nombre}` : ''}</h1>
         <div className="solicitudes-lista">
           {solicitudesVisibles.length === 0 ? (
             <p className="vacio-solicitudes">No hay postulaciones para esta mascota.</p>

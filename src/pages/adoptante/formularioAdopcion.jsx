@@ -184,7 +184,7 @@ function actualizarFotoArchivo(preguntaId, file) {
           <div className="formulario-bloque-acciones">
             <button
               type="button"
-              className="btn-formulario ghost"
+              className="btn-formulario ghost -anterior"
               disabled={!hayAnterior || guardando}
               onClick={() => {
                 if (hayAnterior) {

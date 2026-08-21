@@ -413,7 +413,9 @@ label {
 }
 
 /* ---------- Resumen de solicitud ---------- */
-
+.btn-formulario.ghost.-anterior{
+  margin-left:10%;
+}
 .solicitud-resumen {
   display: flex;
   flex-direction: column;

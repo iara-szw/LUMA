@@ -144,9 +144,10 @@ export default function Home() {
                 >
                   <img src={favoritos.has(m.id) ? '/assets/img/corazon-seleccionado.png' : '/assets/img/corazon.png'} alt="" />
                 </button>
-                {m.foto_url && <img src={m.foto_url} alt={m.nombre} />}
+      <img src={m.foto_url || '/assets/img/perfil_default.jpg'} alt={m.nombre} />
                 <h4>{m.nombre}</h4>
                 {m.edad && <span>{m.edad}</span>}
+                
                 {m.urgente && <span className="badge-urgente">Urgente</span>}
               </article>
             ))

@@ -45,6 +45,88 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
   return { data, error }
 }
 
+export async function obtenerPerfilAdoptantePorSolicitud(solicitudId) {
+  const { data, error } = await Supabase
+    .from('solicitudes')
+    .select(`
+      id,
+      estado,
+      fecha_solicitud,
+      mascotas(id, nombre),
+      usuarios:adoptante_id(
+        id,
+        nombre,
+        apellido,
+        email,
+        telefono,
+        ciudad,
+        provincia,
+        biografia,
+        foto_url
+      )
+    `)
+    .eq('id', solicitudId)
+    .maybeSingle()
+
+  if (error) return { data: null, error }
+  if (!data) return { data: null, error: null }
+
+  return {
+    data: {
+      id: data.id,
+      estado: data.estado,
+      fecha_solicitud: data.fecha_solicitud,
+      mascota: data.mascotas,
+      usuario: data.usuarios,
+    },
+    error: null,
+  }
+}
+
+export async function obtenerRefugio(refugioId) {
+  const result = await Supabase
+    .from('refugios')
+    .select('*')
+    .eq('id', refugioId)
+    .maybeSingle()
+
+  if (result.data) return result
+
+  if (!result.error) {
+    const usuarioRes = await Supabase
+      .from('usuarios')
+      .select('*')
+      .eq('id', refugioId)
+      .maybeSingle()
+
+    if (usuarioRes.error) return usuarioRes
+
+    if (!usuarioRes.data) {
+      const insertRes = await Supabase
+        .from('refugios')
+        .insert({ id: refugioId })
+        .select()
+        .single()
+      return insertRes
+    }
+
+    return {
+      data: {
+        ...usuarioRes.data,
+        id: usuarioRes.data.id,
+        nombre: usuarioRes.data.nombre || 'Refugio',
+        descripcion: usuarioRes.data.descripcion || usuarioRes.data.biografia || '',
+        direccion: usuarioRes.data.direccion || [usuarioRes.data.ciudad, usuarioRes.data.provincia].filter(Boolean).join(', '),
+        logo_url: usuarioRes.data.logo_url || usuarioRes.data.foto_url || usuarioRes.data.foto_perfil || '/assets/img/perfil_default.jpg',
+        portada_url: usuarioRes.data.portada_url || usuarioRes.data.foto_portada_url || '/assets/img/refugio_default.jpg',
+      },
+      error: null,
+    }
+  }
+
+  return result
+}
+
 export async function obtenerEstadisticasDeRefugio(refugioId) {
   const [mascotasRes, solicitudesRes,voluntariosRes, eventosRes] = await Promise.all([
     Supabase
@@ -103,24 +185,4 @@ export async function actualizarRefugio(refugioId, {
     .from('refugios')
     .update(payload)
     .eq('id', refugioId)
-}
-
-export async function obtenerRefugio(refugioId) {
-  const result = await Supabase
-    .from('refugios')
-    .select('*')
-    .eq('id', refugioId)
-    .maybeSingle()
-
-  // Si no existe fila en refugios, crearla vacía
-  if (!result.data && !result.error) {
-    const insertRes = await Supabase
-      .from('refugios')
-      .insert({ id: refugioId })
-      .select()
-      .single()
-    return insertRes
-  }
-
-  return result
 }

@@ -195,7 +195,22 @@ export default function Mascota() {
 
           <div className="refugio">
             <h4>Refugio</h4>
-            <p>{nombreRefugio}</p>
+            <button
+              type="button"
+              onClick={() => refugio?.id && navigate(`/refugio/${refugio.id}`)}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                color: '#4a7a62',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left',
+                fontSize: '1rem',
+              }}
+            >
+              {nombreRefugio}
+            </button>
           </div>
         <div className="mascota-pagina">
       <div className="acciones">
