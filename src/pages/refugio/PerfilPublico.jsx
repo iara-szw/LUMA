@@ -19,8 +19,9 @@ export default function PerfilPublicoRefugio() {
         const [refugioRes, mascotasRes] = await Promise.all([
           obtenerRefugio(id),
           obtenerMascotasDeRefugio(id),
+          
         ])
-
+        
         if (!activo) return
 
         setRefugio(refugioRes?.data || null)
