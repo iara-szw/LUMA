@@ -238,7 +238,7 @@ export default function Mascota() {
             ) : (
               recomendadas.map(r => (
                 <article key={r.id} className="tarjeta-mascota" onClick={() => navigate(`/mascota/${r.id}`)}>
-                  {r.foto_url && <img src={r.foto_url} alt={r.nombre} />}
+      <img src={m.foto_url || '/assets/img/perfil_default.jpg'} alt={m.nombre} />
                   <h4>{r.nombre}</h4>
                   {r.edad && <span>{r.edad}</span>}
                   {r.urgente && <span className="badge-urgente">Urgente</span>}
