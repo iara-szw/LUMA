@@ -115,7 +115,7 @@ function actualizarFotoArchivo(preguntaId, file) {
     <div className="pagina-formulario-adopcion">
       <div className="formulario-shell">
         <header className="formulario-topbar">
-          <button className="btn-formulario ghost" onClick={() => navigate(-1)}>← Volver</button>
+          <button className="btn-formulario-volver" onClick={() => navigate(-1)}>← Volver</button>
           <strong>{mascota?.nombre || 'Solicitud'}</strong>
         </header>
 

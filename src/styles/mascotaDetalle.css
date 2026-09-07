@@ -66,8 +66,8 @@
   box-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
   flex: 1;
   margin-top: -17%;
-    position: relative;
-      z-index: 1;
+  position: relative;
+  z-index: 1;
   width: 110.5%;
   margin-left: -5.25%;
 
@@ -89,7 +89,7 @@
   padding: 6px 10px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.06);
-  font-size: 14px
+  font-size: 14px;
 }
 
 .badge.urgente {
@@ -107,12 +107,25 @@
 .atributos {
   display: flex;
   gap: 12px;
-  margin-top: 16px
+  margin-top: 16px;
+  color: #463b35;
+
+}
+
+h3,
+p,
+h4 {
+  color: #463b35;
+}
+
+h3 {
+  font-weight: 800;
+  font-size: 20px;
 }
 
 .atributo-card {
-      display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
   flex: 1;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(250, 250, 250, 0.8));
   padding: 12px;
@@ -160,23 +173,38 @@
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 8px 0
+  padding: 8px 15px;
+  background-color: white;
+  border-radius: 20px;
 }
 
 .tarjeta-mascota {
   min-width: 160px;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.06);
-  padding: 8px;
-  cursor: pointer
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.25);
+  padding: 0px;
+  cursor: pointer;
+  padding-bottom: 10px;
+  border-radius: 15px;
+  margin-top: 4%;
+  margin-bottom: 4%;
 }
 
-.tarjeta-mascota > img {
+.tarjeta-mascota>img {
   width: 100%;
   height: 110px;
   object-fit: cover;
-  border-radius: 8px
+  border-radius: 15px 15px 0px 0px;
+}
+
+.tarjeta-mascota h4,
+.tarjeta-mascota span {
+  margin-left: 5%;
+}
+
+.tarjeta-mascota span {
+  padding-bottom: 14%;
 }
 
 .badge-urgente {
@@ -202,4 +230,9 @@
   .recomendadas {
     width: 100%
   }
+}
+
+h1 {
+  font-weight: 800;
+  color: #463b35;
 }

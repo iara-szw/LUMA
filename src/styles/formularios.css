@@ -291,6 +291,13 @@ label {
   color: #7b5730;
   margin-left: 10%;
 }
+.btn-formulario-volver{
+    background: transparent;
+  border: 0px solid #b8956a;
+  color: #7b5730;
+    margin:2%;
+    font-size: 16px;
+}
 
 .btn-formulario.quitar
  {
@@ -420,6 +427,10 @@ label {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 0%;
+}
+.solicitud-resumen-item:first-child {
+  margin-top: 5%;
 }
 
 .solicitud-resumen-item {
