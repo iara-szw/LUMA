@@ -235,10 +235,10 @@ export default function Mascota() {
           <div className="scroll-horizontal recomendaciones">
             {recomendadas.length === 0 ? (
               <p className="vacio">No hay recomendaciones.</p>
-            ) : (
+              ) : (
               recomendadas.map(r => (
                 <article key={r.id} className="tarjeta-mascota" onClick={() => navigate(`/mascota/${r.id}`)}>
-      <img src={m.foto_url || '/assets/img/perfil_default.jpg'} alt={m.nombre} />
+                  <img src={r.foto_url || '/assets/img/perfil_default.jpg'} alt={r.nombre} />
                   <h4>{r.nombre}</h4>
                   {r.edad && <span>{r.edad}</span>}
                   {r.urgente && <span className="badge-urgente">Urgente</span>}
