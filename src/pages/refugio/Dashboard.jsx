@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Buscador from '../../components/Buscador'
+import FooterRefugio from '../../components/FooterRefugio'
 import Bandeja from '../../../cliente/public/assets/img/bandeja-entrada.png'
 import Animal from '../../../cliente/public/assets/img/animal.png'
 import { usarChat } from '../../contexts/ContextoChat.jsx'
@@ -229,24 +230,7 @@ const { noLeidos } = usarChat()
         </button>
       </section>
 
-      <nav className="bottom-nav-refugio">
-        <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/dashboard')}>
-          <img src="/assets/img/home.png" alt="Inicio" />
-          <span>Inicio</span>
-        </button>
-        <button className="nav-item-refugio" onClick={()=>navigate('/refugio/mismascotas')} >
-          <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
-          <span>Animales</span>
-        </button>
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
-          <img src="/assets/img/solicitudes.png" alt="Solicitudes" />
-          <span>Solicitudes</span>
-        </button>
-        <button className="nav-item-refugio" onClick={() => navigate('/refugio/perfil')}>
-          <img src="/assets/img/perfil.png" alt="Perfil" /> 
-          <span>Perfil</span>
-        </button>
-      </nav>
+      <FooterRefugio />
     </div>
   )
 }
