@@ -14,7 +14,7 @@ export async function obtenerOCrearConversacion(refugioId, adoptanteId, mascotaI
   const payload = {
     refugio_id: refugioId,
     adoptante_id: adoptanteId,
-    mascota_id: mascotaId,
+    mascota_id: mascotaId ?? null,
     ...(solicitudId ? { solicitud_id: solicitudId } : {}),
     archivada: false,
     eliminado_adoptante: false,
@@ -22,73 +22,18 @@ export async function obtenerOCrearConversacion(refugioId, adoptanteId, mascotaI
   }
 
   try {
-    let query = Supabase
+    const res = await Supabase
       .from('conversaciones')
-      .select('id')
-      .eq('refugio_id', refugioId)
-      .eq('adoptante_id', adoptanteId)
-
-    if (mascotaId !== null && mascotaId !== undefined) {
-      query = query.eq('mascota_id', mascotaId)
-    } else {
-      query = query.is('mascota_id', null)
-    }
-
-    if (solicitudId) {
-      query = query.eq('solicitud_id', solicitudId)
-    }
-
-    const existente = await query.maybeSingle()
-
-    if (existente.error && existente.error.code !== 'PGRST116') {
-      console.error('obtenerOCrearConversacion select error:', existente.error)
-      return existente
-    }
-
-    if (existente.data) {
-      return { data: existente.data, error: null }
-    }
-
-    const insertado = await Supabase
-      .from('conversaciones')
-      .insert(payload)
-      .select()
+      .upsert(payload, { onConflict: 'refugio_id,adoptante_id' })
+      .select('*')
       .single()
 
-    if (insertado.error) {
-      const esDuplicado = insertado.error.code === '23505' || /duplicate|already exists/i.test(insertado.error.message || '')
-
-      if (esDuplicado) {
-        const reintento = await Supabase
-          .from('conversaciones')
-          .select('id')
-          .eq('refugio_id', refugioId)
-          .eq('adoptante_id', adoptanteId)
-
-        if (mascotaId !== null && mascotaId !== undefined) {
-          reintento.eq('mascota_id', mascotaId)
-        } else {
-          reintento.is('mascota_id', null)
-        }
-
-        if (solicitudId) {
-          reintento.eq('solicitud_id', solicitudId)
-        }
-
-        const conversacionExistente = await reintento.maybeSingle()
-
-        if (!conversacionExistente.error || conversacionExistente.error.code === 'PGRST116') {
-          if (conversacionExistente.data) {
-            return { data: conversacionExistente.data, error: null }
-          }
-        }
-      }
-
-      console.error('Supabase insert error:', insertado.error, 'payload:', payload)
-      return insertado
+    if (res.error) {
+      console.error('Supabase upsert error:', res.error, 'payload:', payload)
+      return res
     }
 
-    return insertado
+    return res
   } catch (err) {
     console.error('obtenerOCrearConversacion exception:', err)
     return { data: null, error: err }

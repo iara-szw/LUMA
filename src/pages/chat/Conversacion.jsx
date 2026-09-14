@@ -25,6 +25,7 @@ export default function Conversacion() {
   const [error, setError] = useState(null)
   const [mascota, setMascota] = useState(null)
   const [mostrarFichaMascota, setMostrarFichaMascota] = useState(true)
+  const [nombreInterlocutor, setNombreInterlocutor] = useState('Conversación')
 
   const finRef = useRef(null)
   const channelRef = useRef(null)
@@ -53,6 +54,16 @@ export default function Conversacion() {
         setMascota(conversacionRes.data.mascotas)
       } else {
         setMascota(null)
+      }
+
+      const conversacion = conversacionRes.data
+      if (conversacion) {
+        const nombre = esRefugio
+          ? `${conversacion.adoptantes?.nombre || ''} ${conversacion.adoptantes?.apellido || ''}`.trim() || 'Adoptante'
+          : conversacion.refugios?.nombre || 'Refugio'
+        setNombreInterlocutor(nombre)
+      } else {
+        setNombreInterlocutor('Conversación')
       }
 
       setCargando(false)
@@ -126,7 +137,7 @@ export default function Conversacion() {
         <button className="chat-btn-volver" onClick={() => navigate(-1)} aria-label="Volver">
           ←
         </button>
-        <h2 className="chat-titulo">Conversación</h2>
+        <h2 className="chat-titulo">{nombreInterlocutor}</h2>
       </header>
 
       {mascota && mostrarFichaMascota && (
