@@ -42,7 +42,7 @@ function TarjetaMascota({ animal, onClick, esRefugio = false, favoritos, onToggl
   )
 }
 
-function Seccion({ titulo, animales, onVerMas, onClickAnimal, esRefugio = false }) {
+function Seccion({ titulo, animales, onVerMas, onClickAnimal, esRefugio = false, favoritos, onToggleFavorito }) {
   if (!animales.length) return null
 
   return (
@@ -57,6 +57,8 @@ function Seccion({ titulo, animales, onVerMas, onClickAnimal, esRefugio = false 
             key={a.id}
             animal={a}
             esRefugio={esRefugio}
+            favoritos={favoritos}
+            onToggleFavorito={onToggleFavorito}
             onClick={() => onClickAnimal(a)}
           />
         ))}
@@ -96,6 +98,7 @@ export default function Explorar() {
   }, [usuario])
 
   const nombre = usuario?.nombre?.split(' ')[0]
+  const avatarUsuario = usuario?.foto_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'
   const mostrarPerros = filtroActivo === 'todos' || filtroActivo === 'perros'
 
   const toggleFavorito = async (mascotaId) => {
@@ -136,7 +139,7 @@ export default function Explorar() {
           {usuario ? (
             <img
               className="avatar"
-              src={usuario.foto_perfil || '/assets/img/perfil_default.jpg'}
+              src={avatarUsuario}
               alt="perfil"
               onClick={() => navigate('/adoptante/perfil')}
             />

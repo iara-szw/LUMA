@@ -20,9 +20,9 @@ export default function Footer() {
         <img src="/assets/img/mapa.png" alt="Mapa" className="footer-icono" />
       </Link>
 
-      <Link to="/adoptante/eventos" className={`footer-item ${pathname.includes('eventos') ? 'activo' : ''}`}>
-        <img src="/assets/img/calendario.png"  alt="Eventos" className="footer-icono" />
-        <span>Eventos</span>
+      <Link to="/adoptante/chats" className={`footer-item ${pathname.includes('listaChats') ? 'activo' : ''}`}>
+        <img src="/assets/img/chat.png"  alt="Chats" className="footer-icono" />
+        <span>Chats</span>
       </Link>
       
       <Link to="/adoptante/perfil" className={`footer-item ${pathname.includes('perfil') ? 'activo' : ''}`}>

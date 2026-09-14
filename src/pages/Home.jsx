@@ -54,6 +54,7 @@ export default function Home() {
   }, [usuario])
 
   const nombre = usuario?.nombre?.split(' ')[0]
+  const avatarUsuario = usuario?.foto_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'
 
   const toggleFavorito = async (mascotaId) => {
     if (!usuario) return navigate('/login')
@@ -91,7 +92,7 @@ export default function Home() {
 </button>
         <img
   className="avatar"
-  src={usuario.foto_perfil || '/assets/img/perfil_default.jpg'}
+  src={avatarUsuario}
   alt="perfil"
   onClick={() => navigate('/adoptante/perfil')}
 />
