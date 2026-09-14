@@ -53,6 +53,72 @@ img { max-width: 100%; height: auto; display: block; }
   box-sizing: border-box;
 }
 
+@media (min-width: 768px) {
+  body {
+    padding: 20px 18px 80px;
+  }
+
+  #root {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .pagina-inicio,
+  .pagina-perfil,
+  .pagina-editar,
+  .pagina-perfil-refugio,
+  .pagina-solicitudes,
+  .cargar-pagina,
+  .mascota-pagina,
+  .exp-pagina {
+    max-width: 980px;
+  }
+
+  .navbar {
+    max-width: 980px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 24px 24px 0 0;
+    padding-inline: 24px;
+  }
+
+  .navbar-item {
+    min-width: 110px;
+  }
+
+  .navbar-center {
+    width: 58px;
+    height: 58px;
+    margin-top: -1.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    padding: 28px 26px 90px;
+  }
+
+  .pagina-inicio,
+  .pagina-perfil,
+  .pagina-editar,
+  .pagina-perfil-refugio,
+  .pagina-solicitudes,
+  .cargar-pagina,
+  .mascota-pagina,
+  .exp-pagina {
+    max-width: 1100px;
+  }
+
+  .navbar {
+    max-width: 1100px;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .navbar-item {
+    min-width: 150px;
+  }
+}
+
 /* ─── EXPLORAR ───────────────────────────────────────────── */
 
 .exp-pagina {

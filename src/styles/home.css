@@ -489,3 +489,84 @@ body {
 .navbar-inferior .nav-central .icono-nav {
     font-size: 1.2rem;
 }
+
+/* ── Media Queries ───────────────────────────────── */
+@media (min-width: 768px) {
+    .pagina-inicio {
+        max-width: 980px;
+        padding-bottom: 100px;
+    }
+
+    .inicio-header,
+    .inicioDiv,
+    .saludo,
+    .seccion,
+    .lista-eventos,
+    .cta-auth {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .inicio-superior {
+        padding-bottom: 2rem;
+    }
+
+    .banner-test-match {
+        margin: 1.5rem 1.5rem 0.75rem;
+        padding-right: 8rem;
+    }
+
+    .scroll-horizontal {
+        gap: 1.2rem;
+        padding: 0.4rem 1.5rem 1rem;
+    }
+
+    .tarjeta-mascota {
+        width: 200px;
+    }
+
+    .tarjeta-mascota > img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .lista-eventos {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .tarjeta-evento {
+        min-height: 120px;
+    }
+
+    .navbar-inferior {
+        max-width: 980px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    .pagina-inicio {
+        max-width: 1100px;
+    }
+
+    .navbar-inferior {
+        max-width: 1100px;
+    }
+
+    .scroll-horizontal {
+        gap: 1.5rem;
+    }
+
+    .tarjeta-mascota {
+        width: 220px;
+    }
+
+    .tarjeta-mascota > img {
+        width: 220px;
+        height: 220px;
+    }
+}
