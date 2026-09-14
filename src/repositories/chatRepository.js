@@ -22,18 +22,73 @@ export async function obtenerOCrearConversacion(refugioId, adoptanteId, mascotaI
   }
 
   try {
-    const res = await Supabase
+    let query = Supabase
       .from('conversaciones')
-      .upsert(payload, { onConflict: 'refugio_id,adoptante_id,mascota_id' })
+      .select('id')
+      .eq('refugio_id', refugioId)
+      .eq('adoptante_id', adoptanteId)
+
+    if (mascotaId !== null && mascotaId !== undefined) {
+      query = query.eq('mascota_id', mascotaId)
+    } else {
+      query = query.is('mascota_id', null)
+    }
+
+    if (solicitudId) {
+      query = query.eq('solicitud_id', solicitudId)
+    }
+
+    const existente = await query.maybeSingle()
+
+    if (existente.error && existente.error.code !== 'PGRST116') {
+      console.error('obtenerOCrearConversacion select error:', existente.error)
+      return existente
+    }
+
+    if (existente.data) {
+      return { data: existente.data, error: null }
+    }
+
+    const insertado = await Supabase
+      .from('conversaciones')
+      .insert(payload)
       .select()
       .single()
 
-    if (res.error) {
-      console.error('Supabase upsert error:', res.error, 'payload:', payload)
-      return res
+    if (insertado.error) {
+      const esDuplicado = insertado.error.code === '23505' || /duplicate|already exists/i.test(insertado.error.message || '')
+
+      if (esDuplicado) {
+        const reintento = await Supabase
+          .from('conversaciones')
+          .select('id')
+          .eq('refugio_id', refugioId)
+          .eq('adoptante_id', adoptanteId)
+
+        if (mascotaId !== null && mascotaId !== undefined) {
+          reintento.eq('mascota_id', mascotaId)
+        } else {
+          reintento.is('mascota_id', null)
+        }
+
+        if (solicitudId) {
+          reintento.eq('solicitud_id', solicitudId)
+        }
+
+        const conversacionExistente = await reintento.maybeSingle()
+
+        if (!conversacionExistente.error || conversacionExistente.error.code === 'PGRST116') {
+          if (conversacionExistente.data) {
+            return { data: conversacionExistente.data, error: null }
+          }
+        }
+      }
+
+      console.error('Supabase insert error:', insertado.error, 'payload:', payload)
+      return insertado
     }
 
-    return res
+    return insertado
   } catch (err) {
     console.error('obtenerOCrearConversacion exception:', err)
     return { data: null, error: err }
@@ -272,4 +327,40 @@ export function suscribirseANoLeidosGlobal(usuarioId, onNuevoMensaje) {
 
 export function desuscribirse(channel) {
   if (channel) Supabase.removeChannel(channel)
+}
+
+/**
+ * Obtiene una conversación por su ID, incluyendo datos de la mascota,
+ * refugio y adoptante, para mostrar en la tarjeta del chat.
+ */
+export async function obtenerConversacionPorId(conversacionId) {
+  if (!conversacionId) return { data: null, error: { message: 'conversacion_id faltante' } }
+
+  try {
+    const res = await Supabase
+      .from('conversaciones')
+      .select(`
+        id,
+        refugio_id,
+        adoptante_id,
+        mascota_id,
+        solicitud_id,
+        ultimo_mensaje_fecha,
+        mascotas ( id, nombre, foto_url, edad, sexo, urgente ),
+        refugios:refugio_id ( id, nombre, logo_url ),
+        adoptantes:adoptante_id ( id, nombre, apellido, foto_url )
+      `)
+      .eq('id', conversacionId)
+      .maybeSingle()
+
+    if (res.error) {
+      console.error('obtenerConversacionPorId error:', res.error)
+      return res
+    }
+
+    return res
+  } catch (err) {
+    console.error('obtenerConversacionPorId exception:', err)
+    return { data: null, error: err }
+  }
 }

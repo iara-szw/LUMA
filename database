@@ -132,46 +132,19 @@ CREATE TABLE public.formularios (
   CONSTRAINT formularios_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id),
   CONSTRAINT formularios_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id)
 );
-CREATE TABLE public.preguntas_formulario (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  formulario_id uuid NOT NULL,
-  pregunta text NOT NULL,
-  tipo character varying NOT NULL,
-  orden integer NOT NULL,
-  requerida boolean DEFAULT true,
-  CONSTRAINT preguntas_formulario_pkey PRIMARY KEY (id),
-  CONSTRAINT preguntas_formulario_formulario_id_fkey FOREIGN KEY (formulario_id) REFERENCES public.formularios(id)
-);
-CREATE TABLE public.opciones_pregunta (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  pregunta_id uuid NOT NULL,
-  texto character varying NOT NULL,
-  valor character varying,
-  CONSTRAINT opciones_pregunta_pkey PRIMARY KEY (id),
-  CONSTRAINT opciones_pregunta_pregunta_id_fkey FOREIGN KEY (pregunta_id) REFERENCES public.preguntas_formulario(id)
-);
 CREATE TABLE public.solicitudes (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   mascota_id uuid NOT NULL,
   adoptante_id uuid NOT NULL,
   formulario_id uuid,
   estado character varying DEFAULT 'Pendiente'::character varying,
-  notas text,
+  info jsonb,
   fecha_solicitud timestamp without time zone DEFAULT now(),
   ultima_actualizacion timestamp without time zone DEFAULT now(),
   CONSTRAINT solicitudes_pkey PRIMARY KEY (id),
   CONSTRAINT solicitudes_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id),
   CONSTRAINT solicitudes_adoptante_id_fkey FOREIGN KEY (adoptante_id) REFERENCES public.usuarios(id),
   CONSTRAINT solicitudes_formulario_id_fkey FOREIGN KEY (formulario_id) REFERENCES public.formularios(id)
-);
-CREATE TABLE public.respuestas_formulario (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  solicitud_id uuid NOT NULL,
-  pregunta_id uuid NOT NULL,
-  respuesta text NOT NULL,
-  CONSTRAINT respuestas_formulario_pkey PRIMARY KEY (id),
-  CONSTRAINT respuestas_formulario_solicitud_id_fkey FOREIGN KEY (solicitud_id) REFERENCES public.solicitudes(id),
-  CONSTRAINT respuestas_formulario_pregunta_id_fkey FOREIGN KEY (pregunta_id) REFERENCES public.preguntas_formulario(id)
 );
 CREATE TABLE public.entrevistas (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -246,7 +219,39 @@ CREATE TABLE public.documentos (
 );
 CREATE TABLE public.miembro (
   id_miembro bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-  id_refugio bigint NOT NULL,
-  id_usuario bigint NOT NULL,
-  CONSTRAINT miembro_pkey PRIMARY KEY (id_miembro)
+  id_refugio uuid NOT NULL,
+  id_usuario uuid NOT NULL,
+  CONSTRAINT miembro_pkey PRIMARY KEY (id_miembro),
+  CONSTRAINT miembro_id_refugio_fkey FOREIGN KEY (id_refugio) REFERENCES public.refugios(id),
+  CONSTRAINT miembro_id_usuario_fkey FOREIGN KEY (id_usuario) REFERENCES public.usuarios(id)
+);
+CREATE TABLE public.conversaciones (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  refugio_id uuid NOT NULL,
+  adoptante_id uuid NOT NULL,
+  mascota_id uuid,
+  solicitud_id uuid,
+  archivada boolean DEFAULT false,
+  eliminado_adoptante boolean DEFAULT false,
+  eliminado_refugio boolean DEFAULT false,
+  fecha_creacion timestamp without time zone DEFAULT now(),
+  ultimo_mensaje_fecha timestamp without time zone DEFAULT now(),
+  mascota_oculta boolean DEFAULT false,
+  CONSTRAINT conversaciones_pkey PRIMARY KEY (id),
+  CONSTRAINT conversaciones_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id),
+  CONSTRAINT conversaciones_adoptante_id_fkey FOREIGN KEY (adoptante_id) REFERENCES public.usuarios(id),
+  CONSTRAINT conversaciones_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id),
+  CONSTRAINT conversaciones_solicitud_id_fkey FOREIGN KEY (solicitud_id) REFERENCES public.solicitudes(id)
+);
+CREATE TABLE public.mensajes (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  conversacion_id uuid NOT NULL,
+  emisor_id uuid NOT NULL,
+  contenido text NOT NULL,
+  leido boolean DEFAULT false,
+  eliminado boolean DEFAULT false,
+  fecha timestamp without time zone DEFAULT now(),
+  CONSTRAINT mensajes_pkey PRIMARY KEY (id),
+  CONSTRAINT mensajes_conversacion_id_fkey FOREIGN KEY (conversacion_id) REFERENCES public.conversaciones(id),
+  CONSTRAINT mensajes_emisor_id_fkey FOREIGN KEY (emisor_id) REFERENCES public.usuarios(id)
 );

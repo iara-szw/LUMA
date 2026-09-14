@@ -8,6 +8,7 @@ import {
   marcarComoLeidos,
   suscribirseAMensajes,
   desuscribirse,
+  obtenerConversacionPorId,
 } from '../../repositories/chatRepository'
 import '../../styles/chat.css'
 
@@ -22,6 +23,8 @@ export default function Conversacion() {
   const [cargando, setCargando] = useState(true)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState(null)
+  const [mascota, setMascota] = useState(null)
+  const [mostrarFichaMascota, setMostrarFichaMascota] = useState(true)
 
   const finRef = useRef(null)
   const channelRef = useRef(null)
@@ -32,14 +35,26 @@ export default function Conversacion() {
 
     const cargar = async () => {
       setCargando(true)
-      const { data, error } = await obtenerMensajes(conversacionId)
+
+      const [mensajesRes, conversacionRes] = await Promise.all([
+        obtenerMensajes(conversacionId),
+        obtenerConversacionPorId(conversacionId),
+      ])
+
       if (!activo) return
 
-      if (error) {
+      if (mensajesRes.error) {
         setError('No se pudieron cargar los mensajes.')
       } else {
-        setMensajes(data || [])
+        setMensajes(mensajesRes.data || [])
       }
+
+      if (conversacionRes.data?.mascotas) {
+        setMascota(conversacionRes.data.mascotas)
+      } else {
+        setMascota(null)
+      }
+
       setCargando(false)
 
       // Marcar como leídos los mensajes de la otra parte al abrir el chat
@@ -113,6 +128,30 @@ export default function Conversacion() {
         </button>
         <h2 className="chat-titulo">Conversación</h2>
       </header>
+
+      {mascota && mostrarFichaMascota && (
+        <div className="chat-ficha-mascota">
+          <button
+            type="button"
+            className="chat-ficha-cerrar"
+            aria-label="Cerrar ficha"
+            onClick={() => setMostrarFichaMascota(false)}
+          >
+            ×
+          </button>
+
+          <img
+            src={mascota.foto_url || '/assets/img/perfil_default.jpg'}
+            alt={mascota.nombre}
+            className="chat-ficha-foto"
+          />
+
+          <div className="chat-ficha-info">
+            <strong>{mascota.nombre}</strong>
+            <span>{mascota.edad || 'Edad no disponible'}</span>
+          </div>
+        </div>
+      )}
 
       <div className="chat-mensajes">
         {cargando ? (
