@@ -176,8 +176,11 @@ h3 {
   padding: 8px 15px;
   background-color: white;
   border-radius: 20px;
+  margin-left:6%;
 }
-
+.scroll-horizontal.recomendaciones{
+  margin-left: 0%;
+}
 .tarjeta-mascota {
   min-width: 160px;
   background: white;
