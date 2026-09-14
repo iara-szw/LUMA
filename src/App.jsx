@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ProveedorAuth } from './contexts/ContextoAuth.jsx'
 import { usarAuth } from './hooks/UsarAuth.jsx'
+import { ProveedorChat } from './contexts/ContextoChat.jsx'
+import ListaChats from './pages/chat/ListaChats.jsx'
+import Conversacion from './pages/chat/Conversacion.jsx'
 import Loader from './components/Loader.jsx'
 import Home from './pages/Home'
 import Perfil from './pages/adoptante/Perfil.jsx'
@@ -48,6 +51,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ProveedorAuth>
+        <ProveedorChat>
         <Routes>
           {/* Inicio: muestra Home o redirige a dashboard si es refugio */}
           <Route path="/" element={<RutaInicio />} />
@@ -207,7 +211,12 @@ export default function App() {
 
           <Route path="/inicio" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
+           <Route path="/refugio/chats" element={<RutaProtegida rol="refugio"><ListaChats /></RutaProtegida>} />
+      <Route path="/refugio/chats/:id" element={<RutaProtegida rol="refugio"><Conversacion /></RutaProtegida>} />
+      <Route path="/adoptante/chats" element={<RutaProtegida rol="adoptante"><ListaChats /></RutaProtegida>} />
+      <Route path="/adoptante/chats/:id" element={<RutaProtegida rol="adoptante"><Conversacion /></RutaProtegida>} />
         </Routes>
+        </ProveedorChat>
       </ProveedorAuth>
     </BrowserRouter>
   )

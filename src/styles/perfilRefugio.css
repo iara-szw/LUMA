@@ -78,6 +78,7 @@
   width: 100%;
   height: 220px;
   overflow: hidden;
+  margin-bottom:3%;
 }
 
 .perfil-refugio-portada img {
@@ -88,20 +89,20 @@
 
 /* ── Avatar / logo del refugio, superpuesto sobre el borde de la portada ── */
 .perfil-refugio-avatar {
-  position: absolute;
-  bottom: -28px;
-  left: 16px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #fff;
-  border: 3px solid #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
+    position: absolute;
+    bottom: 0px;
+    left: 16px;
+    width: 20%;
+    height: 35%;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
 }
 
 .perfil-refugio-avatar img {
@@ -117,7 +118,7 @@
 /* ── Info principal ── */
 .perfil-refugio-info {
   background: #FAFAFA;
-  padding: 18px 16px 16px;
+  padding: 30px 16px 16px;
   border-top:1px solid #e8e4dc;
   position: relative;
   margin-top: -20px;

@@ -1,0 +1,248 @@
+/* ===== Conversación ===== */
+
+.chat-pagina {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f7f5f2;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.chat-btn-volver {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.chat-titulo {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.chat-mensajes {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-vacio,
+.chat-error {
+  text-align: center;
+  color: #999;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+.chat-error {
+  color: #c0392b;
+}
+
+.chat-burbuja {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-burbuja--propia {
+  align-self: flex-end;
+  background: #ff8a5c;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-burbuja--ajena {
+  align-self: flex-start;
+  background: #fff;
+  color: #333;
+  border: 1px solid #eee;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-burbuja p {
+  margin: 0;
+}
+
+.chat-burbuja-hora {
+  font-size: 10px;
+  opacity: 0.7;
+  align-self: flex-end;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.chat-input-form input {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  outline: none;
+}
+
+.chat-input-form input:focus {
+  border-color: #ff8a5c;
+}
+
+.chat-input-form button {
+  background: #ff8a5c;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.chat-input-form button:disabled {
+  background: #ddd;
+  cursor: default;
+}
+
+/* ===== Lista de chats ===== */
+
+.lista-chats-pagina {
+  padding: 16px;
+  padding-bottom: 80px;
+}
+
+.lista-chats-titulo {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.lista-chats-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.lista-chats-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #eee;
+}
+
+.lista-chats-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lista-chats-nombre-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.lista-chats-nombre {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lista-chats-fecha {
+  font-size: 11px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.lista-chats-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 2px;
+}
+
+.lista-chats-tag--consulta {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.lista-chats-tag--pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.lista-chats-tag--aceptada {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.lista-chats-badge {
+  background: #ff8a5c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+}
+
+/* ===== Badge del header (Dashboard, etc.) ===== */
+
+.header-icono-badge {
+  position: relative;
+}
+
+.header-icono-badge .badge-contador {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ff8a5c;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}

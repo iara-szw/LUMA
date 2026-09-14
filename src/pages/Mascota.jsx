@@ -8,6 +8,8 @@ import Loader from '../components/Loader'
 import { obtenerMascotaPorId, obtenerOtrasMascotas } from '../repositories/mascotaRepository'
 import { obtenerRefugioPorMascota } from '../repositories/refugioRepository'
 import { agregarFavorito, eliminarFavorito, esFavorito } from '../repositories/usuarioRepository'
+import { obtenerOCrearConversacion } from '../repositories/chatRepository'
+
 
 export default function Mascota() {
   const { id } = useParams()
@@ -20,6 +22,7 @@ export default function Mascota() {
   const [cargando, setCargando] = useState(true)
   const [favorito, setFavorito] = useState(false)
   const [cargandoFavorito, setCargandoFavorito] = useState(false)
+  const [consultando, setConsultando] = useState(false)
 
   // ✅ calcular esDueño después de tener usuario y mascota
   const esDueño = esRefugio && usuario && mascota && usuario.id === mascota.refugio_id
@@ -105,6 +108,26 @@ export default function Mascota() {
     }
 
     navigate(`/adoptante/solicitud/${mascota.id}`)
+  }
+
+  const handleConsultar = async () => {
+    if (!usuario) return navigate('/login')
+    if (consultando) return
+
+    setConsultando(true)
+    const { data, error } = await obtenerOCrearConversacion(
+      mascota.refugio_id,
+      usuario.id,
+      mascota.id
+    )
+    setConsultando(false)
+
+    if (error) {
+      console.error('Error creando/abriendo conversación:', error)
+      return
+    }
+
+    if (data) navigate(`/adoptante/chats/${data.id}`)
   }
 
   return (
@@ -215,9 +238,14 @@ export default function Mascota() {
         <div className="mascota-pagina">
       <div className="acciones">
         {!esRefugio && (
-          <button className="btn-primario" onClick={handleAplicar}>
-            Solicitar adopción
-          </button>
+          <>
+            <button className="btn-primario" onClick={handleAplicar}>
+              Solicitar adopción
+            </button>
+            <button className="btn-secundario" onClick={handleConsultar} disabled={consultando}>
+              {consultando ? 'Abriendo chat...' : 'Consultar'}
+            </button>
+          </>
         )}
 
         {esDueño && (

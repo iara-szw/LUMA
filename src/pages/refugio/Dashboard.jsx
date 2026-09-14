@@ -4,7 +4,7 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import Buscador from '../../components/Buscador'
 import Bandeja from '../../../cliente/public/assets/img/bandeja-entrada.png'
 import Animal from '../../../cliente/public/assets/img/animal.png'
-
+import { usarChat } from '../../contexts/ContextoChat.jsx'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
 import { obtenerRefugio,obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
@@ -13,6 +13,7 @@ import '../../styles/dashboard.css'
 export default function Dashboard() {
   const navigate = useNavigate()
   const { usuario } = usarAuth()
+const { noLeidos } = usarChat()
 
   const [mascotas, setMascotas] = useState([])
   const [eventos, setEventos] = useState([])
@@ -75,9 +76,10 @@ export default function Dashboard() {
           <img src="/assets/img/logo.png" alt="LUMA" />
         </Link>
         <div className="dash-header-iconos">
-          <button className="dash-icono-campana" aria-label="Notificaciones">
-            <img src="/assets/img/notificaciones.png" alt="" />
-          </button>
+         <button className="dash-icono-campana header-icono-badge" aria-label="Mensajes" onClick={() => navigate('/refugio/chats')}>
+  <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
+  {noLeidos > 0 && <span className="badge-contador">{noLeidos > 9 ? '9+' : noLeidos}</span>}
+</button>
           <img
             className="dash-avatar"
             src={refugio?.logo_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'}

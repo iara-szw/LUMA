@@ -4,6 +4,7 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
 import '../../styles/formularios.css'
 import { obtenerSolicitudFormularioPorId, obtenerFormularioMascota, guardarProgresoSolicitud } from '../../repositories/formularioRepository'
+import { obtenerOCrearConversacion } from '../../repositories/chatRepository'
 
 export default function SolicitudFormulario() {
   const { id } = useParams()
@@ -93,6 +94,24 @@ export default function SolicitudFormulario() {
     }
 
     setSolicitud(prev => ({ ...prev, estado: nuevoEstado }))
+
+    // Al aceptar la solicitud, se crea (o reabre) la conversación con el
+    // adoptante para coordinar la entrevista, y se navega directo al chat.
+    if (nuevoEstado === 'Aprobada') {
+      const { data: conversacion, error: errorConversacion } = await obtenerOCrearConversacion(
+        usuario.id,
+        solicitud.usuarios.id,
+        solicitud.mascotas.id,
+        solicitud.id
+      )
+
+      if (errorConversacion) {
+        console.error('Error creando/abriendo conversación:', errorConversacion)
+        return
+      }
+
+      if (conversacion) navigate(`/refugio/chats/${conversacion.id}`)
+    }
   }
 
   if (cargando) return <Loader />

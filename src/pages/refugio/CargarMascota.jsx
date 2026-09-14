@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
-import {ESTADOS} from '../../services/authService'
 import { crearMascotaRefugio, idEspeciePorNombre } from '../../repositories/mascotaRepository'
 import { subirFotoMascota } from '../../repositories/storageRepository'
 import '../../styles/cargarMascota.css'
@@ -9,9 +8,18 @@ import '../../styles/cargarMascota.css'
 const ESTADO_INICIAL = {
   nombre: '',
   especie: '',
-  tipo: '',
   edad: '',
+  sexo: '',
+  tamaño: '',
+  descripcion: '',
+  vacunado: false,
+  castrado: false,
+  desparasitado: false,
+  problemasSalud: false,
+  detalleSalud: '',
   urgente: false,
+  fechaRescate: '',
+  fechaAdopcion: '',
 }
 
 export default function CargarMascota() {
@@ -46,8 +54,6 @@ export default function CargarMascota() {
     const nuevosErrores = {}
     if (!form.nombre.trim()) nuevosErrores.nombre = 'El nombre es obligatorio.'
     if (!form.especie) nuevosErrores.especie = 'Elegí una especie.'
-    if (!form.tipo.trim()) nuevosErrores.tipo = 'Indica el tipo o raza.'
-    if (!form.edad.trim()) nuevosErrores.edad = 'Indica la edad aproximada.'
 
     setErrores(nuevosErrores)
     return Object.keys(nuevosErrores).length === 0
@@ -59,7 +65,7 @@ export default function CargarMascota() {
 
     if (!validar()) return
     if (!usuario?.id) {
-      setErrorEnvio('No se pudo identificar el refugio. Inicia sesion nuevamente.')
+      setErrorEnvio('No se pudo identificar el refugio. Inicia sesión nuevamente.')
       return
     }
 
@@ -81,10 +87,19 @@ export default function CargarMascota() {
       const res = await crearMascotaRefugio(usuario.id, {
         nombre: form.nombre.trim(),
         especie: idEspeciePorNombre(form.especie),
-        tipo: form.tipo.trim(),
         edad: form.edad.trim(),
-        foto_url: fotoUrl,
+        sexo: form.sexo,
+        tamaño: form.tamaño,
+        descripcion: form.descripcion.trim(),
+        vacunado: form.vacunado,
+        castrado: form.castrado,
+        desparasitado: form.desparasitado,
+        problemas_salud: form.problemasSalud,
+        detalle_salud: form.detalleSalud.trim(),
         urgente: form.urgente,
+        fecha_rescate: form.fechaRescate || null,
+        fecha_adopcion: form.fechaAdopcion || null,
+        foto_url: fotoUrl,
       })
 
       if (res?.error) {
@@ -105,8 +120,6 @@ export default function CargarMascota() {
 
   return (
     <div className="cargar-pagina">
-
-      {/* Header */}
       <header className="cargar-header">
         <button
           className="cargar-volver"
@@ -119,8 +132,6 @@ export default function CargarMascota() {
       </header>
 
       <form className="cargar-form" onSubmit={manejarEnvio}>
-
-        {/* Foto */}
         <section className="cargar-tarjeta cargar-tarjeta--foto">
           <div
             className="cargar-foto-zona"
@@ -147,7 +158,6 @@ export default function CargarMascota() {
           </div>
         </section>
 
-        {/* Nombre */}
         <section className="cargar-tarjeta">
           <label className="cargar-label" htmlFor="nombre">Nombre</label>
           <input
@@ -161,7 +171,6 @@ export default function CargarMascota() {
           {errores.nombre && <span className="cargar-error">{errores.nombre}</span>}
         </section>
 
-        {/* Especie */}
         <section className="cargar-tarjeta">
           <label className="cargar-label" htmlFor="especie">Especie</label>
           <select
@@ -177,21 +186,6 @@ export default function CargarMascota() {
           {errores.especie && <span className="cargar-error">{errores.especie}</span>}
         </section>
 
-        {/* Tipo / Raza */}
-        <section className="cargar-tarjeta">
-          <label className="cargar-label" htmlFor="tipo">Tipo / Raza</label>
-          <input
-            id="tipo"
-            type="text"
-            className="cargar-input"
-            placeholder="Ej: Mestizo, Labrador..."
-            value={form.tipo}
-            onChange={e => actualizarCampo('tipo', e.target.value)}
-          />
-          {errores.tipo && <span className="cargar-error">{errores.tipo}</span>}
-        </section>
-
-        {/* Edad */}
         <section className="cargar-tarjeta">
           <label className="cargar-label" htmlFor="edad">Edad aproximada</label>
           <input
@@ -202,11 +196,122 @@ export default function CargarMascota() {
             value={form.edad}
             onChange={e => actualizarCampo('edad', e.target.value)}
           />
-          {errores.edad && <span className="cargar-error">{errores.edad}</span>}
         </section>
 
-        {/* Urgente */}
-        <section className="cargar-tarjeta cargar-tarjeta--urgente">
+        <section className="cargar-tarjeta">
+          <label className="cargar-label" htmlFor="sexo">Sexo</label>
+          <select
+            id="sexo"
+            className="cargar-input cargar-select"
+            value={form.sexo}
+            onChange={e => actualizarCampo('sexo', e.target.value)}
+          >
+            <option value="">Seleccionar</option>
+            <option value="Macho">Macho</option>
+            <option value="Hembra">Hembra</option>
+          </select>
+        </section>
+
+        <section className="cargar-tarjeta">
+          <label className="cargar-label" htmlFor="tamaño">Tamaño</label>
+          <select
+            id="tamaño"
+            className="cargar-input cargar-select"
+            value={form.tamaño}
+            onChange={e => actualizarCampo('tamaño', e.target.value)}
+          >
+            <option value="">Seleccionar</option>
+            <option value="Pequeño">Pequeño</option>
+            <option value="Mediano">Mediano</option>
+            <option value="Grande">Grande</option>
+          </select>
+        </section>
+
+        <section className="cargar-tarjeta">
+          <label className="cargar-label" htmlFor="descripcion">Descripción</label>
+          <textarea
+            id="descripcion"
+            className="cargar-input cargar-textarea"
+            placeholder="Contá su personalidad, historia y detalles relevantes..."
+            value={form.descripcion}
+            onChange={e => actualizarCampo('descripcion', e.target.value)}
+          />
+        </section>
+
+        <section className="cargar-tarjeta">
+          <label className="cargar-label" htmlFor="detalleSalud">Detalle de salud</label>
+          <textarea
+            id="detalleSalud"
+            className="cargar-input cargar-textarea"
+            placeholder="Especificá si tiene alergias, medicación, etc."
+            value={form.detalleSalud}
+            onChange={e => actualizarCampo('detalleSalud', e.target.value)}
+          />
+        </section>
+
+        <section className="cargar-tarjeta">
+          <label className="cargar-label" htmlFor="fechaRescate">Fecha de rescate</label>
+          <input
+            id="fechaRescate"
+            type="date"
+            className="cargar-input"
+            value={form.fechaRescate}
+            onChange={e => actualizarCampo('fechaRescate', e.target.value)}
+          />
+        </section>
+
+        <section className="cargar-tarjeta">
+          <label className="cargar-label" htmlFor="fechaAdopcion">Fecha de adopción</label>
+          <input
+            id="fechaAdopcion"
+            type="date"
+            className="cargar-input"
+            value={form.fechaAdopcion}
+            onChange={e => actualizarCampo('fechaAdopcion', e.target.value)}
+          />
+        </section>
+
+        <section className="cargar-tarjeta cargar-tarjeta--checks">
+          <label className="cargar-checkbox-fila" htmlFor="vacunado">
+            <span>Vacunado</span>
+            <input
+              id="vacunado"
+              type="checkbox"
+              checked={form.vacunado}
+              onChange={e => actualizarCampo('vacunado', e.target.checked)}
+            />
+          </label>
+
+          <label className="cargar-checkbox-fila" htmlFor="castrado">
+            <span>Castrado</span>
+            <input
+              id="castrado"
+              type="checkbox"
+              checked={form.castrado}
+              onChange={e => actualizarCampo('castrado', e.target.checked)}
+            />
+          </label>
+
+          <label className="cargar-checkbox-fila" htmlFor="desparasitado">
+            <span>Desparasitado</span>
+            <input
+              id="desparasitado"
+              type="checkbox"
+              checked={form.desparasitado}
+              onChange={e => actualizarCampo('desparasitado', e.target.checked)}
+            />
+          </label>
+
+          <label className="cargar-checkbox-fila" htmlFor="problemasSalud">
+            <span>Problemas de salud</span>
+            <input
+              id="problemasSalud"
+              type="checkbox"
+              checked={form.problemasSalud}
+              onChange={e => actualizarCampo('problemasSalud', e.target.checked)}
+            />
+          </label>
+
           <label className="cargar-checkbox-fila" htmlFor="urgente">
             <span>Marcar como urgente</span>
             <input
@@ -219,12 +324,11 @@ export default function CargarMascota() {
         </section>
 
         {errorEnvio && <p className="cargar-error cargar-error--general">{errorEnvio}</p>}
-        {exito && <p className="cargar-exito">Mascota publicada“</p>}
+        {exito && <p className="cargar-exito">Mascota publicada</p>}
 
         <button type="submit" className="cargar-btn-guardar" disabled={guardando}>
           {guardando ? 'Guardando...' : 'Publicar mascota'}
         </button>
-
       </form>
     </div>
   )
