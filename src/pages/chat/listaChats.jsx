@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { obtenerConversaciones } from '../../repositories/chatRepository'
 import Footer from '../../components/Footer'
+import FooterRefugio from '../../components/FooterRefugio'
 import '../../styles/chat.css'
 
 const tagPorEstado = (solicitudEstado) => {
@@ -13,7 +14,9 @@ const tagPorEstado = (solicitudEstado) => {
 
 export default function ListaChats() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { usuario, esRefugio } = usarAuth()
+  const esRutaRefugio = location.pathname.startsWith('/refugio') || (typeof window !== 'undefined' && window.location.pathname.startsWith('/refugio'))
 
   const [conversaciones, setConversaciones] = useState([])
   const [cargando, setCargando] = useState(true)
@@ -52,22 +55,22 @@ export default function ListaChats() {
         <p className="chat-vacio">Cargando conversaciones...</p>
       ) : conversaciones.length === 0 ? (
         <p className="chat-vacio">
-          {esRefugio ? 'Todavía no recibiste consultas.' : 'Todavía no iniciaste ninguna conversación.'}
+          {esRutaRefugio ? 'Todavía no recibiste consultas.' : 'Todavía no iniciaste ninguna conversación.'}
         </p>
       ) : (
         conversaciones.map(c => {
-          const contraparte = esRefugio ? c.adoptantes : c.refugios
-          const nombre = esRefugio
+          const contraparte = esRutaRefugio ? c.adoptantes : c.refugios
+          const nombre = esRutaRefugio
             ? `${contraparte?.nombre || ''} ${contraparte?.apellido || ''}`.trim()
             : contraparte?.nombre || 'Refugio'
-          const avatar = esRefugio ? contraparte?.foto_url : contraparte?.logo_url
+          const avatar = esRutaRefugio ? contraparte?.foto_url : contraparte?.logo_url
           const tag = tagPorEstado(c.solicitudes?.estado)
 
           return (
             <article
               key={c.id}
               className="lista-chats-item"
-              onClick={() => navigate(`/${esRefugio ? 'refugio' : 'adoptante'}/chats/${c.id}`)}
+              onClick={() => navigate(`/${esRutaRefugio ? 'refugio' : 'adoptante'}/chats/${c.id}`)}
             >
               <img
                 className="lista-chats-avatar"
@@ -88,7 +91,7 @@ export default function ListaChats() {
         })
       )}
 
-      <Footer />
+      {esRutaRefugio ? <FooterRefugio /> : <Footer />}
     </div>
   )
 }
