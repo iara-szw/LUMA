@@ -12,11 +12,14 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: #fff;
+  background-color: #f2ebe0;
   border-bottom: 1px solid #eee;
   position: sticky;
   top: 0;
   z-index: 5;
+  border-radius:0px 0px 25px 25px;
+  padding-top: 4%;
+  padding-bottom: 5%;
 }
 
 .chat-btn-volver {
@@ -40,6 +43,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  border-color: #fafafa;
 }
 
 .chat-vacio,
@@ -68,7 +72,7 @@
 
 .chat-burbuja--propia {
   align-self: flex-end;
-  background: #ff8a5c;
+  background: #B8956A;
   color: #fff;
   border-bottom-right-radius: 4px;
 }
@@ -89,6 +93,7 @@
   font-size: 10px;
   opacity: 0.7;
   align-self: flex-end;
+  color: white;
 }
 
 .chat-input-form {
@@ -109,11 +114,11 @@
 }
 
 .chat-input-form input:focus {
-  border-color: #ff8a5c;
+  border-color: #baa392;
 }
 
 .chat-input-form button {
-  background: #ff8a5c;
+  background: #B8956A;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -211,7 +216,7 @@
 }
 
 .lista-chats-badge {
-  background: #ff8a5c;
+  background: #B8956A;
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -234,7 +239,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #ff8a5c;
+  background: #B8956A;
   color: #fff;
   font-size: 10px;
   font-weight: 700;
