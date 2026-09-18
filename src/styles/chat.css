@@ -207,6 +207,38 @@
   margin-bottom: 16px;
 }
 
+.lista-chats-filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.lista-chats-filtro {
+  background: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  color: #666;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.lista-chats-filtro:hover {
+  background: #e8e8e8;
+  border-color: #d0d0d0;
+}
+
+.lista-chats-filtro.activo {
+  background: #B8956A;
+  color: #fff;
+  border-color: #B8956A;
+}
+
 .lista-chats-item {
   display: flex;
   align-items: center;

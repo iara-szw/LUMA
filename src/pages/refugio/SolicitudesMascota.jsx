@@ -27,12 +27,15 @@ export default function SolicitudesMascota() {
   const [filtrosTemp, setFiltrosTemp] = useState({})
   const [mostrarFiltro, setMostrarFiltro] = useState(false)
   const [cargando, setCargando] = useState(true)
+  const [preguntaSeleccionada, setPreguntaSeleccionada] = useState(null)
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState(null)
 
   const solicitudesVisibles = useMemo(() => {
     if (!Object.keys(filtros).length) return solicitudes
     return solicitudes.filter(s =>
-      Object.entries(filtros).every(([preguntaId, opcion]) =>
-        (s.info || {})[preguntaId] === opcion
+      Object.entries(filtros).every(([preguntaId, opciones]) =>
+        // opciones es un array, hace OR: la respuesta debe estar en el array
+        Array.isArray(opciones) && opciones.includes((s.info || {})[preguntaId])
       )
     )
   }, [solicitudes, filtros])
@@ -96,45 +99,107 @@ export default function SolicitudesMascota() {
       <FooterRefugio />
 
       {mostrarFiltro && (
-        <div className="filtro-overlay">
+        <div className="filtro-overlay" onClick={() => setMostrarFiltro(false)}>
           <div className="filtro-panel" onClick={(e) => e.stopPropagation()}>
             <h3>Filtrar por pregunta</h3>
-            {preguntasMC.length === 0 ? (
-              <p>No hay preguntas de tipo multiple-choice para esta mascota.</p>
-            ) : (
-              preguntasMC.map(p => (
-                <div key={p.id} style={{ marginBottom: 12 }}>
-                  <strong>{p.titulo}</strong>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                    {(p.opciones || []).map((op, idx) => {
-                      const seleccionado = filtrosTemp[p.id] === op
-                      return (
-                        <button
-                          key={idx}
-                          className={`filtro-opcion ${seleccionado ? 'activo' : ''}`}
+            
+            <div className="filtro-seccion-selectores">
+              <div style={{ marginBottom: 12 }}>
+                <label>Selecciona una pregunta:</label>
+                <select 
+                  className="filtro-select"
+                  value={preguntaSeleccionada?.id || ''}
+                  onChange={(e) => {
+                    if (!e.target.value) {
+                      setPreguntaSeleccionada(null)
+                      setOpcionSeleccionada(null)
+                    } else {
+                      const p = preguntasMC.find(x => x.id === e.target.value)
+                      setPreguntaSeleccionada(p)
+                      setOpcionSeleccionada(null)
+                    }
+                  }}
+                >
+                  <option value="">-- Selecciona una pregunta --</option>
+                  {preguntasMC.map(p => (
+                    <option key={p.id} value={p.id}>{p.titulo}</option>
+                  ))}
+                </select>
+              </div>
+
+              {preguntaSeleccionada && (
+                <div style={{ marginBottom: 12 }}>
+                  <label>Selecciona una opción:</label>
+                  <select 
+                    className="filtro-select"
+                    value={opcionSeleccionada || ''}
+                    onChange={(e) => setOpcionSeleccionada(e.target.value || null)}
+                  >
+                    <option value="">-- Selecciona una opción --</option>
+                    {(preguntaSeleccionada.opciones || []).map((op, idx) => (
+                      <option key={idx} value={op}>{op}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {preguntaSeleccionada && opcionSeleccionada && (
+                <button 
+                  className="btn-accion-verde"
+                  onClick={() => {
+                    setFiltrosTemp(prev => {
+                      const opcionesActuales = prev[preguntaSeleccionada.id] || []
+                      // Evitar duplicados
+                      if (opcionesActuales.includes(opcionSeleccionada)) {
+                        return prev
+                      }
+                      return {
+                        ...prev,
+                        [preguntaSeleccionada.id]: [...opcionesActuales, opcionSeleccionada]
+                      }
+                    })
+                    setPreguntaSeleccionada(null)
+                    setOpcionSeleccionada(null)
+                  }}
+                >
+                  Agregar filtro
+                </button>
+              )}
+            </div>
+
+            {Object.keys(filtrosTemp).length > 0 && (
+              <div className="filtro-lista-aplicados">
+                <h4>Filtros aplicados:</h4>
+                <div className="filtro-items-scroll">
+                  {Object.entries(filtrosTemp).map(([pId, opcion]) => {
+                    const preg = preguntasMC.find(p => p.id === pId)
+                    return (
+                      <div key={pId} className="filtro-item-aplicado">
+                        <div className="filtro-item-contenido">
+                          <strong>{preg?.titulo}</strong>
+                          <span>{opcion}</span>
+                        </div>
+                        <button 
+                          className="filtro-item-eliminar"
                           onClick={() => {
                             setFiltrosTemp(prev => {
-                              const actual = prev[p.id]
-                              if (actual === op) {
-                                const next = { ...prev }
-                                delete next[p.id]
-                                return next
-                              }
-                              return { ...prev, [p.id]: op }
+                              const next = { ...prev }
+                              delete next[pId]
+                              return next
                             })
                           }}
                         >
-                          {op}
+                          ✕
                         </button>
-                      )
-                    })}
-                  </div>
+                      </div>
+                    )
+                  })}
                 </div>
-              ))
+              </div>
             )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginTop: 16 }}>
-              <button className="btn-formulario ghost" onClick={() => { setFiltros({}); setFiltrosTemp({}); }}>Limpiar filtro</button>
+              <button className="btn-formulario ghost" onClick={() => { setFiltros({}); setFiltrosTemp({}); setPreguntaSeleccionada(null); setOpcionSeleccionada(null); }}>Limpiar filtros</button>
               <button className="btn-accion-verde" onClick={() => { setFiltros(filtrosTemp); setMostrarFiltro(false) }}>Guardar filtros</button>
             </div>
           </div>

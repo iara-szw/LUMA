@@ -325,6 +325,12 @@ label {
   transform: scale(0.98);
 }
 
+.formulario-pregunta label {
+  font-weight:900;
+}
+.formulario-opciones label{
+  font-weight: 500;
+}
 .pagina-formulario-adopcion .btn-formulario.ghost{
   margin:0%
 }

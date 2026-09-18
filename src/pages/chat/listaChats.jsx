@@ -12,6 +12,12 @@ const tagPorEstado = (solicitudEstado) => {
   return { texto: 'Postulación en curso', clase: 'lista-chats-tag--pendiente' }
 }
 
+const obtenerTipoConversacion = (solicitudEstado) => {
+  if (!solicitudEstado) return 'consulta'
+  if (solicitudEstado === 'Aceptada') return 'aceptada'
+  return 'postulacion'
+}
+
 export default function ListaChats() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -20,6 +26,7 @@ export default function ListaChats() {
 
   const [conversaciones, setConversaciones] = useState([])
   const [cargando, setCargando] = useState(true)
+  const [filtroSeleccionado, setFiltroSeleccionado] = useState('todos')
 
   useEffect(() => {
     let activo = true
@@ -47,18 +54,45 @@ export default function ListaChats() {
       : fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' })
   }
 
+  const conversacionesFiltradas = conversaciones.filter(c => {
+    if (filtroSeleccionado === 'todos') return true
+    const tipo = obtenerTipoConversacion(c.solicitudes?.estado)
+    return tipo === filtroSeleccionado
+  })
+
   return (
     <div className="lista-chats-pagina">
       <h2 className="lista-chats-titulo">Mensajes</h2>
 
+      <div className="lista-chats-filtros">
+        <button
+          className={`lista-chats-filtro ${filtroSeleccionado === 'todos' ? 'activo' : ''}`}
+          onClick={() => setFiltroSeleccionado('todos')}
+        >
+          Todos
+        </button>
+        <button
+          className={`lista-chats-filtro ${filtroSeleccionado === 'consulta' ? 'activo' : ''}`}
+          onClick={() => setFiltroSeleccionado('consulta')}
+        >
+          Consulta
+        </button>
+        <button
+          className={`lista-chats-filtro ${filtroSeleccionado === 'postulacion' ? 'activo' : ''}`}
+          onClick={() => setFiltroSeleccionado('postulacion')}
+        >
+          Postulación en curso
+        </button>
+      </div>
+
       {cargando ? (
         <p className="chat-vacio">Cargando conversaciones...</p>
-      ) : conversaciones.length === 0 ? (
+      ) : conversacionesFiltradas.length === 0 ? (
         <p className="chat-vacio">
           {esRutaRefugio ? 'Todavía no recibiste consultas.' : 'Todavía no iniciaste ninguna conversación.'}
         </p>
       ) : (
-        conversaciones.map(c => {
+        conversacionesFiltradas.map(c => {
           const contraparte = esRutaRefugio ? c.adoptantes : c.refugios
           const nombre = esRutaRefugio
             ? `${contraparte?.nombre || ''} ${contraparte?.apellido || ''}`.trim()

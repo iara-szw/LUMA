@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { usarAuth } from '../hooks/UsarAuth'
 import Footer from '../components/Footer'
+import FooterRefugio from '../components/FooterRefugio'
 import Loader from '../components/Loader'
 import { obtenerMascotaPorId, obtenerOtrasMascotas } from '../repositories/mascotaRepository'
 import { obtenerRefugioPorMascota } from '../repositories/refugioRepository'
@@ -277,28 +278,7 @@ export default function Mascota() {
         </aside>
       </main>
 
-      {esRefugio ? (
-        <nav className="bottom-nav-refugio">
-          <button className="nav-item-refugio" onClick={() => navigate('/refugio/dashboard')}>
-            <img src="/assets/img/home.png" alt="Inicio" />
-            <span>Inicio</span>
-          </button>
-          <button className="nav-item-refugio" onClick={()=>navigate('/refugio/mismascotas')} >
-          <img src="/assets/img/animal.png" alt="Cargar" style={{ width: '24px', height: '24px', opacity: 0.2, filter: "invert(100%)"}} />
-          <span>Animales</span>
-          </button>
-          <button className="nav-item-refugio" onClick={() => navigate('/refugio/solicitudes')}>
-            <img src="/assets/img/solicitudes.png" alt="Solicitudes" />
-            <span>Solicitudes</span>
-          </button>
-          <button className="nav-item-refugio activo" onClick={() => navigate('/refugio/perfil')}>
-            <img src="/assets/img/perfil.png" alt="Perfil" />
-            <span>Perfil</span>
-          </button>
-        </nav>
-      ) : (
-        <Footer />
-      )}
+      {esRefugio ? <FooterRefugio /> : <Footer />}
     </div>
   )
 }
