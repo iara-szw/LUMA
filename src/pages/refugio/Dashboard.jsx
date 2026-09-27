@@ -59,11 +59,12 @@ export default function Dashboard() {
   const nombreRefugio = refugio?.nombre || usuario?.nombre || 'Refugio'
 
   const formatearFecha = (fechaStr) => {
-    if (!fechaStr) return { mes: '', dia: '' }
+    if (!fechaStr) return { mes: '', dia: '', hora: '' }
     const fecha = new Date(fechaStr)
     const mes = fecha.toLocaleString('es-AR', { month: 'short' }).toUpperCase()
     const dia = fecha.getDate()
-    return { mes, dia }
+    const hora = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    return { mes, dia, hora }
   }
 
   return (
@@ -121,7 +122,7 @@ export default function Dashboard() {
             </div>
             <div className="dash-stat-item">
               <span className="dash-stat-label">Eventos proximos</span>
-              <span className="dash-stat-valor">–</span>
+              <span className="dash-stat-valor">{cargandoEventos ? '–' : eventos.length}</span>
             </div>
             <div className="dash-stat-item">
               <span className="dash-stat-label">Visitas agendadas</span>
@@ -141,7 +142,7 @@ export default function Dashboard() {
           <span className="dash-accion-icono">+</span>
           <span>Cargar</span>
         </button>
-        <button className="dash-accion-btn" onClick={() => navigate('/refugio/dashboard')}>
+        <button className="dash-accion-btn" onClick={() => navigate('/refugio/misMascotas')}>
           <span className="dash-accion-icono"><img src={Animal} alt="" style={{ filter: "invert(100%)" }} /></span>
           <span>Animales</span>
         </button>
@@ -199,7 +200,7 @@ export default function Dashboard() {
             <p className="dash-vacio">Cargando eventos...</p>
           ) : eventos.length > 0 ? (
             eventos.slice(0, 3).map(e => {
-              const { mes, dia } = formatearFecha(e.fecha)
+              const { mes, dia, hora } = formatearFecha(e.fecha_evento)
               return (
                 <article key={e.id} className="dash-tarjeta-evento">
                   <div className="dash-evento-fecha">
@@ -207,8 +208,8 @@ export default function Dashboard() {
                     <span className="dash-evento-dia">{dia}</span>
                   </div>
                   <div className="dash-evento-info">
-                    <h4>{e.nombre}</h4>
-                    <p>{e.lugar}{e.hora ? ` · ${e.hora}` : ''}</p>
+                    <h4>{e.titulo}</h4>
+                    <p>{e.lugar}{hora ? ` · ${hora}` : ''}</p>
                   </div>
                 </article>
               )
@@ -224,6 +225,14 @@ export default function Dashboard() {
           onClick={() => navigate('/refugio/dashboard')}
         >
           Ver todos
+        </button>
+
+        <button
+          type="button"
+          className="dash-btn-agregar-evento"
+          onClick={() => navigate('/refugio/eventos/crear')}
+        >
+          Agregar evento
         </button>
       </section>
 

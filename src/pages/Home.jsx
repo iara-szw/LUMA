@@ -21,12 +21,12 @@ export default function Home() {
 
   useEffect(() => {
     let activo = true
-    
+
     const obtenerDatos = async () => {
       try {
         const [mascotasRes, eventosRes] = await Promise.all([
           obtenerMascotasRecientes(),
-          obtenerEventosProximos(),
+          obtenerEventosProximos(2), // solo los próximos 2 en la home
         ])
 
         if (!activo) return
@@ -78,6 +78,17 @@ export default function Home() {
       }
     } finally {
       setCargandoFavoritos(false)
+    }
+  }
+
+  // La tabla eventos usa `titulo` y `fecha_evento` (timestamp único);
+  // acá lo separamos en mes/día/hora para el badge de fecha de la tarjeta
+  const formatearFechaEvento = (fechaStr) => {
+    const fecha = new Date(fechaStr)
+    return {
+      mes: fecha.toLocaleString('es-AR', { month: 'short' }).toUpperCase(),
+      dia: fecha.getDate(),
+      hora: fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
     }
   }
 
@@ -164,13 +175,21 @@ export default function Home() {
           {cargandoEventos ? (
             <p className="vacio">Cargando eventos...</p>
           ) : eventos.length > 0 ? (
-            eventos.map(e => (
-              <article key={e.id} className="tarjeta-evento">
-                <h4>{e.nombre}</h4>
-                <p>{e.lugar}</p>
-                <p>{e.fecha} {e.hora && `· ${e.hora}`}</p>
-              </article>
-            ))
+            eventos.map(e => {
+              const { mes, dia, hora } = formatearFechaEvento(e.fecha_evento)
+              return (
+                <article key={e.id} className="tarjeta-evento">
+                  <div className="evento-fecha">
+                    <span className="evento-mes">{mes}</span>
+                    <span className="evento-dia">{dia}</span>
+                  </div>
+                  <div className="evento-info">
+                    <h4>{e.titulo}</h4>
+                    <p>{e.lugar}{hora ? ` · ${hora}` : ''}</p>
+                  </div>
+                </article>
+              )
+            })
           ) : (
             <p className="vacio">No hay eventos próximos.</p>
           )}
@@ -178,7 +197,7 @@ export default function Home() {
         <button
           type="button"
           className="btn-ver-todos"
-          onClick={() => navigate('/adoptante/eventos')}
+          onClick={() => navigate('/adoptante/calendario')}
         >
           Ver todos
         </button>
@@ -195,5 +214,5 @@ export default function Home() {
       )}
       <Footer />
     </div>
-      )
+  )
 }

@@ -10,6 +10,7 @@ import Perfil from './pages/adoptante/Perfil.jsx'
 import IniciarSesion from './pages/auth/InicioSesion'
 import EditarPerfil from './pages/adoptante/editarUsuario.jsx'
 import Registro from './pages/auth/Registro'
+import CargarEvento from './pages/refugio/CargarEvento.jsx'
 import Dashboard from './pages/refugio/Dashboard.jsx'
 import PerfilRefugio from './pages/refugio/Perfil.jsx'
 import CargarMascota from './pages/refugio/CargarMascota.jsx'
@@ -25,7 +26,7 @@ import Mascota from './pages/Mascota.jsx'
 import SolicitudFormulario from './pages/refugio/solicitudFormulario.jsx'
 import PerfilAdoptanteRefugio from './pages/refugio/PerfilUsuario.jsx'
 import PerfilPublicoRefugio from './pages/refugio/PerfilPublico.jsx'
-
+import Calendario from './pages/adoptante/Calendario.jsx'
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
 
@@ -68,7 +69,14 @@ export default function App() {
               </RutaProtegida>
             }
           />
-
+<Route
+  path="/adoptante/calendario"
+  element={
+    <RutaProtegida rol="adoptante">
+      <Calendario />
+    </RutaProtegida>
+  }
+/>
           {/* Perfil del refugio */}
           <Route
             path="/refugio/perfil"
@@ -102,6 +110,14 @@ export default function App() {
               </RutaProtegida>
             }
           />
+          <Route
+  path="/refugio/eventos/crear"
+  element={
+    <RutaProtegida rol="refugio">
+      <CargarEvento />
+    </RutaProtegida>
+  }
+/>
           <Route
             path="/refugio/mascota/:id/postulaciones"
             element={

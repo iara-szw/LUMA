@@ -16,6 +16,7 @@ export default function Perfil() {
   const { usuario, cerrarSesion, cargando } = usarAuth()
   const [mascotas, setMascotas] = useState([])
   const [solicitudes, setSolicitudes] = useState([])
+  const [mostrarTodasSolicitudes, setMostrarTodasSolicitudes] = useState(false)
   const [stats, setStats] = useState({ mascotas: 0, cantidad_voluntarios: 0, adopciones: 0, eventos: 0 })
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [refugio, setRefugio] = useState(null)
@@ -157,12 +158,24 @@ export default function Perfil() {
 
       {/* Solicitudes recientes */}
       <section className="seccion-refugio">
-        <h3 className="seccion-refugio-titulo">Solicitudes recientes</h3>
+        <div className="perfil-lista-header">
+          <h3 className="seccion-refugio-titulo">Solicitudes recientes</h3>
+          {solicitudes.length > 3 && (
+            <button
+              type="button"
+              className="exp-ver-mas"
+              aria-expanded={mostrarTodasSolicitudes}
+              onClick={() => setMostrarTodasSolicitudes(mostrar => !mostrar)}
+            >
+              {mostrarTodasSolicitudes ? 'Ver menos' : 'Ver más'}
+            </button>
+          )}
+        </div>
         {solicitudes.length === 0 ? (
           <p className="vacio-refugio">No hay solicitudes todavía.</p>
         ) : (
           <div className="lista-solicitudes">
-            {solicitudes.slice(0, 5).map(s => (
+            {solicitudes.slice(0, mostrarTodasSolicitudes ? solicitudes.length : 3).map(s => (
               <article
                 key={s.id}
                 className="tarjeta-solicitud"

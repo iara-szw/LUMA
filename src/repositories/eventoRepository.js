@@ -1,25 +1,39 @@
 import { Supabase } from '../services/supabase'
 
-export async function obtenerEventosProximos() {
-  const { data, error } = await Supabase
+// Eventos públicos y activos (todos los refugios), para el calendario del adoptante.
+// Pasá `limite` para traer solo los próximos N (ej. el widget "Mis eventos").
+export async function obtenerEventosProximos(limite) {
+  let query = Supabase
     .from('eventos')
-    .select('id, titulo, lugar, fecha_evento')
+    .select('*, refugios(nombre, logo_url)')
     .eq('activo', true)
+    .gte('fecha_evento', new Date().toISOString())
     .order('fecha_evento', { ascending: true })
-    .limit(5)
 
-  if (data) {
-    const mapped = data.map(e => {
-      const dt = new Date(e.fecha_evento)
-      return {
-        id: e.id,
-        nombre: e.titulo,
-        lugar: e.lugar,
-        fecha: dt.toLocaleDateString('es-AR'),
-        hora: dt.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
-      }
-    })
-    return { data: mapped, error }
-  }
-  return { data, error }
+  if (limite) query = query.limit(limite)
+
+  return query
+}
+
+// Eventos de un refugio en particular, para su propio dashboard/calendario
+export async function obtenerEventosRefugio(refugioId) {
+  return Supabase
+    .from('eventos')
+    .select('*')
+    .eq('refugio_id', refugioId)
+    .order('fecha_evento', { ascending: true })
+}
+
+export async function crearEvento(evento) {
+  // evento: { refugio_id, titulo, descripcion, lugar, direccion, imagen_url, fecha_evento }
+  return Supabase.from('eventos').insert(evento).select().single()
+}
+
+export async function actualizarEvento(id, cambios) {
+  return Supabase.from('eventos').update(cambios).eq('id', id).select().single()
+}
+
+// Soft delete: se desactiva en vez de borrar, para no perder el historial
+export async function desactivarEvento(id) {
+  return Supabase.from('eventos').update({ activo: false }).eq('id', id)
 }

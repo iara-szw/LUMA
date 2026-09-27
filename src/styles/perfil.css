@@ -119,11 +119,19 @@
   padding: 1.25rem 0 0.5rem;
 }
 
+.perfil-lista-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 1.25rem 0.85rem;
+}
+
 .seccion-titulo {
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--texto);
-  padding: 0 1.25rem 0.85rem;
+  padding: 0;
 }
 
 /* ── Tarjeta postulación ──────────────────────────── */

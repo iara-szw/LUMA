@@ -1,0 +1,132 @@
+.cal-pagina {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 16px;
+  background: #fafafa;
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.cal-logo img {
+  height: 32px;
+}
+
+.cal-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cal-vacio {
+  text-align: center;
+  color: #888;
+  padding: 32px 0;
+}
+
+.cal-seccion {
+  margin-bottom: 20px;
+}
+
+.cal-mes-titulo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.cal-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cal-tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+}
+
+.cal-tarjeta--entrevista {
+  cursor: default;
+}
+
+.cal-tarjeta-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #f0f0f0;
+}
+
+.cal-tarjeta--evento .cal-tarjeta-fecha {
+  background: #e6f4ea;
+}
+
+.cal-tarjeta--entrevista .cal-tarjeta-fecha {
+  background: #fdeee0;
+}
+
+.cal-tarjeta-diasemana {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #777;
+}
+
+.cal-tarjeta-dia {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.cal-tarjeta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cal-tarjeta-info h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.cal-tarjeta-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.cal-badge {
+  align-self: flex-start;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-bottom: 2px;
+}
+
+.cal-badge--evento {
+  background: #d5f0dd;
+  color: #1e7a3d;
+}
+
+.cal-badge--entrevista {
+  background: #fbe2c9;
+  color: #a15a0c;
+}

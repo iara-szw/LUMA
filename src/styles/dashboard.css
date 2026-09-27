@@ -491,6 +491,22 @@ overflow-x: hidden;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
+}.dash-btn-agregar-evento {
+  display: block;
+  margin: 10px auto 0;
+  background: var(--dash-verde);
+  border: none;
+  border-radius: 24px;
+  padding: 10px 36px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.dash-btn-agregar-evento:hover {
+  opacity: 0.9;
 }
 
 @media (min-width: 1200px) {

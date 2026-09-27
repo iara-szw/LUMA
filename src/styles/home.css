@@ -252,7 +252,62 @@ body {
     border-radius: 18px;
     display: block;
 }
+.lista-eventos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
 
+.tarjeta-evento {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--blanco);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.evento-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--marron);
+  border-radius: 10px;
+  width: 44px;
+  min-width: 44px;
+  height: 50px;
+  color: #fff;
+}
+
+.evento-mes {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.evento-dia {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.evento-info h4 {
+  margin: 0 0 3px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.evento-info p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--texto-suave);
+}
 .tarjeta-favorito {
     position: absolute;
     top: 0.5rem;

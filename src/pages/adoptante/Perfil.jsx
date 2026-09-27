@@ -14,6 +14,7 @@ export default function Perfil() {
   const navigate = useNavigate()
   const { usuario, cerrarSesion } = usarAuth()
   const [postulaciones, setPostulaciones] = useState([])
+  const [mostrarTodasPostulaciones, setMostrarTodasPostulaciones] = useState(false)
   const [cursos, setCursos] = useState([])
   const [guardados, setGuardados] = useState([])
   const [cargando, setCargando] = useState(true)
@@ -81,11 +82,23 @@ export default function Perfil() {
    </section>
 
       <section className="seccion">
-        <h3 className="seccion-titulo">Mis Postulaciones</h3>
+        <div className="perfil-lista-header">
+          <h3 className="seccion-titulo">Mis Postulaciones</h3>
+          {postulaciones.length > 3 && (
+            <button
+              type="button"
+              className="exp-ver-mas"
+              aria-expanded={mostrarTodasPostulaciones}
+              onClick={() => setMostrarTodasPostulaciones(mostrar => !mostrar)}
+            >
+              {mostrarTodasPostulaciones ? 'Ver menos' : 'Ver más'}
+            </button>
+          )}
+        </div>
         {postulaciones.length === 0 ? (
           <p className="vacio">No tenés postulaciones aún.</p>
         ) : (
-          postulaciones.map(p => (
+          postulaciones.slice(0, mostrarTodasPostulaciones ? postulaciones.length : 3).map(p => (
             <article
               key={p.id}
               className="tarjeta-postulacion"
