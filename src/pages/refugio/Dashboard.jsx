@@ -222,7 +222,7 @@ export default function Dashboard() {
         <button
           type="button"
           className="dash-btn-ver-todos"
-          onClick={() => navigate('/refugio/dashboard')}
+          onClick={() => navigate('/refugio/calendario')}
         >
           Ver todos
         </button>

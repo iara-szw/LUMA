@@ -132,6 +132,8 @@
   font-weight: 800;
   color: var(--texto);
   padding: 0;
+      margin-left: 5%;
+
 }
 
 /* ── Tarjeta postulación ──────────────────────────── */

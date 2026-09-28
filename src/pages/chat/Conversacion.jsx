@@ -26,6 +26,8 @@ export default function Conversacion() {
   const [mascota, setMascota] = useState(null)
   const [mostrarFichaMascota, setMostrarFichaMascota] = useState(true)
   const [nombreInterlocutor, setNombreInterlocutor] = useState('Conversación')
+  const [interlocutorAvatar, setInterlocutorAvatar] = useState(null)
+  const [conversacionData, setConversacionData] = useState(null)
 
   const finRef = useRef(null)
   const channelRef = useRef(null)
@@ -54,6 +56,28 @@ export default function Conversacion() {
         setMascota(conversacionRes.data.mascotas)
       } else {
         setMascota(null)
+      }
+
+      // determinar avatar del interlocutor: si yo soy refugio, muestro foto del adoptante, y viceversa
+      const conv = conversacionRes.data
+      if (conv) {
+        const pick = (obj, keys) => {
+          if (!obj) return null
+          for (const k of keys) {
+            if (obj[k]) return obj[k]
+          }
+          return null
+        }
+
+        let avatar = null
+        if (esRefugio) {
+          avatar = pick(conv.adoptantes, ['foto_url', 'foto', 'foto_perfil']) || pick(conv.adoptante, ['foto_url', 'foto', 'foto_perfil'])
+        } else {
+          avatar = pick(conv.refugios, ['logo_url', 'logo', 'foto_url', 'logoUrl', 'logoURL']) || pick(conv.refugio, ['logo_url', 'logo', 'foto_url'])
+        }
+
+        setInterlocutorAvatar(avatar)
+        setConversacionData(conv)
       }
 
       const conversacion = conversacionRes.data
@@ -134,10 +158,45 @@ export default function Conversacion() {
   return (
     <div className="chat-pagina">
       <header className="chat-header">
-        <button className="chat-btn-volver" onClick={() => navigate(-1)} aria-label="Volver">
-          ←
-        </button>
-        <h2 className="chat-titulo">{nombreInterlocutor}</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button className="chat-btn-volver" onClick={() => navigate(-1)} aria-label="Volver">←</button>
+          <h2 className="chat-titulo" style={{ margin: 0 }}>{nombreInterlocutor}</h2>
+          <img
+            src={interlocutorAvatar || '/assets/img/perfil_default.jpg'}
+            alt={nombreInterlocutor}
+            style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', marginLeft: 8, cursor: 'pointer' }}
+            onClick={() => {
+              if (!conversacionData) return
+              if (esRefugio) {
+                // refugio debe ver el perfil del adoptante
+                const solicitudId = conversacionData?.solicitud_id
+                if (solicitudId) {
+                  navigate(`/refugio/solicitud/${solicitudId}/perfil`)
+                  return
+                }
+
+                const adoptanteId = conversacionData?.adoptante_id || conversacionData?.adoptantes?.id || conversacionData?.adoptante?.id
+                if (adoptanteId) {
+                  navigate(`/refugio/adoptante/${adoptanteId}`)
+                }
+              } else {
+                // adoptante debe ver el perfil público del refugio
+                const refugioId = conversacionData?.refugio_id || conversacionData?.refugios?.id || conversacionData?.refugio_id
+                if (refugioId) navigate(`/refugio/${refugioId}`)
+              }
+            }}
+          />
+        </div>
+
+        <div className="chat-header-iconos" style={{ display: 'flex', alignItems: 'center', gap: '10px' ,marginLeft: '30%'}}>
+          <img
+            className="avatar"
+            src={usuario?.foto_url || usuario?.foto_perfil || usuario?.logo_url || '/assets/img/perfil_default.jpg'}
+            alt="perfil"
+            onClick={() => navigate(esRefugio ? '/refugio/perfil' : '/adoptante/perfil')}
+            style={{ width: 36, height: 36, borderRadius: '50%', cursor: 'pointer' }}
+          />
+        </div>
       </header>
 
       {mascota && mostrarFichaMascota && (

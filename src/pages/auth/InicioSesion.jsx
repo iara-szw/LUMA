@@ -1,32 +1,42 @@
 import '../../styles/auth.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { usarAuth } from '../../hooks/UsarAuth'
 import { iniciarSesion } from '../../services/authService'
 
 export default function IniciarSesion() {
   const navigate = useNavigate()
+  const { usuario, cargando } = usarAuth()
 
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [error, setError]       = useState(null)
-  const [cargando, setCargando] = useState(false)
+  const [cargandoForm, setCargandoForm] = useState(false)
 
   const manejarLogin = async () => {
     setError(null)
-    setCargando(true)
+    setCargandoForm(true)
 
     const { error } = await iniciarSesion(email, password)
 
     if (error) {
       console.log(error)
       setError('Email o contraseña incorrectos')
-      setCargando(false)
+      setCargandoForm(false)
       return
     }
 
     navigate('/', { replace: true })
-    setCargando(false)
+    setCargandoForm(false)
   }
+
+  useEffect(() => {
+    // si ya está logeado, redirigir según rol
+    if (!cargando && usuario) {
+      if (usuario.rol === 'refugio') navigate('/refugio/dashboard', { replace: true })
+      else navigate('/', { replace: true })
+    }
+  }, [usuario, cargando, navigate])
 
   return (
     <div className="auth-page">
@@ -50,8 +60,8 @@ export default function IniciarSesion() {
 
       {error && <p className="error">{error}</p>}
 
-      <button onClick={manejarLogin} disabled={cargando}>
-        {cargando ? 'Ingresando...' : 'Ingresar'}
+      <button onClick={manejarLogin} disabled={cargandoForm}>
+        {cargandoForm ? 'Ingresando...' : 'Ingresar'}
       </button>
 
       <p>

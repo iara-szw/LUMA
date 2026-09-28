@@ -135,10 +135,10 @@
   background: #fff;
   border: 1px solid #e8e4dc;
   border-radius: 16px;
-  padding: 14px;
+  padding: 14px  !important;
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .foto-mascota {

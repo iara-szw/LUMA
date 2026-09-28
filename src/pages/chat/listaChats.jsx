@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { obtenerConversaciones } from '../../repositories/chatRepository'
 import Footer from '../../components/Footer'
@@ -60,10 +60,39 @@ export default function ListaChats() {
     return tipo === filtroSeleccionado
   })
 
+  const pick = (obj, keys) => {
+    if (!obj) return null
+    for (const k of keys) if (obj[k]) return obj[k]
+    return null
+  }
+
   return (
     <div className="lista-chats-pagina">
-      <h2 className="lista-chats-titulo">Mensajes</h2>
+      <div className="lista-chats-header">
+      <header className="inicio-header">
+        <Link to="/" className="logo"><img src="/assets/img/logo.png" alt="" /></Link>
+        <div className="inicio-header-iconos">
+          {usuario ? (
+            <>
+              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
+              <img
+                className="avatar"
+                src={usuario.foto_url || usuario.foto_perfil || usuario.logo_url || '/assets/img/perfil_default.jpg'}
+                alt="perfil"
+                onClick={() => navigate(esRefugio ? '/refugio/perfil' : '/adoptante/perfil')}
+              />
+            </>
+          ) : (
+            <nav className="nav-auth">
+              <Link to="/login">Iniciar sesión</Link>
+              <Link to="/registro" className="btn-registro">Registrarse</Link>
+            </nav>
+          )}
+        </div>
+      </header>
 
+      <h2 className="lista-chats-titulo">Mensajes</h2>
+</div>
       <div className="lista-chats-filtros">
         <button
           className={`lista-chats-filtro ${filtroSeleccionado === 'todos' ? 'activo' : ''}`}
@@ -92,12 +121,14 @@ export default function ListaChats() {
           {esRutaRefugio ? 'Todavía no recibiste consultas.' : 'Todavía no iniciaste ninguna conversación.'}
         </p>
       ) : (
-        conversacionesFiltradas.map(c => {
-          const contraparte = esRutaRefugio ? c.adoptantes : c.refugios
-          const nombre = esRutaRefugio
-            ? `${contraparte?.nombre || ''} ${contraparte?.apellido || ''}`.trim()
-            : contraparte?.nombre || 'Refugio'
-          const avatar = esRutaRefugio ? contraparte?.foto_url : contraparte?.logo_url
+      conversacionesFiltradas.map(c => {
+        const contraparte = esRutaRefugio ? c.adoptantes : c.refugios
+        const nombre = esRutaRefugio
+          ? `${contraparte?.nombre || ''} ${contraparte?.apellido || ''}`.trim()
+          : contraparte?.nombre || 'Refugio'
+        const avatar = esRutaRefugio
+          ? pick(contraparte, ['foto_url', 'foto', 'foto_perfil'])
+          : pick(contraparte, ['logo_url', 'logo', 'foto_url', 'logoUrl', 'logoURL'])
           const tag = tagPorEstado(c.solicitudes?.estado)
 
           return (
@@ -108,8 +139,20 @@ export default function ListaChats() {
             >
               <img
                 className="lista-chats-avatar"
-                src={avatar || '/cliente/public/assets/img/perfil_default.jpg'}
+                src={avatar || '/assets/img/perfil_default.jpg'}
                 alt={nombre}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (esRutaRefugio) {
+                    // refugio viendo la lista -> abrir perfil del adoptante
+                    const adoptanteId = c.adoptante_id || c.adoptantes?.id
+                    if (adoptanteId) navigate(`/refugio/adoptante/${adoptanteId}`)
+                  } else {
+                    // adoptante viendo la lista -> abrir perfil público del refugio
+                    const refugioId = c.refugio_id || c.refugios?.id
+                    if (refugioId) navigate(`/refugio/${refugioId}`)
+                  }
+                }}
               />
               <div className="lista-chats-info">
                 <div className="lista-chats-nombre-fila">

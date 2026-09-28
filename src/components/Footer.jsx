@@ -20,7 +20,7 @@ export default function Footer() {
         <img src="/assets/img/mapa.png" alt="Mapa" className="footer-icono" />
       </Link>
 
-      <Link to="/adoptante/chats" className={`footer-item ${pathname.includes('listaChats') ? 'activo' : ''}`}>
+      <Link to="/adoptante/chats" className={`footer-item ${pathname.includes('chats') ? 'activo' : ''}`}>
         <img src="/assets/img/chat.png"  alt="Chats" className="footer-icono" />
         <span>Chats</span>
       </Link>

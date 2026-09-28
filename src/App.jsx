@@ -27,6 +27,8 @@ import SolicitudFormulario from './pages/refugio/solicitudFormulario.jsx'
 import PerfilAdoptanteRefugio from './pages/refugio/PerfilUsuario.jsx'
 import PerfilPublicoRefugio from './pages/refugio/PerfilPublico.jsx'
 import Calendario from './pages/adoptante/Calendario.jsx'
+import CalendarioRefugio from './pages/refugio/calendario.jsx'
+import PerfilAdoptante from './pages/refugio/PerfilAdoptante.jsx'
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
 
@@ -76,7 +78,25 @@ export default function App() {
       <Calendario />
     </RutaProtegida>
   }
-/>
+            />
+
+          <Route
+            path="/refugio/adoptante/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <PerfilAdoptante />
+              </RutaProtegida>
+            }
+          />
+
+                    <Route
+                      path="/refugio/calendario"
+                      element={
+                        <RutaProtegida rol="refugio">
+                          <CalendarioRefugio />
+                        </RutaProtegida>
+                      }
+                    />
           {/* Perfil del refugio */}
           <Route
             path="/refugio/perfil"

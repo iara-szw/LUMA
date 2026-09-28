@@ -83,6 +83,24 @@ export async function obtenerPerfilAdoptantePorSolicitud(solicitudId) {
   }
 }
 
+export async function obtenerPerfilAdoptantePorId(adoptanteId) {
+  const { data, error } = await Supabase
+    .from('usuarios')
+    .select('id, nombre, apellido, email, telefono, ciudad, provincia, biografia, foto_url')
+    .eq('id', adoptanteId)
+    .maybeSingle()
+
+  if (error) return { data: null, error }
+  if (!data) return { data: null, error: null }
+
+  return {
+    data: {
+      usuario: data,
+    },
+    error: null,
+  }
+}
+
 export async function obtenerRefugio(refugioId) {
   const result = await Supabase
     .from('refugios')

@@ -127,29 +127,27 @@ export default function Perfil() {
         </p>
       </section>
 
-      {/* Mascotas en adopción */}
+      {/* Mascotas en adopción (usar mismas tarjetas que perfil adoptante) */}
       <section className="seccion-refugio">
         <h3 className="seccion-refugio-titulo">Mascotas en adopción</h3>
         {mascotas.length === 0 ? (
           <p className="vacio-refugio">No hay mascotas publicadas aún.</p>
         ) : (
-          <div className="scroll-horizontal-refugio">
+          <div className="scroll-horizontal">
             {mascotas.map(m => (
               <article
                 key={m.id}
-                className="tarjeta-mascota-refugio"
+                className="tarjeta-mascota"
                 onClick={() => navigate(`/refugio/mascota/${m.id}`)}
               >
-                {m.foto_url && (
+                {m.foto_url ? (
                   <img src={m.foto_url} alt={m.nombre} />
+                ) : (
+                  <div className="tarjeta-tarjeta-placeholder" />
                 )}
-                <div className="tarjeta-mascota-refugio-info">
-                  <h4>{m.nombre}</h4>
-                  <p>{m.especies?.nombre || m.especie}</p>
-                  {m.urgente && (
-                    <span className="badge-urgente-refugio">Urgente</span>
-                  )}
-                </div>
+                <h4>{m.nombre}</h4>
+                {m.edad && <span>{m.edad}</span>}
+                {m.urgente && <span className="badge-urgente">Urgente</span>}
               </article>
             ))}
           </div>

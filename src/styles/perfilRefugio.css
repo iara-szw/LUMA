@@ -153,16 +153,18 @@
 
 /* ── Secciones genéricas ── */
 .seccion-refugio {
-  background: #F7F3EA;
+  background:var(--crema);
   margin: 5% 7%;
   border-radius: 16px;
   padding: 16px;
   border: 0px solid #e8e4dc;
-      box-shadow: 0 5px 10px rgba(92, 74, 58, 0.1);
 
 }
 
-
+.seccion-refugio .scroll-horizontal{
+  background-color: transparent;
+  margin:0%;
+}
 .perfil-lista-header {
   display: flex;
   align-items: center;

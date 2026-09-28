@@ -197,15 +197,24 @@
 /* ===== Lista de chats ===== */
 
 .lista-chats-pagina {
-  padding: 16px;
   padding-bottom: 80px;
 }
-
-.lista-chats-titulo {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 16px;
+.lista-chats-header{
+  background-color: var(--crema);
+  border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
+.lista-chats-titulo {
+    font-size: 25px;
+    font-weight: 800;
+    margin-left: 5%;
+    margin-top: 3%;
+    margin-bottom: 16px;
+        padding-bottom: 2%;
+
+}
+
+
 
 .lista-chats-filtros {
   display: flex;
@@ -213,6 +222,8 @@
   margin-bottom: 16px;
   overflow-x: auto;
   padding-bottom: 8px;
+      margin-left: 5%;
+
 }
 
 .lista-chats-filtro {

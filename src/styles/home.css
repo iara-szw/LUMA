@@ -219,7 +219,13 @@ body {
     color: var(--texto);
     padding: 0 1.25rem 0.85rem;
 }
-
+.pagina-inicio .seccion-titulo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--texto);
+    margin-left: 5%;
+    padding: 0;
+}
 /* ── Scroll horizontal mascotas ───────────────────── */
 .scroll-horizontal {
     display: flex;
