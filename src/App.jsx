@@ -21,6 +21,7 @@ import SolicitudesRefugio from './pages/refugio/Solicitudes.jsx'
 import MisMascotas from './pages/refugio/MisMascotas.jsx'
 import SolicitudesMascota from './pages/refugio/SolicitudesMascota.jsx'
 import Explorar from './pages/adoptante/Explorar.jsx'
+import DetalleEvento from './pages/DetalleEvento.jsx'
 import FormularioAdopcion from './pages/adoptante/formularioAdopcion.jsx'
 import Mascota from './pages/Mascota.jsx'
 import SolicitudFormulario from './pages/refugio/solicitudFormulario.jsx'
@@ -97,6 +98,7 @@ export default function App() {
                         </RutaProtegida>
                       }
                     />
+                    <Route path="/eventos/:id" element={<DetalleEvento />} />
           {/* Perfil del refugio */}
           <Route
             path="/refugio/perfil"

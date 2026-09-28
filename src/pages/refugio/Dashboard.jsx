@@ -202,7 +202,8 @@ export default function Dashboard() {
             eventos.slice(0, 3).map(e => {
               const { mes, dia, hora } = formatearFecha(e.fecha_evento)
               return (
-                <article key={e.id} className="dash-tarjeta-evento">
+                <article key={e.id} className="dash-tarjeta-evento" onClick={() => { if (e.tipo !== 'entrevista' && e.id) navigate(`/eventos/${e.id}`) }}>
+
                   <div className="dash-evento-fecha">
                     <span className="dash-evento-mes">{mes}</span>
                     <span className="dash-evento-dia">{dia}</span>

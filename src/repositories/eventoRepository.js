@@ -15,6 +15,15 @@ export async function obtenerEventosProximos(limite) {
   return query
 }
 
+// Un evento puntual por id, para la pantalla de detalle
+export async function obtenerEventoPorId(id) {
+  return Supabase
+    .from('eventos')
+    .select('*, refugios(nombre, logo_url)')
+    .eq('id', id)
+    .single()
+}
+
 // Eventos de un refugio en particular, para su propio dashboard/calendario
 export async function obtenerEventosRefugio(refugioId) {
   return Supabase
