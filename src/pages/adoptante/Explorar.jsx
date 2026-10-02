@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import Footer from '../../components/Footer'
 import Buscador from '../../components/Buscador'
 import { usarAuth } from '../../hooks/UsarAuth'
@@ -18,24 +18,30 @@ const filtros = [
 ]
 
 function TarjetaMascota({ animal, onClick, esRefugio = false, favoritos, onToggleFavorito }) {
+  const imagenMuestra = esRefugio 
+    ? (animal.logo_url || animal.foto_url || animal.foto_perfil || '/assets/img/perfil_default.jpg')
+    : (animal.foto_url || '/assets/img/perfil_default.jpg')
+  
   return (
     <article className="tarjeta-mascota" onClick={onClick}>
-      <button
-        type="button"
-        className="tarjeta-favorito"
-        aria-label={`${favoritos?.has(animal.id) ? 'Remover' : 'Guardar'} ${animal.nombre}`}
-        onClick={(e) => {
-          e.stopPropagation()
-          onToggleFavorito?.(animal.id)
-        }}
-      >
-        <img
-          src={favoritos?.has(animal.id) ? '/assets/img/corazon-seleccionado.png' : '/assets/img/corazon.png'}
-          alt=""
-        />
-      </button>
+      {!esRefugio && (
+        <button
+          type="button"
+          className="tarjeta-favorito"
+          aria-label={`${favoritos?.has(animal.id) ? 'Remover' : 'Guardar'} ${animal.nombre}`}
+          onClick={(e) => {
+            e.stopPropagation()
+            onToggleFavorito?.(animal.id)
+          }}
+        >
+          <img
+            src={favoritos?.has(animal.id) ? '/assets/img/corazon-seleccionado.png' : '/assets/img/corazon.png'}
+            alt=""
+          />
+        </button>
+      )}
       {animal.urgente && <span className="badge-urgente">Urgente</span>}
-      <img src={animal.foto_url || '/assets/img/perfil_default.jpg'} alt={animal.nombre} />
+      <img src={imagenMuestra} alt={animal.nombre} />
       <h4>{animal.nombre}</h4>
       <span>{esRefugio ? 'Refugio' : animal.edad || 'Sin edad'}</span>
     </article>
@@ -69,7 +75,9 @@ function Seccion({ titulo, animales, onVerMas, onClickAnimal, esRefugio = false,
 
 export default function Explorar() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { usuario } = usarAuth()
+  const queryBusqueda = searchParams.get('q') || ''
   const [filtroActivo, setFiltroActivo] = useState('todos')
   const [datos, setDatos] = useState({ perros: [], gatos: [], refugios: [] })
   const [favoritos, setFavoritos] = useState(new Set())
@@ -77,13 +85,17 @@ export default function Explorar() {
 
   useEffect(() => {
     const obtenerDatos = async () => {
-      const [{ data: perros }, { data: gatos }, { data: refugios }] = await Promise.all([
+      const [respPerros, respGatos, respRefugios] = await Promise.all([
         obtenerPerros(),
         obtenerGatos(),
         obtenerRefugios(),
       ])
 
-      setDatos({ perros: perros || [], gatos: gatos || [], refugios: refugios || [] })
+      setDatos({ 
+        perros: respPerros?.data || [], 
+        gatos: respGatos?.data || [], 
+        refugios: respRefugios?.data || [] 
+      })
     }
 
     const obtenerFavoritos = async () => {
@@ -99,6 +111,32 @@ export default function Explorar() {
 
   const nombre = usuario?.nombre?.split(' ')[0]
   const avatarUsuario = usuario?.foto_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'
+  
+  // Filtrar por búsqueda
+  const filtrarPorBusqueda = (items, esRefugio = false) => {
+    if (!queryBusqueda) return items
+    const query = queryBusqueda.toLowerCase()
+    return items.filter(item => {
+      const nombre = item.nombre?.toLowerCase() || ''
+      const descripcion = item.descripcion?.toLowerCase() || ''
+      const ciudad = item.ciudad?.toLowerCase() || ''
+      const provincia = item.provincia?.toLowerCase() || ''
+      const refugioNombre = item.refugios?.nombre?.toLowerCase() || ''
+      
+      return (
+        nombre.includes(query) || 
+        descripcion.includes(query) || 
+        ciudad.includes(query) || 
+        provincia.includes(query) ||
+        refugioNombre.includes(query)
+      )
+    })
+  }
+
+  const perrosFiltrados = filtrarPorBusqueda(datos.perros)
+  const gatosFiltrados = filtrarPorBusqueda(datos.gatos)
+  const refugiosFiltrados = filtrarPorBusqueda(datos.refugios, true)
+
   const mostrarPerros = filtroActivo === 'todos' || filtroActivo === 'perros'
 
   const toggleFavorito = async (mascotaId) => {
@@ -178,7 +216,7 @@ export default function Explorar() {
       {mostrarPerros && (
         <Seccion
           titulo="Perros"
-          animales={datos.perros}
+          animales={perrosFiltrados}
           onVerMas={() => setFiltroActivo('perros')}
           onClickAnimal={a => navigate(`/mascota/${a.id}`)}
           favoritos={favoritos}
@@ -189,7 +227,7 @@ export default function Explorar() {
       {mostrarGatos && (
         <Seccion
           titulo="Gatos"
-          animales={datos.gatos}
+          animales={gatosFiltrados}
           onVerMas={() => setFiltroActivo('gatos')}
           onClickAnimal={a => navigate(`/mascota/${a.id}`)}
           favoritos={favoritos}
@@ -200,7 +238,7 @@ export default function Explorar() {
       {mostrarRefugios && (
         <Seccion
           titulo="Refugios"
-          animales={datos.refugios}
+          animales={refugiosFiltrados}
           onVerMas={() => setFiltroActivo('refugios')}
           onClickAnimal={a => navigate(`/refugio/${a.id}`)}
           esRefugio
