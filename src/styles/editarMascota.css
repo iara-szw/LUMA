@@ -1,24 +1,192 @@
-select{
-        border-radius: 15px;
-    padding: 2.5%;
-    border: none;
+/* ── Editar mascota (estilo LUMA) ─────────────────── */
+
+.pagina-editar {
+  padding-bottom: 2rem;
 }
 
-input[type="checkbox"] {
-    width: 10%;
-    padding: 4%;
-    border-radius: 4px;
-    border:2px solid #b8956a;
-    box-sizing: border-box;
+/* Header crema con base redondeada */
+.pagina-editar .perfil-header {
+  background: var(--crema, #F2EADD);
+  border-radius: 0 0 28px 28px;
+  padding: 1.25rem 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  justify-content: flex-start;
 }
-input{
-    border: 1px solid #d9c6a8;
+
+/* El botón se ve como título de pantalla */
+.pagina-editar .perfil-header > button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font, inherit);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--texto, #5C4A3A);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-input[type="checkbox"]:checked{
-   background-color: #b8956a    ;
+
+.pagina-editar form {
+  padding: 0 1.25rem;
 }
-label{
-display: flex;
-    align-items: center;
-    gap: 10px;
+
+/* Foto centrada con halo */
+.pagina-editar .foto-campo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.pagina-editar .foto-preview {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid var(--blanco, #fff);
+  box-shadow: 0 0 0 6px var(--crema, #F2EADD), 0 4px 12px rgba(92, 74, 58, 0.15);
+  margin: 0.5rem 0 0.9rem;
+}
+
+.pagina-editar .foto-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pagina-editar .foto-campo::after {
+  content: 'Tocá para cambiar';
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--texto-suave, #8A7B6E);
+}
+
+/* Labels */
+.pagina-editar label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Campos blancos, bordes suaves, foco marrón */
+.pagina-editar input:not([type="checkbox"]),
+.pagina-editar select,
+.pagina-editar textarea {
+  background: var(--blanco, #fff);
+  border: 1px solid #E6DAC6;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.05);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pagina-editar input:not([type="checkbox"]):focus,
+.pagina-editar select:focus,
+.pagina-editar textarea:focus {
+  outline: none;
+  border-color: #b8956a;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
+}
+
+/* Select con flecha propia */
+.pagina-editar select {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem 2.5rem 0.85rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--texto, #5C4A3A);
+  cursor: pointer;
+  background-color: var(--blanco, #fff);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23b8956a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px 8px;
+}
+
+/* Checkbox: casilla fija, tilde centrado y verde salvia al marcar */
+.pagina-editar input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  background: #fff;
+  border: 2px solid #CBB99C;
+  border-radius: 7px;
+  box-sizing: border-box;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.pagina-editar input[type="checkbox"]::after {
+  content: '';
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) scale(0);
+  margin-top: -2px;
+  transition: transform 0.12s ease;
+}
+
+.pagina-editar input[type="checkbox"]:checked {
+  background-color: var(--verde, #9CA986);
+  border-color: var(--verde, #9CA986);
+}
+
+.pagina-editar input[type="checkbox"]:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+/* Opciones: lista compacta, sin bordes ni tarjetas */
+.pagina-editar label:has(input[type="checkbox"]) {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0.35rem 0.25rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Editar formulario: pill con borde */
+.pagina-editar .btn-formulario {
+  background: var(--blanco, #fff);
+  color: var(--texto, #5C4A3A);
+  border: 1px solid #CBB99C;
+  border-radius: 50px;
+  padding: 0.65rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Guardar: verde salvia */
+.pagina-editar form > button[type="submit"] {
+  background: var(--verde, #9CA986);
+  color: var(--blanco, #fff);
+  border: none;
+  border-radius: 50px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(92, 74, 58, 0.15);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.pagina-editar form > button[type="submit"]:active {
+  transform: scale(0.98);
+}
+
+.pagina-editar form > button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
