@@ -11,7 +11,7 @@ const aplicarLimite = (query, cantidad) => {
 export async function obtenerMascotasRecientes(cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, foto_url, urgente, edad')
+    .select('id, nombre, foto_url, urgente, edad, refugios(nombre)')
     .eq('estado_id', ESTADOS.publicada)
     .order('fecha_publicacion', { ascending: false })
 
@@ -21,7 +21,7 @@ export async function obtenerMascotasRecientes(cantidad) {
 export async function obtenerPerros(cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, edad, foto_url, urgente')
+    .select('id, nombre, edad, foto_url, urgente, descripcion, refugio_id, refugios(nombre)')
     .eq('especie_id', ESPECIE_PERRO)
     .eq('estado_id', ESTADOS.publicada)
 
@@ -31,7 +31,7 @@ export async function obtenerPerros(cantidad) {
 export async function obtenerGatos(cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, edad, foto_url, urgente')
+    .select('id, nombre, edad, foto_url, urgente, descripcion, refugio_id, refugios(nombre)')
     .eq('especie_id', ESPECIE_GATO)
     .eq('estado_id', ESTADOS.publicada)
 
@@ -41,7 +41,7 @@ export async function obtenerGatos(cantidad) {
 export async function obtenerMascotasRefugio(refugioId, cantidad) {
   const query = Supabase
     .from('mascotas')
-    .select('id, nombre, edad, urgente, foto_url, especie_id')
+    .select('id, nombre, edad, urgente, foto_url, especie_id, refugios(nombre)')
     .eq('refugio_id', refugioId)
     .eq('estado_id', ESTADOS.publicada)
     
