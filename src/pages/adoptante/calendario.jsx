@@ -57,7 +57,7 @@ export default function Calendario() {
               <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
               <img
                 className="avatar"
-                src={usuario.foto_url || usuario.foto_perfil || '/assets/img/perfil_default.jpg'}
+                src={usuario?.foto_url || '/assets/img/perfil_default.jpg'}
                 alt="perfil"
                 onClick={() => navigate('/adoptante/perfil')}
               />

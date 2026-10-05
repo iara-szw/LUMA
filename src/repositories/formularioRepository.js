@@ -1,44 +1,46 @@
 import { Supabase } from '../services/supabase'
 
 export const FORMULARIO_DEFAULT = [
- 
   {
     id: 'seccion_disponibilidad',
     titulo: 'Disponibilidad',
     preguntas: [
       {
         id: 'tiempo',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
+        titulo: '¿Cuánto tiempo podés dedicarle a tu mascota?',
         tipo: 'text',
         placeholder: 'Ej: 2 horas por día',
         obligatorio: true,
-      },{
-        id: 'tiempoDisponible',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
-        tipo: 'text',
-        placeholder: 'Ej: 2 horas por día',
+      },
+      {
+        id: 'vivienda',
+        titulo: '¿Qué tipo de vivienda tenés?',
+        tipo: 'textarea',
+        placeholder: 'Contanos si es casa, departamento, jardín, etc.',
         obligatorio: true,
-      }
+      },
     ],
-  }, {
-    id: 'a',
-    titulo: 'a',
+  },
+  {
+    id: 'seccion_hogar',
+    titulo: 'Hogar',
     preguntas: [
       {
-        id: 'a',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
-        tipo: 'text',
-        placeholder: 'Ej: 2 horas por día',
+        id: 'otros_animales',
+        titulo: '¿Tenés otros animales en casa?',
+        tipo: 'multiple',
+        opciones: ['No', 'Sí, perros', 'Sí, gatos', 'Sí, otros'],
         obligatorio: true,
-      },{
-        id: 'a',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
-        tipo: 'text',
-        placeholder: 'Ej: 2 horas por día',
+      },
+      {
+        id: 'espacio',
+        titulo: '¿Hay espacio suficiente para la mascota?',
+        tipo: 'textarea',
+        placeholder: 'Contanos un poco sobre el espacio y rutina del hogar.',
         obligatorio: true,
-      }
+      },
     ],
-  }
+  },
 ]
 
 function normalizarBloques(valor) {

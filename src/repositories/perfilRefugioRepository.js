@@ -1,6 +1,11 @@
 import { Supabase } from '../services/supabase'
 import { ESTADOS } from '../services/authService'
 
+function resolverFotoUsuario(usuario) {
+  if (!usuario) return '/assets/img/perfil_default.jpg'
+  return usuario.foto_url || '/assets/img/perfil_default.jpg'
+}
+
 export async function obtenerMascotasDeRefugio(refugioId) {
   return Supabase
     .from('mascotas')
@@ -34,7 +39,10 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
         creado_en: s.fecha_solicitud,
         es_nueva: s.estado === 'Pendiente',
         paso_actual: s.estado === 'Pendiente' ? 'formulario_completo' : s.estado === 'Aprobada' ? 'entrevista_sugerida' : 'en_revision',
-        usuarios: s.usuarios,
+        usuarios: {
+          ...s.usuarios,
+          foto_url: resolverFotoUsuario(s.usuarios),
+        },
         mascotas: s.mascotas,
         info,
       }
@@ -77,7 +85,10 @@ export async function obtenerPerfilAdoptantePorSolicitud(solicitudId) {
       estado: data.estado,
       fecha_solicitud: data.fecha_solicitud,
       mascota: data.mascotas,
-      usuario: data.usuarios,
+      usuario: {
+        ...data.usuarios,
+        foto_url: resolverFotoUsuario(data.usuarios),
+      },
     },
     error: null,
   }
@@ -95,7 +106,10 @@ export async function obtenerPerfilAdoptantePorId(adoptanteId) {
 
   return {
     data: {
-      usuario: data,
+      usuario: {
+        ...data,
+        foto_url: resolverFotoUsuario(data),
+      },
     },
     error: null,
   }
@@ -135,7 +149,7 @@ export async function obtenerRefugio(refugioId) {
         nombre: usuarioRes.data.nombre || 'Refugio',
         descripcion: usuarioRes.data.descripcion || usuarioRes.data.biografia || '',
         direccion: usuarioRes.data.direccion || [usuarioRes.data.ciudad, usuarioRes.data.provincia].filter(Boolean).join(', '),
-        logo_url: usuarioRes.data.logo_url || usuarioRes.data.foto_url || usuarioRes.data.foto_perfil || '/assets/img/perfil_default.jpg',
+        logo_url: usuarioRes.data.logo_url || usuarioRes.data.foto_url || '/assets/img/perfil_default.jpg',
         portada_url: usuarioRes.data.portada_url || usuarioRes.data.foto_portada_url || '/assets/img/refugio_default.jpg',
       },
       error: null,

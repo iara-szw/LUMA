@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/Loader'
+import { usarAuth } from '../../hooks/UsarAuth'
+import { obtenerOCrearConversacion } from '../../repositories/chatRepository'
 import { obtenerMascotasDeRefugio, obtenerRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/perfilRefugio.css'
 
 export default function PerfilPublicoRefugio() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { usuario, esRefugio } = usarAuth()
   const [refugio, setRefugio] = useState(null)
   const [mascotas, setMascotas] = useState([])
   const [cargando, setCargando] = useState(true)
+  const [iniciandoChat, setIniciandoChat] = useState(false)
 
   useEffect(() => {
     let activo = true
@@ -19,9 +23,8 @@ export default function PerfilPublicoRefugio() {
         const [refugioRes, mascotasRes] = await Promise.all([
           obtenerRefugio(id),
           obtenerMascotasDeRefugio(id),
-          
         ])
-        
+
         if (!activo) return
 
         setRefugio(refugioRes?.data || null)
@@ -34,6 +37,54 @@ export default function PerfilPublicoRefugio() {
     cargarDatos()
     return () => { activo = false }
   }, [id])
+
+  const handleIniciarConversacion = async () => {
+    if (!usuario) {
+      return navigate('/login')
+    }
+
+    if (esRefugio) {
+      return
+    }
+
+    if (!id || !usuario?.id) return
+
+    setIniciandoChat(true)
+    try {
+      const { data, error } = await obtenerOCrearConversacion(id, usuario.id)
+
+      if (error) {
+        console.error('Error creando/abriendo conversación:', error)
+        return
+      }
+
+      if (data) navigate(`/adoptante/chats/${data.id}`)
+    } finally {
+      setIniciandoChat(false)
+    }
+  }
+
+  const fallbackAvatar = '/assets/img/perfil_default.jpg'
+
+  const resolverFotoUsuario = (usuarioActual) => {
+    const fallback = '/assets/img/perfil_default.jpg'
+    if (!usuarioActual) return fallback
+
+    const valor = usuarioActual.foto_url
+    if (typeof valor !== 'string') return fallback
+
+    const limpio = valor.trim()
+    if (!limpio || limpio === 'null' || limpio === 'undefined') return fallback
+
+    return limpio
+  }
+
+  const avatarRefugio = resolverFotoUsuario(refugio)
+
+  const handleImageError = (event) => {
+    event.currentTarget.src = '/assets/img/perfil_default.jpg'
+    event.currentTarget.onerror = null
+  }
 
   if (cargando) return <Loader />
 
@@ -66,8 +117,9 @@ export default function PerfilPublicoRefugio() {
         />
         <div className="perfil-refugio-avatar">
           <img
-            src={refugio.logo_url || '/assets/img/perfil_default.jpg'}
+            src={avatarRefugio}
             alt={refugio.nombre || 'Logo del refugio'}
+            onError={handleImageError}
           />
         </div>
       </div>
@@ -77,6 +129,29 @@ export default function PerfilPublicoRefugio() {
         <p className="perfil-refugio-ubicacion">
           📍 {ubicacion}
         </p>
+{!esRefugio && (
+  <button
+    type="button"
+    onClick={handleIniciarConversacion}
+    disabled={iniciandoChat}
+    style={{
+      marginTop: '16px',
+      background: 'var(--dash-bg)',
+      color: 'var(--arena-hover)',
+      borderWidth: 'medium',
+      borderStyle: 'none',
+      borderColor: 'var(--arena-hover)',
+      borderImage: 'none',
+      border: '1px solid var(--arena-hover)',
+      borderRadius: '20px',
+      padding: '10px 18px',
+      fontWeight: '600',
+      cursor: 'pointer',
+    }}
+  >
+    {iniciandoChat ? 'Abriendo chat...' : 'Iniciar conversación'}
+  </button>
+)}
       </section>
 
       <section className="seccion-refugio">
