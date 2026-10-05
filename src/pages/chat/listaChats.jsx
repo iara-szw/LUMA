@@ -77,7 +77,7 @@ export default function ListaChats() {
               <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
               <img
                 className="avatar"
-                src={usuario.foto_url || usuario.foto_perfil || usuario.logo_url || '/assets/img/perfil_default.jpg'}
+                src={usuario.foto_url || usuario.logo_url || '/assets/img/perfil_default.jpg'}
                 alt="perfil"
                 onClick={() => navigate(esRefugio ? '/refugio/perfil' : '/adoptante/perfil')}
               />
@@ -127,8 +127,8 @@ export default function ListaChats() {
           ? `${contraparte?.nombre || ''} ${contraparte?.apellido || ''}`.trim()
           : contraparte?.nombre || 'Refugio'
         const avatar = esRutaRefugio
-          ? pick(contraparte, ['foto_url', 'foto', 'foto_perfil'])
-          : pick(contraparte, ['logo_url', 'logo', 'foto_url', 'logoUrl', 'logoURL'])
+          ? pick(contraparte, ['foto_url'])
+          : pick(contraparte, ['logo_url', 'foto_url', 'logoUrl', 'logoURL'])
           const tag = tagPorEstado(c.solicitudes?.estado)
 
           return (

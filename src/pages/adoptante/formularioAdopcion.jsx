@@ -157,7 +157,7 @@ function actualizarFotoArchivo(preguntaId, file) {
         ) : pregunta.tipo === 'multiple' ? (
           <div className="formulario-opciones">
             {(pregunta.opciones || []).map((op, idx) => (
-              <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <label key={`${pregunta.id}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="radio"
                   name={pregunta.id}

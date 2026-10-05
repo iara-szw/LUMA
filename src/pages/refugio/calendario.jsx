@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import FooterRefugio from '../../components/FooterRefugio'
-import { obtenerEventosRefugio } from '../../repositories/eventoRepository'
+import { obtenerCalendarioRefugio } from '../../repositories/calendarioRepository'
 import '../../styles/calendario.css'
 
 export default function CalendarioRefugio() {
@@ -23,21 +23,21 @@ export default function CalendarioRefugio() {
     let activo = true
 
     const obtenerDatos = async () => {
-      const { data, error } = await obtenerEventosRefugio(usuario.id)
+      const { data, error } = await obtenerCalendarioRefugio(usuario.id)
       if (!activo) return
       if (error) setError(error)
       else {
-        // normalizar a la misma forma que el calendario del adoptante (campo `fecha`)
-        const eventos = (data || []).map(e => ({
-          tipo: 'evento',
-          id: e.id,
-          fecha: e.fecha_evento || e.fecha,
-          titulo: e.titulo,
-          lugar: e.lugar,
-          imagen_url: e.imagen_url,
-          modalidad: e.modalidad,
+        const itemsCalendario = (data || []).map(item => ({
+          tipo: item.tipo,
+          id: item.id,
+          fecha: item.fecha,
+          titulo: item.titulo,
+          lugar: item.lugar,
+          modalidad: item.modalidad,
+          refugio: item.refugio,
+          resultado: item.resultado,
         }))
-        setItems(eventos)
+        setItems(itemsCalendario)
       }
       setCargando(false)
     }
@@ -76,7 +76,7 @@ export default function CalendarioRefugio() {
               <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
               <img
                 className="avatar"
-                src={usuario.foto_url || usuario.foto_perfil || '/assets/img/perfil_default.jpg'}
+                src={usuario?.foto_url || '/assets/img/perfil_default.jpg'}
                 alt="perfil"
                 onClick={() => navigate('/refugio/perfil')}
               />

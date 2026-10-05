@@ -1,26 +1,40 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { usarAuth } from '../hooks/UsarAuth'
 import { obtenerEventosProximos } from '../repositories/eventoRepository'
+import { obtenerEntrevistasConfirmadas } from '../repositories/entrevistaRepository'
+import { eventoAItem, entrevistaAItem, combinarItems } from '../utils/itemsCalendario'
 import '../styles/proximosEventos.css'
 
 export default function ProximosEventos() {
   const navigate = useNavigate()
-  const [eventos, setEventos] = useState([])
+  const { usuario } = usarAuth()
+  const [items, setItems] = useState([])
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
+    if (!usuario?.id) return
     let activo = true
 
     const obtenerDatos = async () => {
-      const { data, error } = await obtenerEventosProximos(2)
+      const [evRes, entRes] = await Promise.all([
+        obtenerEventosProximos(2),
+        obtenerEntrevistasConfirmadas(usuario.id, 2),
+      ])
       if (!activo) return
-      if (!error) setEventos(data || [])
+
+      const combinados = combinarItems(
+        (evRes.data || []).map(e => eventoAItem(e)),
+        (entRes.data || []).map(entrevistaAItem),
+      ).slice(0, 2)
+
+      setItems(combinados)
       setCargando(false)
     }
 
     obtenerDatos()
     return () => { activo = false }
-  }, [])
+  }, [usuario])
 
   const formatearFecha = (fechaStr) => {
     const fecha = new Date(fechaStr)
@@ -31,31 +45,37 @@ export default function ProximosEventos() {
     }
   }
 
+  const irAlDetalle = (item) =>
+    navigate(item.tipo === 'entrevista' ? '/adoptante/calendario' : `/eventos/${item.id}`)
+
   return (
     <section className="prox-eventos-seccion">
       <h3 className="prox-eventos-titulo">Mis eventos</h3>
 
       {cargando ? (
         <p className="prox-eventos-vacio">Cargando eventos...</p>
-      ) : eventos.length === 0 ? (
+      ) : items.length === 0 ? (
         <p className="prox-eventos-vacio">No hay eventos próximos.</p>
       ) : (
         <div className="prox-eventos-lista">
-          {eventos.map(e => {
-            const { mes, dia, hora } = formatearFecha(e.fecha_evento)
+          {items.map(item => {
+            const { mes, dia, hora } = formatearFecha(item.fecha)
             return (
               <article
-                key={e.id}
-                className="prox-evento-tarjeta"
-                onClick={() => navigate(`/eventos/${e.id}`)}
+                key={`${item.tipo}-${item.id}`}
+                className={`prox-evento-tarjeta prox-evento-tarjeta--${item.tipo}`}
+                onClick={() => irAlDetalle(item)}
               >
                 <div className="prox-evento-fecha">
                   <span className="prox-evento-mes">{mes}</span>
                   <span className="prox-evento-dia">{dia}</span>
                 </div>
                 <div className="prox-evento-info">
-                  <h4>{e.titulo}</h4>
-                  <p>{e.lugar}{hora ? ` · ${hora}` : ''}</p>
+                  {item.tipo === 'entrevista' && (
+                    <span className="prox-evento-etiqueta">Entrevista</span>
+                  )}
+                  <h4>{item.titulo}</h4>
+                  <p>{item.lugar}{hora ? ` · ${hora}` : ''}</p>
                 </div>
               </article>
             )

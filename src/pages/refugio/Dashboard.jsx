@@ -81,7 +81,7 @@ export default function Dashboard() {
 </button>
           <img
             className="dash-avatar"
-            src={refugio?.logo_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'}
+            src={refugio?.logo_url || '/assets/img/perfil_default.jpg'}
             alt="perfil"
             onClick={() => navigate('/refugio/perfil')}
           />

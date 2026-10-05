@@ -1,45 +1,80 @@
 import { Supabase } from '../services/supabase'
 
 export const FORMULARIO_DEFAULT = [
- 
   {
     id: 'seccion_disponibilidad',
     titulo: 'Disponibilidad',
     preguntas: [
       {
         id: 'tiempo',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
+        titulo: '¿Cuánto tiempo podés dedicarle a tu mascota?',
         tipo: 'text',
         placeholder: 'Ej: 2 horas por día',
         obligatorio: true,
-      },{
-        id: 'tiempoDisponible',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
-        tipo: 'text',
-        placeholder: 'Ej: 2 horas por día',
+      },
+      {
+        id: 'vivienda',
+        titulo: '¿Qué tipo de vivienda tenés?',
+        tipo: 'textarea',
+        placeholder: 'Contanos si es casa, departamento, jardín, etc.',
         obligatorio: true,
-      }
+      },
     ],
-  }, {
-    id: 'a',
-    titulo: 'a',
+  },
+  {
+    id: 'seccion_hogar',
+    titulo: 'Hogar',
     preguntas: [
       {
-        id: 'a',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
-        tipo: 'text',
-        placeholder: 'Ej: 2 horas por día',
+        id: 'otros_animales',
+        titulo: '¿Tenés otros animales en casa?',
+        tipo: 'multiple',
+        opciones: ['No', 'Sí, perros', 'Sí, gatos', 'Sí, otros'],
         obligatorio: true,
-      },{
-        id: 'a',
-        titulo: '¿Cuánto tiempo podés dedicarle?',
-        tipo: 'text',
-        placeholder: 'Ej: 2 horas por día',
+      },
+      {
+        id: 'espacio',
+        titulo: '¿Hay espacio suficiente para la mascota?',
+        tipo: 'textarea',
+        placeholder: 'Contanos un poco sobre el espacio y rutina del hogar.',
         obligatorio: true,
-      }
+      },
     ],
-  }
+  },
 ]
+
+function asegurarIdsUnicos(bloques) {
+  const usados = new Set()
+
+  return (Array.isArray(bloques) ? bloques : []).map((bloque, indexBloque) => {
+    const bloqueId = bloque?.id || `seccion_${indexBloque + 1}`
+    const bloqueNormalizado = {
+      ...bloque,
+      id: bloqueId,
+      preguntas: Array.isArray(bloque?.preguntas) ? bloque.preguntas : [],
+    }
+
+    bloqueNormalizado.preguntas = bloqueNormalizado.preguntas.map((pregunta, indexPregunta) => {
+      const baseId = String(pregunta?.id || `pregunta_${indexBloque + 1}_${indexPregunta + 1}`)
+      let idUnico = baseId
+      let contador = 2
+
+      while (usados.has(idUnico)) {
+        idUnico = `${baseId}_${contador}`
+        contador += 1
+      }
+
+      usados.add(idUnico)
+
+      return {
+        ...pregunta,
+        id: idUnico,
+      }
+    })
+
+    return bloqueNormalizado
+  })
+}
 
 function normalizarBloques(valor) {
   if (!valor) return FORMULARIO_DEFAULT
@@ -49,10 +84,10 @@ function normalizarBloques(valor) {
     if (!Array.isArray(parsed) || parsed.length === 0) return FORMULARIO_DEFAULT
 
     // Formato nuevo: ya viene como secciones con .preguntas
-    if (parsed[0]?.preguntas) return parsed
+    if (parsed[0]?.preguntas) return asegurarIdsUnicos(parsed)
 
     // Formato viejo: array plano de preguntas -> migramos a una sola sección
-    return [{ id: 'seccion_1', titulo: 'Preguntas', preguntas: parsed }]
+    return asegurarIdsUnicos([{ id: 'seccion_1', titulo: 'Preguntas', preguntas: parsed }])
   } catch {
     return FORMULARIO_DEFAULT
   }

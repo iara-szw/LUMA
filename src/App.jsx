@@ -30,6 +30,7 @@ import PerfilPublicoRefugio from './pages/refugio/PerfilPublico.jsx'
 import Calendario from './pages/adoptante/Calendario.jsx'
 import CalendarioRefugio from './pages/refugio/calendario.jsx'
 import PerfilAdoptante from './pages/refugio/PerfilAdoptante.jsx'
+import CrearEntrevista from './pages/chat/CrearEntrevista.jsx'
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
 
@@ -253,6 +254,9 @@ export default function App() {
       <Route path="/refugio/chats/:id" element={<RutaProtegida rol="refugio"><Conversacion /></RutaProtegida>} />
       <Route path="/adoptante/chats" element={<RutaProtegida rol="adoptante"><ListaChats /></RutaProtegida>} />
       <Route path="/adoptante/chats/:id" element={<RutaProtegida rol="adoptante"><Conversacion /></RutaProtegida>} />
+      <Route path="/refugio/entrevista/crear" element={<RutaProtegida rol="refugio"><CrearEntrevista /></RutaProtegida>} />
+      <Route path="/refugio/chats/:id/entrevista" element={<RutaProtegida rol="refugio"><CrearEntrevista /></RutaProtegida>} />
+      <Route path="/adoptante/chats/:id/entrevista" element={<RutaProtegida rol="adoptante"><CrearEntrevista /></RutaProtegida>} />
         </Routes>
         </ProveedorChat>
       </ProveedorAuth>

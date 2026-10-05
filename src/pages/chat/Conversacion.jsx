@@ -10,7 +10,40 @@ import {
   desuscribirse,
   obtenerConversacionPorId,
 } from '../../repositories/chatRepository'
+import { Supabase } from '../../services/supabase'
+import { responderEntrevista } from '../../repositories/entrevistaRepository'
 import '../../styles/chat.css'
+
+function parsearEntrevistaMensaje(contenido) {
+  if (!contenido || typeof contenido !== 'string') return null
+
+  let raw = contenido
+  if (raw.startsWith('__ENTREVISTA_CONFIRMADA__')) {
+    raw = raw.replace('__ENTREVISTA_CONFIRMADA__', '__ENTREVISTA__')
+  } else if (raw.startsWith('__ENTREVISTA_RECHAZADA__')) {
+    raw = raw.replace('__ENTREVISTA_RECHAZADA__', '__ENTREVISTA__')
+  }
+
+  if (!raw.startsWith('__ENTREVISTA__')) return null
+
+  try {
+    return JSON.parse(raw.replace('__ENTREVISTA__', ''))
+  } catch (error) {
+    console.error('Error parseando propuesta de entrevista:', error)
+    return null
+  }
+}
+
+async function guardarEstadoMensajeEntrevista(mensajeId, contenido) {
+  if (!mensajeId) return { data: null, error: { message: 'mensaje_id faltante' } }
+
+  return Supabase
+    .from('mensajes')
+    .update({ contenido })
+    .eq('id', mensajeId)
+    .select()
+    .maybeSingle()
+}
 
 export default function Conversacion() {
   const { id: conversacionId } = useParams()
@@ -28,6 +61,8 @@ export default function Conversacion() {
   const [nombreInterlocutor, setNombreInterlocutor] = useState('Conversación')
   const [interlocutorAvatar, setInterlocutorAvatar] = useState(null)
   const [conversacionData, setConversacionData] = useState(null)
+  const [procesoEntrevistaId, setProcesoEntrevistaId] = useState(null)
+  const [respondiendoEntrevista, setRespondiendoEntrevista] = useState(false)
 
   const finRef = useRef(null)
   const channelRef = useRef(null)
@@ -71,9 +106,9 @@ export default function Conversacion() {
 
         let avatar = null
         if (esRefugio) {
-          avatar = pick(conv.adoptantes, ['foto_url', 'foto', 'foto_perfil']) || pick(conv.adoptante, ['foto_url', 'foto', 'foto_perfil'])
+          avatar = pick(conv.adoptantes, ['foto_url']) || pick(conv.adoptante, ['foto_url'])
         } else {
-          avatar = pick(conv.refugios, ['logo_url', 'logo', 'foto_url', 'logoUrl', 'logoURL']) || pick(conv.refugio, ['logo_url', 'logo', 'foto_url'])
+          avatar = pick(conv.refugios, ['logo_url', 'foto_url', 'logoUrl', 'logoURL']) || pick(conv.refugio, ['logo_url', 'foto_url'])
         }
 
         setInterlocutorAvatar(avatar)
@@ -150,6 +185,99 @@ export default function Conversacion() {
     setEnviando(false)
   }
 
+  const handleResponderEntrevista = async (mensajeId, aceptado) => {
+    if (enviando) return
+
+    setEnviando(true)
+
+    const { error } = await responderEntrevista(mensajeId, aceptado)
+
+    if (error) {
+      setError('No se pudo actualizar la propuesta de entrevista.')
+    } else {
+      setMensajes(prev => prev.map(m => {
+        if (m.id === mensajeId) {
+          return { ...m, estado: aceptado ? 'aceptado' : 'rechazado' }
+        }
+        return m
+      }))
+    }
+
+    setEnviando(false)
+  }
+
+  const handleAceptarEntrevista = async (mensajeId, entrevistaId) => {
+    if (!mensajeId || !entrevistaId) return
+    setRespondiendoEntrevista(true)
+    try {
+      const { error: errorEntrevista } = await responderEntrevista(entrevistaId, true)
+      if (errorEntrevista) throw errorEntrevista
+
+      const nuevoContenido = `__ENTREVISTA_CONFIRMADA__${JSON.stringify({
+        id: entrevistaId,
+        mascota: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.mascota || 'mascota',
+        fecha: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.fecha || new Date().toISOString(),
+        modalidad: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.modalidad || 'Presencial',
+        lugar: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.lugar || 'No especificado',
+        notas: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.notas || '',
+        estado: 'Confirmada',
+      })}`
+
+      const { error: errorMensaje } = await guardarEstadoMensajeEntrevista(mensajeId, nuevoContenido)
+      if (errorMensaje) throw errorMensaje
+
+      setMensajes(prev => prev.map(m => {
+        if (m.id === mensajeId) {
+          return { ...m, contenido: nuevoContenido }
+        }
+        return m
+      }))
+      setError(null)
+    } catch (err) {
+      console.error('Error confirmando entrevista:', err)
+      setError('No se pudo confirmar la entrevista.')
+    } finally {
+      setRespondiendoEntrevista(false)
+      setProcesoEntrevistaId(null)
+    }
+  }
+
+  const handleRechazarEntrevista = async (mensajeId, entrevistaId) => {
+    if (!mensajeId || !entrevistaId) return
+    setRespondiendoEntrevista(true)
+    try {
+      const { error: errorEntrevista } = await responderEntrevista(entrevistaId, false)
+      if (errorEntrevista) throw errorEntrevista
+
+      const nuevoContenido = `__ENTREVISTA_RECHAZADA__${JSON.stringify({
+        id: entrevistaId,
+        mascota: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.mascota || 'mascota',
+        fecha: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.fecha || new Date().toISOString(),
+        modalidad: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.modalidad || 'Presencial',
+        lugar: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.lugar || 'No especificado',
+        notas: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.notas || '',
+        estado: 'Rechazada',
+      })}`
+
+      const { error: errorMensaje } = await guardarEstadoMensajeEntrevista(mensajeId, nuevoContenido)
+      if (errorMensaje) throw errorMensaje
+
+      setMensajes(prev => prev.map(m => {
+        if (m.id === mensajeId) {
+          return { ...m, contenido: nuevoContenido }
+        }
+        return m
+      }))
+      setError(null)
+    } catch (err) {
+      console.error('Error rechazando entrevista:', err)
+      setError('No se pudo rechazar la entrevista.')
+    } finally {
+      setRespondiendoEntrevista(false)
+      setProcesoEntrevistaId(null)
+    }
+  }
+
   const formatearHora = (fechaStr) => {
     const fecha = new Date(fechaStr)
     return fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
@@ -189,9 +317,19 @@ export default function Conversacion() {
         </div>
 
         <div className="chat-header-iconos" style={{ display: 'flex', alignItems: 'center', gap: '10px' ,marginLeft: '30%'}}>
+          {esRefugio && (
+            <button
+              type="button"
+              className="btn-formulario"
+              onClick={() => navigate(`/refugio/chats/${conversacionId}/entrevista`)}
+              style={{ padding: '8px 12px', fontSize: 13 }}
+            >
+              Programar entrevista
+            </button>
+          )}
           <img
             className="avatar"
-            src={usuario?.foto_url || usuario?.foto_perfil || usuario?.logo_url || '/assets/img/perfil_default.jpg'}
+            src={usuario?.foto_url || usuario?.logo_url || '/assets/img/perfil_default.jpg'}
             alt="perfil"
             onClick={() => navigate(esRefugio ? '/refugio/perfil' : '/adoptante/perfil')}
             style={{ width: 36, height: 36, borderRadius: '50%', cursor: 'pointer' }}
@@ -233,6 +371,61 @@ export default function Conversacion() {
         ) : (
           mensajes.map(m => {
             const esPropio = m.emisor_id === usuario?.id
+            const entrevista = parsearEntrevistaMensaje(m.contenido)
+            const entrevistaConfirmada = typeof m.contenido === 'string' && m.contenido.startsWith('__ENTREVISTA_CONFIRMADA__')
+            const entrevistaRechazada = typeof m.contenido === 'string' && m.contenido.startsWith('__ENTREVISTA_RECHAZADA__')
+
+            if (entrevista || entrevistaConfirmada || entrevistaRechazada) {
+              const data = entrevista || (entrevistaConfirmada ? parsearEntrevistaMensaje(m.contenido.replace('__ENTREVISTA_CONFIRMADA__', '__ENTREVISTA__')) : parsearEntrevistaMensaje(m.contenido.replace('__ENTREVISTA_RECHAZADA__', '__ENTREVISTA__')))
+
+              return (
+                <div
+                  key={m.id}
+                  className={esPropio ? 'chat-burbuja chat-burbuja--propia' : 'chat-burbuja chat-burbuja--ajena'}
+                  style={{ maxWidth: 420 }}
+                >
+                  <div style={{ display: 'grid', gap: 8 }}>
+                    <strong>{esPropio ? 'Propuesta enviada' : 'Entrevista propuesta'}</strong>
+                    <span><strong>Mascota:</strong> {data?.mascota || '—'}</span>
+                    <span><strong>Fecha:</strong> {new Date(data?.fecha || Date.now()).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                    <span><strong>Modalidad:</strong> {data?.modalidad || '—'}</span>
+                    <span><strong>Lugar:</strong> {data?.lugar || 'No especificado'}</span>
+                    {data?.notas && <span><strong>Notas:</strong> {data.notas}</span>}
+
+                    {!esPropio && !entrevistaConfirmada && !entrevistaRechazada && (
+                      <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          className="btn-formulario"
+                          style={{ padding: '8px 10px', fontSize: 12 }}
+                          disabled={respondiendoEntrevista}
+                          onClick={() => handleAceptarEntrevista(m.id, data?.id)}
+                        >
+                          Aceptar
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-formulario ghost"
+                          style={{ padding: '8px 10px', fontSize: 12 }}
+                          disabled={respondiendoEntrevista}
+                          onClick={() => handleRechazarEntrevista(m.id, data?.id)}
+                        >
+                          Rechazar
+                        </button>
+                      </div>
+                    )}
+
+                    {(entrevistaConfirmada || entrevistaRechazada) && (
+                      <span style={{ fontWeight: 700, color: entrevistaConfirmada ? '#1f7a4d' : '#8a2e2e' }}>
+                        {entrevistaConfirmada ? 'Entrevista confirmada' : 'Entrevista rechazada'}
+                      </span>
+                    )}
+                  </div>
+                  <span className="chat-burbuja-hora">{formatearHora(m.fecha)}</span>
+                </div>
+              )
+            }
+
             return (
               <div
                 key={m.id}

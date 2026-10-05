@@ -28,12 +28,35 @@ export async function obtenerOCrearConversacion(refugioId, adoptanteId, mascotaI
       .select('*')
       .single()
 
-    if (res.error) {
-      console.error('Supabase upsert error:', res.error, 'payload:', payload)
-      return res
+    if (!res.error) return res
+
+    const resExistente = await Supabase
+      .from('conversaciones')
+      .select('*')
+      .eq('refugio_id', refugioId)
+      .eq('adoptante_id', adoptanteId)
+      .order('id', { ascending: false })
+      .limit(1)
+
+    if (resExistente.data && resExistente.data.length > 0) {
+      return {
+        data: resExistente.data[0],
+        error: null,
+      }
     }
 
-    return res
+    const resInsert = await Supabase
+      .from('conversaciones')
+      .insert(payload)
+      .select('*')
+      .single()
+
+    if (resInsert.error) {
+      console.error('obtenerOCrearConversacion insert error:', resInsert.error)
+      return resInsert
+    }
+
+    return resInsert
   } catch (err) {
     console.error('obtenerOCrearConversacion exception:', err)
     return { data: null, error: err }

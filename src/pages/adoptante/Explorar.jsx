@@ -19,7 +19,7 @@ const filtros = [
 
 function TarjetaMascota({ animal, onClick, esRefugio = false, favoritos, onToggleFavorito }) {
   const imagenMuestra = esRefugio 
-    ? (animal.logo_url || animal.foto_url || animal.foto_perfil || '/assets/img/perfil_default.jpg')
+    ? (animal.logo_url || animal.foto_url || '/assets/img/perfil_default.jpg')
     : (animal.foto_url || '/assets/img/perfil_default.jpg')
   
   return (
@@ -110,7 +110,7 @@ export default function Explorar() {
   }, [usuario])
 
   const nombre = usuario?.nombre?.split(' ')[0]
-  const avatarUsuario = usuario?.foto_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'
+  const avatarUsuario = usuario?.foto_url || '/assets/img/perfil_default.jpg'
   
   // Filtrar por búsqueda
   const filtrarPorBusqueda = (items, esRefugio = false) => {

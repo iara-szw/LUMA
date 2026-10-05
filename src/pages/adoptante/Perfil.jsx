@@ -51,7 +51,7 @@ export default function Perfil() {
 
   const cursosCompletos = cursos.filter(c => c.completado).length
   const nombre = usuario?.nombre?.split(' ')[0]
-  const avatarUsuario = usuario?.foto_url || usuario?.foto_perfil || '/assets/img/perfil_default.jpg'
+  const avatarUsuario = usuario?.foto_url || '/assets/img/perfil_default.jpg'
 
   if (cargando) return( <Loader></Loader>)
 
