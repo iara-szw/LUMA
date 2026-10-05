@@ -49,10 +49,10 @@ export default function PerfilUsuario() {
     .join(' ') || 'Usuario'
 
   return (
-    <div className="pagina-perfil">
-      <header className="perfil-header">
-        <button type="button" onClick={() => navigate(-1)}>← Volver</button>
-      </header>
+    <div className="pagina-perfil pagina-perfil-usuario">
+           <header className="perfil-header">
+      <button type="button" onClick={() => navigate(-1)}>← Volver</button>
+    </header>
 
       <section className="perfil-info" style={{ paddingTop: '0.6rem' }}>
         <div className="perfil-avatar-wrapper">
