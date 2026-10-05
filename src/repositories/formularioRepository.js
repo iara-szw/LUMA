@@ -43,6 +43,39 @@ export const FORMULARIO_DEFAULT = [
   },
 ]
 
+function asegurarIdsUnicos(bloques) {
+  const usados = new Set()
+
+  return (Array.isArray(bloques) ? bloques : []).map((bloque, indexBloque) => {
+    const bloqueId = bloque?.id || `seccion_${indexBloque + 1}`
+    const bloqueNormalizado = {
+      ...bloque,
+      id: bloqueId,
+      preguntas: Array.isArray(bloque?.preguntas) ? bloque.preguntas : [],
+    }
+
+    bloqueNormalizado.preguntas = bloqueNormalizado.preguntas.map((pregunta, indexPregunta) => {
+      const baseId = String(pregunta?.id || `pregunta_${indexBloque + 1}_${indexPregunta + 1}`)
+      let idUnico = baseId
+      let contador = 2
+
+      while (usados.has(idUnico)) {
+        idUnico = `${baseId}_${contador}`
+        contador += 1
+      }
+
+      usados.add(idUnico)
+
+      return {
+        ...pregunta,
+        id: idUnico,
+      }
+    })
+
+    return bloqueNormalizado
+  })
+}
+
 function normalizarBloques(valor) {
   if (!valor) return FORMULARIO_DEFAULT
 
@@ -51,10 +84,10 @@ function normalizarBloques(valor) {
     if (!Array.isArray(parsed) || parsed.length === 0) return FORMULARIO_DEFAULT
 
     // Formato nuevo: ya viene como secciones con .preguntas
-    if (parsed[0]?.preguntas) return parsed
+    if (parsed[0]?.preguntas) return asegurarIdsUnicos(parsed)
 
     // Formato viejo: array plano de preguntas -> migramos a una sola sección
-    return [{ id: 'seccion_1', titulo: 'Preguntas', preguntas: parsed }]
+    return asegurarIdsUnicos([{ id: 'seccion_1', titulo: 'Preguntas', preguntas: parsed }])
   } catch {
     return FORMULARIO_DEFAULT
   }
