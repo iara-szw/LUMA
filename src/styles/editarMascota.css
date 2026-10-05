@@ -89,7 +89,9 @@
   box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
 }
 
-/* Select con flecha propia */
+/* ── Select ───────────────────────────────────────── */
+
+/* Base: funciona en todos los navegadores */
 .pagina-editar select {
   -webkit-appearance: none;
   appearance: none;
@@ -107,7 +109,82 @@
   background-size: 12px 8px;
 }
 
-/* Checkbox: casilla fija, tilde centrado y verde salvia al marcar */
+.pagina-editar select option {
+  background: #fff;
+  color: var(--texto, #5C4A3A);
+  font-family: inherit;
+}
+
+/* Chrome / Edge: lista desplegable con diseño LUMA */
+@supports (appearance: base-select) {
+  .pagina-editar select,
+  .pagina-editar select::picker(select) {
+    appearance: base-select;
+  }
+
+  .pagina-editar select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    background-image: none;
+  }
+
+  /* Flecha propia que rota al abrir */
+  .pagina-editar select::picker-icon {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23b8956a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    display: flex;
+    transition: transform 0.2s ease;
+  }
+
+  .pagina-editar select:open::picker-icon {
+    transform: rotate(180deg);
+  }
+
+  /* Ventana de opciones */
+  .pagina-editar select::picker(select) {
+    background: var(--blanco, #fff);
+    border: 1px solid #E6DAC6;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(92, 74, 58, 0.15);
+    padding: 0.35rem;
+    margin-top: 6px;
+  }
+
+  /* Cada opción */
+  .pagina-editar select option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: var(--texto, #5C4A3A);
+    cursor: pointer;
+  }
+
+  .pagina-editar select option:hover,
+  .pagina-editar select option:focus-visible {
+    background: var(--crema, #F2EADD);
+    outline: none;
+  }
+
+  .pagina-editar select option:checked {
+    background: var(--crema-oscura, #EDE6DA);
+    font-weight: 700;
+  }
+
+  /* Tilde verde a la derecha de la opción elegida */
+  .pagina-editar select option::checkmark {
+    content: '✓';
+    order: 1;
+    color: var(--verde, #9CA986);
+    font-weight: 800;
+  }
+}
+
+/* ── Checkbox: casilla fija, tilde centrado y verde salvia ── */
 .pagina-editar input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
