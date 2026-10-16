@@ -1,9 +1,11 @@
-/* Basic styling for Mascota detail page */
+/* ── Detalle de mascota (estilo LUMA) ─────────────── */
 .mascota-pagina {
-  font-family: Inter, system-ui, Arial;
-  color: #222;
+  font-family: var(--font, inherit);
+  color: #463b35;
+  padding-bottom: 80px; /* espacio para la barra inferior */
 }
 
+/* Hero */
 .mascota-hero {
   position: relative;
   height: 320px;
@@ -13,8 +15,8 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
 }
 
 .mascota-hero::after {
@@ -25,25 +27,37 @@
   pointer-events: none;
 }
 
+/* Botones circulares sobre la foto */
 .btn-back,
 .btn-fav {
   position: absolute;
   top: 16px;
-  background: rgba(255, 255, 255, 0.85);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: #463b35;
+  font-size: 1.1rem;
+  font-weight: 700;
   border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.2);
   cursor: pointer;
-  z-index: 2
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
 }
 
-.btn-back {
-  left: 16px
+.btn-back:active,
+.btn-fav:active {
+  transform: scale(0.92);
 }
 
-.btn-fav {
-  right: 16px
-}
+.btn-back { left: 16px; }
+.btn-fav  { right: 16px; }
 
 .btn-fav img {
   width: 20px;
@@ -51,6 +65,7 @@
   display: block;
 }
 
+/* Contenido */
 .mascota-contenido {
   display: flex;
   gap: 24px;
@@ -59,180 +74,326 @@
   margin: -60px auto 40px;
 }
 
+/* Tarjeta principal */
 .perfil {
   background: #fafafa;
-  padding: 20px;
-  border-radius: 35px 35px 0px 0px;
-  box-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
+  padding: 24px 20px 20px;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -4px 24px rgba(92, 74, 58, 0.1);
   flex: 1;
   margin-top: -17%;
   position: relative;
   z-index: 1;
   width: 110.5%;
   margin-left: -5.25%;
-
 }
 
 .recomendadas {
   width: 360px;
 }
 
+/* Encabezado: nombre + urgente en la misma fila, género debajo */
 .perfil-encabezado {
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.perfil-titulo {
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px
+  justify-content: space-between; /* nombre a la izquierda, urgente a la derecha */
+  gap: 12px;
 }
 
-.badges .badge {
-  margin-left: 8px;
-  padding: 6px 10px;
+.perfil-titulo h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.perfil-encabezado .badge-sexo {
+  align-self: flex-start;
+}
+
+/* Tipografía (acotada a esta pantalla) */
+.mascota-pagina h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.mascota-pagina h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.mascota-pagina h4 {
+  color: #463b35;
+}
+
+.mascota-pagina p {
+  color: #6d625d;
+}
+
+/* Badges de sexo / urgente */
+.perfil-encabezado .badge, .badge-sexo {
+  margin-left: 0;
+  padding: 6px 14px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.06);
-  font-size: 14px;
+  background: none;
+  color: #6d625d;
+  font-size: 16 px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-.badge.urgente {
-  background-color: #ff6b6b;
-  color: white
+.perfil-encabezado .badge.urgente {
+  background-color: #D9826B;
+  color: #fff;
+  flex-shrink: 0;
 }
 
 .meta {
   display: flex;
   gap: 12px;
   margin-top: 8px;
-  color: #666
+  color: #6d625d;
 }
 
+/* Tiles de Edad / Tamaño / Actividad */
 .atributos {
   display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  color: #463b35;
-
-}
-
-h3,
-p,
-h4 {
-  color: #463b35;
-}
-
-h3 {
-  font-weight: 800;
-  font-size: 20px;
+  gap: 10px;
+  margin-top: 18px;
 }
 
 .atributo-card {
   display: flex;
   flex-direction: column;
+  gap: 2px;
   flex: 1;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(250, 250, 250, 0.8));
-  padding: 12px;
-  border-radius: 10px;
-  text-align: center
+  background: #F2EADD;
+  padding: 12px 8px;
+  border-radius: 14px;
+  text-align: center;
 }
 
-.sobre {
-  margin-top: 18px
+.atributo-card strong {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7A6A5D;
 }
 
-.salud {
-  margin-top: 12px
+.atributo-card span {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+/* Sobre mí */
+.sobre { margin-top: 22px; }
+
+.sobre h3 {
+  margin: 0 0 0.3rem;
+}
+
+.sobre p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Salud */
+.salud { margin-top: 18px; }
+
+.salud h4,
+.refugio h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
 }
 
 .salud-badges {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  margin-top: 8px
+  margin-top: 8px;
 }
 
+/* Cumplido: salvia suave */
 .badge.ok {
-  background: #e6ffef;
-  color: #056a3b;
-  padding: 6px 10px;
-  border-radius: 999px
+  background: #EEF5EB;
+  color: #5F8252;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
+/* Sin cumplir: rojizo suave */
 .badge.no {
-  background: #fff2f2;
-  color: #9b2c2c;
-  padding: 6px 10px;
-  border-radius: 999px
+  background: #F8E3DD;
+  color: #B5523B;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
-.refugio {
-  margin-top: 12px
+/* Refugio: pisa el verde inline del JSX */
+.refugio { margin-top: 18px; }
+
+.refugio button {
+  margin-top: 4px;
+  color: #463b35 !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  text-decoration: underline !important;
+  text-decoration-color: #CBB99C !important;
+  text-underline-offset: 4px;
+  font-family: inherit !important;
 }
 
+/* Botones de acción */
 .acciones {
-  margin-top: 18px
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
 }
 
-.scroll-horizontal {
+.acciones .btn-primario,
+.acciones .btn-secundario {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+/* Primario: marrón original */
+.acciones .btn-primario {
+  background: #b8956a;
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(92, 74, 58, 0.18);
+}
+
+.acciones .btn-secundario {
+  background: #fff;
+  color: #463b35;
+  border: 1px solid #CBB99C;
+}
+
+.acciones .btn-primario:active,
+.acciones .btn-secundario:active {
+  transform: scale(0.98);
+}
+
+.acciones .btn-secundario:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Otras mascotas del refugio */
+.recomendadas h3 {
+  margin: 0 0 0.5rem;
+}
+
+.mascota-pagina .scroll-horizontal {
   display: flex;
   gap: 12px;
   overflow-x: auto;
   padding: 8px 15px;
-  background-color: white;
+  background-color: #fff;
   border-radius: 20px;
-  margin-left:6%;
-}
-.scroll-horizontal.recomendaciones{
-  margin-left: 0%;
-}
-.tarjeta-mascota {
-  min-width: 160px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.25);
-  padding: 0px;
-  cursor: pointer;
-  padding-bottom: 10px;
-  border-radius: 15px;
-  margin-top: 4%;
-  margin-bottom: 4%;
+  margin-left: 6%;
+  scrollbar-width: none;
 }
 
-.tarjeta-mascota>img {
+.mascota-pagina .scroll-horizontal::-webkit-scrollbar {
+  display: none;
+}
+
+.mascota-pagina .scroll-horizontal.recomendaciones {
+  margin-left: 0;
+}
+
+.mascota-pagina .tarjeta-mascota {
+  min-width: 160px;
+  width: auto;
+  background: #fff;
+  border: 1px solid #EDE6DA;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(92, 74, 58, 0.1);
+  padding: 0 0 10px;
+  cursor: pointer;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  overflow: hidden;
+}
+
+.mascota-pagina .tarjeta-mascota > img {
   width: 100%;
   height: 110px;
   object-fit: cover;
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 0;
+  display: block;
 }
 
-.tarjeta-mascota h4,
-.tarjeta-mascota span {
-  margin-left: 5%;
+.mascota-pagina .tarjeta-mascota h4,
+.mascota-pagina .tarjeta-mascota span {
+  margin-left: 8%;
 }
 
+.mascota-pagina .tarjeta-mascota h4 {
+  margin-top: 8px;
+  margin-bottom: 2px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
 
-.badge-urgente {
+.mascota-pagina .tarjeta-mascota span {
+  font-size: 0.8rem;
+  color: #7A6A5D;
+}
+.badge-sexo{
+    margin-left: -2%;
+    margin-top: -2%;
+
+}
+.mascota-pagina .badge-urgente {
+  position: static;
   display: inline-block;
   margin-top: 6px;
-  background: #ff6b6b;
-  color: white;
+  background: #D9826B;
+  color: #fff !important;
   padding: 4px 8px;
   border-radius: 999px;
-  font-size: 12px
+  font-size: 0.65rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.vacio {
-  color: #666
+.mascota-pagina .vacio {
+  color: #7A6A5D;
 }
 
-@media (max-width:900px) {
+@media (max-width: 900px) {
   .mascota-contenido {
     flex-direction: column;
-    margin-top: 0
+    margin-top: 0;
   }
 
   .recomendadas {
-    width: 100%
+    width: 100%;
   }
-}
-
-h1 {
-  font-weight: 800;
-  color: #463b35;
 }

@@ -18,7 +18,7 @@ export default function Mascota() {
   const { usuario, esRefugio } = usarAuth()   // ✅ primero obtenemos usuario y esRefugio
   const [mascota, setMascota] = useState(null)
   const [recomendadas, setRecomendadas] = useState([])
-    const [refugio, setRefugio] = useState(null)
+  const [refugio, setRefugio] = useState(null)
 
   const [cargando, setCargando] = useState(true)
   const [favorito, setFavorito] = useState(false)
@@ -132,7 +132,6 @@ export default function Mascota() {
   }
 
   return (
-   
     <div className="mascota-pagina">
       <header
         className="mascota-hero"
@@ -182,12 +181,13 @@ export default function Mascota() {
       <main className="mascota-contenido">
         <section className="perfil">
           <div className="perfil-encabezado">
-            <h1>{mascota.nombre}</h1>
-            <div className="badges">
-              {mascota.sexo && <span className="badge sexo">{mascota.sexo}</span>}
+            <div className="perfil-titulo">
+              <h1>{mascota.nombre}</h1>
               {mascota.urgente && <span className="badge urgente">Urgente</span>}
             </div>
+            {mascota.sexo && <span className="badge-sexo">{mascota.sexo}</span>}
           </div>
+
           <div className="atributos">
             <div className="atributo-card">
               <strong>Edad</strong>
@@ -236,27 +236,25 @@ export default function Mascota() {
               {nombreRefugio}
             </button>
           </div>
-        <div className="mascota-pagina">
-      <div className="acciones">
-        {!esRefugio && (
-          <>
-            <button className="btn-primario" onClick={handleAplicar}>
-              Solicitar adopción
-            </button>
-            <button className="btn-secundario" onClick={handleConsultar} disabled={consultando}>
-              {consultando ? 'Abriendo chat...' : 'Consultar'}
-            </button>
-          </>
-        )}
 
-        {esDueño && (
-          <button className="btn-primario" onClick={() => navigate(`/refugio/editarMascota/${mascota.id}`)}>
-            Editar mascota
-          </button>
-        )}
-      </div>
+          <div className="acciones">
+            {!esRefugio && (
+              <>
+                <button className="btn-primario" onClick={handleAplicar}>
+                  Solicitar adopción
+                </button>
+                <button className="btn-secundario" onClick={handleConsultar} disabled={consultando}>
+                  {consultando ? 'Abriendo chat...' : 'Consultar'}
+                </button>
+              </>
+            )}
 
-    </div>
+            {esDueño && (
+              <button className="btn-primario" onClick={() => navigate(`/refugio/editarMascota/${mascota.id}`)}>
+                Editar mascota
+              </button>
+            )}
+          </div>
         </section>
 
         <aside className="recomendadas">
@@ -264,7 +262,7 @@ export default function Mascota() {
           <div className="scroll-horizontal recomendaciones">
             {recomendadas.length === 0 ? (
               <p className="vacio">No hay recomendaciones.</p>
-              ) : (
+            ) : (
               recomendadas.map(r => (
                 <article key={r.id} className="tarjeta-mascota" onClick={() => navigate(`/mascota/${r.id}`)}>
                   <img src={r.foto_url || '/assets/img/perfil_default.jpg'} alt={r.nombre} />

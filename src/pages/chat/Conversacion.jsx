@@ -283,58 +283,51 @@ export default function Conversacion() {
     return fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
   }
 
+  const irAlPerfilInterlocutor = () => {
+    if (!conversacionData) return
+    if (esRefugio) {
+      // refugio debe ver el perfil del adoptante
+      const solicitudId = conversacionData?.solicitud_id
+      if (solicitudId) {
+        navigate(`/refugio/solicitud/${solicitudId}/perfil`)
+        return
+      }
+
+      const adoptanteId = conversacionData?.adoptante_id || conversacionData?.adoptantes?.id || conversacionData?.adoptante?.id
+      if (adoptanteId) navigate(`/refugio/adoptante/${adoptanteId}`)
+    } else {
+      // adoptante debe ver el perfil público del refugio
+      const refugioId = conversacionData?.refugio_id || conversacionData?.refugios?.id
+      if (refugioId) navigate(`/refugio/${refugioId}`)
+    }
+  }
+
   return (
     <div className="chat-pagina">
       <header className="chat-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button className="chat-btn-volver" onClick={() => navigate(-1)} aria-label="Volver">←</button>
-          <h2 className="chat-titulo" style={{ margin: 0 }}>{nombreInterlocutor}</h2>
-          <img
-            src={interlocutorAvatar || '/assets/img/perfil_default.jpg'}
-            alt={nombreInterlocutor}
-            style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', marginLeft: 8, cursor: 'pointer' }}
-            onClick={() => {
-              if (!conversacionData) return
-              if (esRefugio) {
-                // refugio debe ver el perfil del adoptante
-                const solicitudId = conversacionData?.solicitud_id
-                if (solicitudId) {
-                  navigate(`/refugio/solicitud/${solicitudId}/perfil`)
-                  return
-                }
+        <button className="chat-btn-volver" onClick={() => navigate(-1)} aria-label="Volver">←</button>
 
-                const adoptanteId = conversacionData?.adoptante_id || conversacionData?.adoptantes?.id || conversacionData?.adoptante?.id
-                if (adoptanteId) {
-                  navigate(`/refugio/adoptante/${adoptanteId}`)
-                }
-              } else {
-                // adoptante debe ver el perfil público del refugio
-                const refugioId = conversacionData?.refugio_id || conversacionData?.refugios?.id || conversacionData?.refugio_id
-                if (refugioId) navigate(`/refugio/${refugioId}`)
-              }
-            }}
-          />
+        <img
+          className="chat-header-avatar"
+          src={interlocutorAvatar || '/assets/img/perfil_default.jpg'}
+          alt={nombreInterlocutor}
+          onClick={irAlPerfilInterlocutor}
+        />
+
+        <div className="chat-header-info">
+          <h2 className="chat-titulo">{nombreInterlocutor}</h2>
+          {mascota?.nombre && <span className="chat-subtitulo">Por {mascota.nombre}</span>}
         </div>
 
-        <div className="chat-header-iconos" style={{ display: 'flex', alignItems: 'center', gap: '10px' ,marginLeft: '30%'}}>
-          {esRefugio && (
-            <button
-              type="button"
-              className="btn-formulario"
-              onClick={() => navigate(`/refugio/chats/${conversacionId}/entrevista`)}
-              style={{ padding: '8px 12px', fontSize: 13 }}
-            >
-              Programar entrevista
-            </button>
-          )}
-          <img
-            className="avatar"
-            src={usuario?.foto_url || usuario?.logo_url || '/assets/img/perfil_default.jpg'}
-            alt="perfil"
-            onClick={() => navigate(esRefugio ? '/refugio/perfil' : '/adoptante/perfil')}
-            style={{ width: 36, height: 36, borderRadius: '50%', cursor: 'pointer' }}
-          />
-        </div>
+        {esRefugio && (
+          <button
+            type="button"
+            className="chat-btn-entrevista"
+            onClick={() => navigate(`/refugio/chats/${conversacionId}/entrevista`)}
+          >
+            Programar entrevista
+          </button>
+        )}
       </header>
 
       {mascota && mostrarFichaMascota && (
@@ -378,49 +371,73 @@ export default function Conversacion() {
             if (entrevista || entrevistaConfirmada || entrevistaRechazada) {
               const data = entrevista || (entrevistaConfirmada ? parsearEntrevistaMensaje(m.contenido.replace('__ENTREVISTA_CONFIRMADA__', '__ENTREVISTA__')) : parsearEntrevistaMensaje(m.contenido.replace('__ENTREVISTA_RECHAZADA__', '__ENTREVISTA__')))
 
+              const estadoEntrevista = entrevistaConfirmada ? 'confirmada' : entrevistaRechazada ? 'rechazada' : 'pendiente'
+              const textoEstado = { confirmada: 'Confirmada', rechazada: 'Rechazada', pendiente: 'Pendiente' }[estadoEntrevista]
+
               return (
                 <div
                   key={m.id}
-                  className={esPropio ? 'chat-burbuja chat-burbuja--propia' : 'chat-burbuja chat-burbuja--ajena'}
-                  style={{ maxWidth: 420 }}
+                  className={`chat-entrevista ${esPropio ? 'chat-entrevista--propia' : 'chat-entrevista--ajena'}`}
                 >
-                  <div style={{ display: 'grid', gap: 8 }}>
-                    <strong>{esPropio ? 'Propuesta enviada' : 'Entrevista propuesta'}</strong>
-                    <span><strong>Mascota:</strong> {data?.mascota || '—'}</span>
-                    <span><strong>Fecha:</strong> {new Date(data?.fecha || Date.now()).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-                    <span><strong>Modalidad:</strong> {data?.modalidad || '—'}</span>
-                    <span><strong>Lugar:</strong> {data?.lugar || 'No especificado'}</span>
-                    {data?.notas && <span><strong>Notas:</strong> {data.notas}</span>}
+                  <div className="chat-entrevista-cabecera">
+                    <strong className="chat-entrevista-titulo">
+                      {esPropio ? 'Propuesta de entrevista' : 'Entrevista propuesta'}
+                    </strong>
+                    <span className={`chat-entrevista-estado chat-entrevista-estado--${estadoEntrevista}`}>
+                      {textoEstado}
+                    </span>
+                  </div>
 
-                    {!esPropio && !entrevistaConfirmada && !entrevistaRechazada && (
-                      <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-                        <button
-                          type="button"
-                          className="btn-formulario"
-                          style={{ padding: '8px 10px', fontSize: 12 }}
-                          disabled={respondiendoEntrevista}
-                          onClick={() => handleAceptarEntrevista(m.id, data?.id)}
-                        >
-                          Aceptar
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-formulario ghost"
-                          style={{ padding: '8px 10px', fontSize: 12 }}
-                          disabled={respondiendoEntrevista}
-                          onClick={() => handleRechazarEntrevista(m.id, data?.id)}
-                        >
-                          Rechazar
-                        </button>
+                  <dl className="chat-entrevista-datos">
+                    <div className="chat-entrevista-fila">
+                      <dt>Mascota</dt>
+                      <dd>{data?.mascota || '—'}</dd>
+                    </div>
+                    <div className="chat-entrevista-fila">
+                      <dt>Fecha</dt>
+                      <dd>
+                        {new Date(data?.fecha || Date.now()).toLocaleString('es-AR', {
+                          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+                        })}
+                      </dd>
+                    </div>
+                    <div className="chat-entrevista-fila">
+                      <dt>Modalidad</dt>
+                      <dd>{data?.modalidad || '—'}</dd>
+                    </div>
+                    <div className="chat-entrevista-fila">
+                      <dt>Lugar</dt>
+                      <dd>{data?.lugar || 'No especificado'}</dd>
+                    </div>
+                    {data?.notas && (
+                      <div className="chat-entrevista-fila">
+                        <dt>Notas</dt>
+                        <dd>{data.notas}</dd>
                       </div>
                     )}
+                  </dl>
 
-                    {(entrevistaConfirmada || entrevistaRechazada) && (
-                      <span style={{ fontWeight: 700, color: entrevistaConfirmada ? '#1f7a4d' : '#8a2e2e' }}>
-                        {entrevistaConfirmada ? 'Entrevista confirmada' : 'Entrevista rechazada'}
-                      </span>
-                    )}
-                  </div>
+                  {!esPropio && estadoEntrevista === 'pendiente' && (
+                    <div className="chat-entrevista-acciones">
+                      <button
+                        type="button"
+                        className="chat-entrevista-btn chat-entrevista-btn--aceptar"
+                        disabled={respondiendoEntrevista}
+                        onClick={() => handleAceptarEntrevista(m.id, data?.id)}
+                      >
+                        Aceptar
+                      </button>
+                      <button
+                        type="button"
+                        className="chat-entrevista-btn chat-entrevista-btn--rechazar"
+                        disabled={respondiendoEntrevista}
+                        onClick={() => handleRechazarEntrevista(m.id, data?.id)}
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                  )}
+
                   <span className="chat-burbuja-hora">{formatearHora(m.fecha)}</span>
                 </div>
               )
