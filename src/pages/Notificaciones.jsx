@@ -50,7 +50,6 @@ export default function Notificaciones() {
   }
 const abrirNoti = async (n) => {
     const res = await marcarNotiLeida(n.id)
-console.log('id:', n.id, 'resultado:', res)
   if (!n.conversacion_id) return
   if (!n.leida) {
     setNotis(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))
