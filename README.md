@@ -119,7 +119,7 @@ La visión es que LUMA se convierta en la plataforma de referencia para la adopc
 
 ## 📌 Estado del proyecto
 
-🟡 En desarrollo – Proyecto académico 2025
+🟡 En desarrollo – Proyecto académico 2026
 
 ---
 
