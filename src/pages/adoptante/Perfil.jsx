@@ -9,6 +9,7 @@ import {
 } from '../../repositories/perfilRepository'
 import { agregarFavorito, eliminarFavorito } from '../../repositories/usuarioRepository'
 import '../../styles/perfil.css'
+import NotiBadge from '../../components/NotiBadge'
 
 export default function Perfil() {
   const navigate = useNavigate()
@@ -60,7 +61,10 @@ export default function Perfil() {
       <header className="perfil-header">
         <button onClick={() => navigate(-1)}>← Mi perfil</button>
         <div className="perfil-header-iconos">
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png"></img> </button>
+              <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/notificaciones')}>
+                <img src="/assets/img/notificaciones.png"></img>
+                <NotiBadge />
+              </button>
               <button className="icono-configuracion" aria-label="Configuración" onClick={() => navigate('/adoptante/editarUsuario')}><img src="/assets/img/configurar.png"></img> </button>
         </div>
       </header>

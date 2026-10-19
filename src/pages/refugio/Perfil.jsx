@@ -10,6 +10,7 @@ import {
 } from '../../repositories/perfilRefugioRepository'
 import '../../styles/perfilRefugio.css'
 import FooterRefugio from '../../components/FooterRefugio'
+import NotiBadge from '../../components/NotiBadge'
 
 export default function Perfil() {
   const navigate = useNavigate()
@@ -64,8 +65,9 @@ export default function Perfil() {
       <header className="perfil-refugio-header">
         <button onClick={() => navigate(-1)} aria-label="Volver">←</button>
         <div className="perfil-refugio-header-iconos">
-          <button aria-label="Notificaciones" onClick={() => navigate('/refugio/dashboard')}>
+          <button aria-label="Notificaciones" onClick={() => navigate('/refugio/notificaciones')}>
             <img src="/assets/img/notificaciones.png" alt="" />
+            <NotiBadge />
           </button>
           <button aria-label="Configuración" onClick={() => navigate('/refugio/editarRefugio')}>
             <img src="/assets/img/configurar.png" alt="" />

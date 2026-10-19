@@ -4,6 +4,7 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import FooterRefugio from '../../components/FooterRefugio'
 import { obtenerCalendarioRefugio } from '../../repositories/calendarioRepository'
 import '../../styles/calendario.css'
+import NotiBadge from '../../components/NotiBadge'
 
 export default function CalendarioRefugio() {
   const navigate = useNavigate()
@@ -73,7 +74,10 @@ export default function CalendarioRefugio() {
         <div className="inicio-header-iconos">
           {usuario ? (
             <>
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
+              <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/refugio/notificaciones')}>
+                <img src="/assets/img/notificaciones.png" alt=""/>
+                <NotiBadge />
+              </button>
               <img
                 className="avatar"
                 src={usuario?.foto_url || '/assets/img/perfil_default.jpg'}

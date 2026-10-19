@@ -9,6 +9,7 @@ import { agregarFavorito, eliminarFavorito } from '../../repositories/usuarioRep
 import { obtenerGuardadosDeUsuario } from '../../repositories/perfilRepository'
 import '../../styles/home.css'
 import '../../styles/style.css'
+import NotiBadge from '../../components/NotiBadge'
 
 const filtros = [
   { key: 'todos', label: 'Todos' },
@@ -171,8 +172,10 @@ export default function Explorar() {
       <header className="inicio-header">
         <Link to="/" className="logo"><img src="/assets/img/logo.png" alt="LUMA" /></Link>
         <div className="inicio-header-iconos">
-                        <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" />
-</button>
+                        <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/notificaciones')}>
+                          <img src="/assets/img/notificaciones.png" />
+                          <NotiBadge />
+                        </button>
 
           {usuario ? (
             <img

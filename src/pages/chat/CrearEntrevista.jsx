@@ -5,6 +5,7 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import { enviarMensaje, obtenerConversacionPorId } from '../../repositories/chatRepository'
 import { obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
 import { crearEntrevista } from '../../repositories/entrevistaRepository'
+import { actualizarTituloPorContenido } from '../../repositories/notificacionesRepository'
 
 export default function CrearEntrevista() {
   const { id } = useParams()
@@ -112,6 +113,25 @@ export default function CrearEntrevista() {
 
       const { error: errorMensaje } = await enviarMensaje(id, usuario.id, msj)
       if (errorMensaje) throw errorMensaje
+
+      // Reemplazar la notificación genérica creada por el trigger:
+      // 1) borrar la notificación que contenga el id de la entrevista (trigger)
+      // 2) crear una notificación propia con título 'Entrevista'
+      try {
+        const destinatario = conversacion?.adoptante_id || conversacion?.adoptantes?.id
+        if (destinatario && entrevista?.id) {
+          const needle = `"id":"${entrevista.id}"`
+          // borrar posibles notificaciones generadas automáticamente
+          try { await borrarNotificacionPorContenido(destinatario, needle) } catch (e) { /* ignore */ }
+
+          // crear notificación más clara
+          const mensajeNoti = `Propuesta de entrevista para ${mascotaSeleccionada?.nombre || 'una mascota'} el ${fechaFormateada}`
+          console.log('Creando notificación de entrevista para', destinatario, 'con mensaje:', mensajeNoti)
+          await crearNotificacion({ usuarioId: destinatario, titulo: 'Entrevista', mensaje: mensajeNoti })
+        }
+      } catch (e) {
+        console.error('No se pudo reemplazar notificación de entrevista:', e)
+      }
 
       navigate(`/refugio/chats/${id}`)
     } catch (e) {

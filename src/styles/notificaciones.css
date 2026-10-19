@@ -1,0 +1,125 @@
+.pagina-notificaciones {
+    --noti-bg: #fffaf3;
+    --noti-accent: #f5c16c;
+    --noti-border: #f0e2d6;
+    --noti-text: #3c342f;
+    --noti-muted: #887f7a;
+    --noti-unread-bg: #fff1d6;
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    color: var(--noti-text);
+}
+
+.pagina-notificaciones .notis {
+    background: linear-gradient(90deg, var(--noti-bg), #fff);
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 6px rgba(60,52,47,0.04);
+}
+
+.pagina-notificaciones .notis h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--noti-text);
+    margin: 0;
+}
+
+.pagina-notificaciones .notis-seccion {
+    padding-top: 0;
+}
+
+.pagina-notificaciones .noti-lista {
+    max-width: 880px;
+    margin: 0 auto 48px;
+    padding: 0 16px;
+    display: grid;
+    gap: 12px;
+}
+
+.pagina-notificaciones .noti-item {
+    background: #ffffff;
+    border: 1px solid var(--noti-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.pagina-notificaciones .noti-item.noleida {
+    background: var(--noti-unread-bg);
+    border-left: 4px solid var(--noti-accent);
+}
+
+.pagina-notificaciones .noti-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(60,52,47,0.08);
+}
+
+.pagina-notificaciones .noti-item h4 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    color: var(--noti-text);
+}
+
+.pagina-notificaciones .noti-item p {
+    margin: 0 0 8px 0;
+    color: var(--noti-muted);
+    line-height: 1.4;
+}
+
+.pagina-notificaciones .noti-fecha {
+    font-size: 12px;
+    color: var(--noti-muted);
+    align-self: flex-end;
+}
+
+.pagina-notificaciones .vacio {
+    text-align: center;
+    color: var(--noti-muted);
+    padding: 28px 8px;
+}
+
+@media (min-width: 720px) {
+    .pagina-notificaciones .noti-item {
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .pagina-notificaciones .noti-item h4 {
+        flex: 1 1 auto;
+    }
+
+    .pagina-notificaciones .noti-item p {
+        flex: 2 1 60%;
+    }
+
+    .pagina-notificaciones .noti-fecha {
+        flex: 0 0 auto;
+        margin-left: 12px;
+    }
+}
+
+/* Badge global para icono de campana (pequeño y único) */
+.icono-campana {
+    position: relative;
+}
+
+.luma-noti-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--verde);
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    min-width: 20px;
+    text-align: center;
+}
+

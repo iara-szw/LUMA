@@ -76,7 +76,7 @@ export default function Dashboard() {
           <img src="/assets/img/logo.png" alt="LUMA" />
         </Link>
         <div className="dash-header-iconos">
-         <button className="dash-icono-campana" aria-label="Mensajes" onClick={() => navigate('/refugio/chats')}>
+         <button className="dash-icono-campana" aria-label="Mensajes" onClick={() => navigate('/refugio/notificaciones')}>
   <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
 </button>
           <img

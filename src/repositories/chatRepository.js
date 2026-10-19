@@ -332,3 +332,30 @@ export async function obtenerConversacionPorId(conversacionId) {
     return { data: null, error: err }
   }
 }
+
+/**
+ * Busca un mensaje que contenga el payload de entrevista con el id dado.
+ * Retorna la fila del mensaje (incluye emisor_id, conversacion_id, contenido, fecha).
+ */
+export async function buscarMensajePorEntrevistaId(entrevistaId) {
+  if (!entrevistaId) return { data: null, error: { message: 'entrevistaId faltante' } }
+  try {
+    const needle = `"id":"${entrevistaId}"`
+    const res = await Supabase
+      .from('mensajes')
+      .select('id, conversacion_id, emisor_id, contenido, fecha')
+      .ilike('contenido', `%${needle}%`)
+      .order('fecha', { ascending: false })
+      .limit(1)
+
+    if (res.error) {
+      console.error('buscarMensajePorEntrevistaId error:', res.error)
+      return { data: null, error: res.error }
+    }
+
+    return { data: (res.data && res.data.length) ? res.data[0] : null, error: null }
+  } catch (err) {
+    console.error('buscarMensajePorEntrevistaId exception:', err)
+    return { data: null, error: err }
+  }
+}
