@@ -18,9 +18,9 @@ export default function Footer() {
         <span>Buscar</span>
       </Link>
 
-      <Link to="/adoptante/mapa" className={`footer-item footer-central ${pathname.includes('mapa') ? 'activo' : ''}`}>
-        <img src="/assets/img/mapa.png" alt="Mapa" className="footer-icono" />
-      </Link>
+ <Link to="/adoptante/mapa" className={`footer-item footer-central ${pathname.includes('mapa') ? 'activo' : ''}`}>
+  <img src="/assets/img/mapa.png" alt="Mapa" className="footer-icono" />
+</Link>
 
       <Link to="/adoptante/chats" className={`footer-item ${pathname.includes('chats') ? 'activo' : ''}`}>
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

@@ -32,6 +32,9 @@ import Calendario from './pages/adoptante/Calendario.jsx'
 import CalendarioRefugio from './pages/refugio/calendario.jsx'
 import PerfilAdoptante from './pages/refugio/PerfilAdoptante.jsx'
 import CrearEntrevista from './pages/chat/CrearEntrevista.jsx'
+import Mapa from './pages/adoptante/mapa.jsx'
+
+
 function RutaProtegida({ children, rol }) {
   const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
 
@@ -155,6 +158,14 @@ export default function App() {
             element={
               <RutaProtegida rol="refugio">
                 <SolicitudesMascota />
+              </RutaProtegida>
+            }
+          />
+           <Route
+            path="/adoptante/mapa"
+            element={
+              <RutaProtegida rol="adoptante">
+                <Mapa />
               </RutaProtegida>
             }
           />

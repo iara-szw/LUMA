@@ -5,6 +5,40 @@ import { actualizarRefugio, obtenerRefugio } from '../../repositories/perfilRefu
 import { subirAvatar } from '../../repositories/storageRepository'
 import '../../styles/editarUsuario.css'
 
+// 1. Función para obtener coordenadas desde una dirección
+async function obtenerCoordenadas(direccion, ciudad, provincia) {
+  try {
+    if (!direccion) return null;
+
+    // Construimos la dirección de búsqueda
+    const busqueda = `${direccion}, ${ciudad || ''}, ${provincia || ''}, Argentina`.trim();
+    const query = encodeURIComponent(busqueda);
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`,
+      {
+        headers: {
+          'Accept-Language': 'es',
+          'User-Agent': 'LUMA-PetApp/1.0' // Importante para evitar bloqueos
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (data && data.length > 0) {
+      return {
+        latitud: parseFloat(data[0].lat),
+        longitud: parseFloat(data[0].lon)
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error al obtener coordenadas:', error);
+    return null;
+  }
+}
+
 export default function EditarRefugio() {
   const navigate = useNavigate();
   const { refrescarUsuario, usuario } = usarAuth();
@@ -23,7 +57,7 @@ export default function EditarRefugio() {
   const [direccion, setDireccion] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [provincia, setProvincia] = useState('');
-  const [voluntarios, setVoluntarios]=useState('')
+  const [voluntarios, setVoluntarios] = useState('');
   const [instagram, setInstagram] = useState('');
 
   const obtenerDatos = async () => {
@@ -44,7 +78,6 @@ export default function EditarRefugio() {
     }
   }, [usuario?.id]);
 
-  // ✅ Sincronizar estados cuando se cargue el refugio
   useEffect(() => {
     if (refugio) {
       setNombre(refugio.nombre || '');
@@ -53,7 +86,7 @@ export default function EditarRefugio() {
       setDireccion(refugio.direccion || '');
       setCiudad(refugio.ciudad || '');
       setProvincia(refugio.provincia || '');
-      setVoluntarios(refugio.cantidad_voluntarios || '')
+      setVoluntarios(refugio.cantidad_voluntarios || '');
       setInstagram(refugio.instagram || '');
       setPreviewLogo(refugio.logo_url || null);
       setPreviewPortada(refugio.portada_url || refugio.foto_portada_url || null);
@@ -88,9 +121,28 @@ export default function EditarRefugio() {
         portadaUrl = url;
       }
 
-      const payload = { nombre, descripcion, telefono, direccion, ciudad, provincia,voluntarios, instagram };
+      // 2. Buscamos las coordenadas según lo que haya ingresado en dirección, ciudad y provincia
+      const coords = await obtenerCoordenadas(direccion, ciudad, provincia);
+
+      const payload = { 
+        nombre, 
+        descripcion, 
+        telefono, 
+        direccion, 
+        ciudad, 
+        provincia, 
+        voluntarios, 
+        instagram 
+      };
+
       if (logoUrl) payload.logo_url = logoUrl;
       if (portadaUrl) payload.portada_url = portadaUrl;
+
+      // 3. Agregamos las coordenadas al payload si la API devolvió resultado
+      if (coords) {
+        payload.latitud = coords.latitud;
+        payload.longitud = coords.longitud;
+      }
 
       const { error } = await actualizarRefugio(usuario.id, payload);
 
@@ -189,10 +241,12 @@ export default function EditarRefugio() {
           <label htmlFor="instagram">Instagram</label>
           <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} />
         </div>
+
         <div>
           <label htmlFor="voluntarios">Cant.Voluntarios</label>
           <input id="voluntarios" type="number" value={voluntarios} onChange={(e) => setVoluntarios(e.target.value)} />
         </div>
+
         <button type="submit" disabled={loading}>
           {loading ? 'Guardando...' : 'Guardar cambios'}
         </button>

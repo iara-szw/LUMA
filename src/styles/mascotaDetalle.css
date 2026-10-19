@@ -138,13 +138,14 @@
 }
 
 /* Badges de sexo / urgente */
-.perfil-encabezado .badge, .badge-sexo {
+.perfil-encabezado .badge,
+.badge-sexo {
   margin-left: 0;
   padding: 6px 14px;
   border-radius: 999px;
   background: none;
   color: #6d625d;
-  font-size: 16 px;
+  font-size: 16px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -153,6 +154,11 @@
   background-color: #D9826B;
   color: #fff;
   flex-shrink: 0;
+}
+
+.badge-sexo {
+  margin-left: -2%;
+  margin-top: -2%;
 }
 
 .meta {
@@ -327,6 +333,7 @@
 }
 
 .mascota-pagina .tarjeta-mascota {
+  position: relative; /* para ubicar el cartel Urgente dentro de la tarjeta */
   min-width: 160px;
   width: auto;
   background: #fff;
@@ -364,23 +371,25 @@
   font-size: 0.8rem;
   color: #7A6A5D;
 }
-.badge-sexo{
-    margin-left: -2%;
-    margin-top: -2%;
 
-}
-.mascota-pagina .badge-urgente {
-  position: static;
+/* Urgente: píldora roja en la esquina superior izquierda de la foto */
+.mascota-pagina .tarjeta-mascota .badge-urgente {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  margin: 0;
+  z-index: 1;
   display: inline-block;
-  margin-top: 6px;
   background: #D9826B;
   color: #fff !important;
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 999px;
   font-size: 0.65rem !important;
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
 .mascota-pagina .vacio {

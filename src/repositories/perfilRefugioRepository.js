@@ -200,6 +200,8 @@ export async function actualizarRefugio(refugioId, {
   instagram,
   logo_url,
   portada_url,
+  latitud,
+  longitud,
 } = {}) {
   const payload = {}
   if (typeof nombre !== 'undefined') payload.nombre = nombre
@@ -211,8 +213,10 @@ export async function actualizarRefugio(refugioId, {
   if (typeof instagram !== 'undefined') payload.instagram = instagram
   if (typeof logo_url !== 'undefined') payload.logo_url = logo_url
   if (typeof portada_url !== 'undefined') payload.portada_url = portada_url
+  if (typeof latitud !== 'undefined') payload.latitud = latitud
+  if (typeof longitud !== 'undefined') payload.longitud = longitud
 
-  // Actualizamos la tabla `refugios` para mantener compatibilidad con el perfil en sesión
+  // Actualizamos la tabla `refugios`
   return Supabase
     .from('refugios')
     .update(payload)

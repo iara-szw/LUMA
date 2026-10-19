@@ -231,9 +231,13 @@ body {
     display: flex;
     gap: 0.85rem;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 0.25rem 1.25rem 0.75rem;
-    scroll-snap-type: x mandatory;
+    /* sin scroll-snap: el carrusel desliza libre y la 1ª tarjeta
+       respeta el padding izquierdo (el snap era lo que la cortaba) */
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
     scrollbar-width: none;
 }
 
@@ -245,7 +249,6 @@ body {
 .tarjeta-mascota {
     flex-shrink: 0;
     width: 145px;
-    scroll-snap-align: start;
     cursor: pointer;
     position: relative;
     -webkit-tap-highlight-color: transparent;
@@ -257,6 +260,8 @@ body {
     object-fit: cover;
     border-radius: 18px;
     display: block;
+    -webkit-user-drag: none;
+    user-select: none;
 }
 .lista-eventos {
   display: flex;
@@ -349,19 +354,23 @@ body {
     color: var(--texto-suave);
 }
 
-.badge-urgente {
+/* Urgente: píldora roja sobre la foto, con fallback por si
+   la variable --urgente no está definida (antes quedaba sin fondo) */
+.tarjeta-mascota .badge-urgente {
     position: absolute;
     top: 0.5rem;
     left: 0.5rem;
-    background: var(--urgente);
-    color: var(--blanco) !important;
-    font-size: 0.65rem !important;
-    font-weight: 700;
-    padding: 0.2rem 0.55rem;
-    border-radius: 50px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
     z-index: 1;
+    background: var(--urgente, #D9826B);
+    color: #fff !important;
+    font-size: 0.65rem !important;
+    font-weight: 800;
+    line-height: 1;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
 /* ── Lista eventos ────────────────────────────────── */

@@ -1,0 +1,215 @@
+/* =====================
+   mapa.css — LUMA
+   ===================== */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --crema-header: #f3efe6;
+  --fondo-pagina: #faf8f5;
+  --texto-principal: #463b35;
+  --texto-secundario: #7a6b63;
+  --marron-luma: #b8956a;
+  --marron-hover: #9e7d54;
+  --borde-suave: #efe3d1;
+}
+
+.mapa-pagina {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  padding-bottom: 72px; /* Espacio para el menú inferior */
+  background: var(--fondo-pagina);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto-principal);
+}
+
+/* ---------- Header Cremoso ---------- */
+.mapa-header {
+  flex-shrink: 0;
+  padding: 20px 20px 16px;
+  background: var(--crema-header);
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+  box-shadow: 0 2px 10px rgba(92, 74, 58, 0.05);
+}
+
+.mapa-titulo {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--texto-principal);
+  line-height: 1.2;
+}
+
+.mapa-subtitulo {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--texto-secundario);
+}
+
+/* ---------- Contenedor del Mapa ---------- */
+.mapa-contenedor {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 16px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(92, 74, 58, 0.12);
+  border: 1px solid var(--borde-suave);
+  isolation: isolate; /* Evita superposición de z-index sobre la navbar */
+}
+
+.mapa-leaflet {
+  height: 100%;
+  width: 100%;
+}
+
+/* ---------- Custom Pins ---------- */
+.mapa-pin span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--marron-luma, #b8956a);
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(92, 74, 58, 0.3);
+}
+.leaflet-marker-icon.mapa-pin {
+  background: none !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapa-pin:hover span {
+  transform: scale(1.1);
+}
+
+/* ---------- Popups de Leaflet ---------- */
+.leaflet-popup-content-wrapper {
+  border-radius: 18px;
+  padding: 4px;
+  box-shadow: 0 8px 24px rgba(92, 74, 58, 0.18);
+  border: 1px solid var(--borde-suave);
+}
+
+.mapa-popup {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 6px 12px;
+  align-items: center;
+  min-width: 210px;
+}
+
+.mapa-popup img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ede6da;
+}
+
+.mapa-popup h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--texto-principal);
+}
+
+.mapa-popup p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--texto-secundario);
+}
+
+.mapa-popup button {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding: 9px 12px;
+  background: var(--marron-luma);
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mapa-popup button:hover {
+  background: var(--marron-hover);
+}
+
+/* ---------- Botón Flotante de Ubicación con Imagen ---------- */
+.mapa-btn-ubicacion {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 1000;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid var(--borde-suave);
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(92, 74, 58, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mapa-btn-ubicacion:hover {
+  transform: scale(1.05);
+  background-color: #faf8f5;
+}
+
+.mapa-btn-ubicacion img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* ---------- Cartel de Avisos ---------- */
+.mapa-aviso {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 1000;
+  padding: 12px;
+  width: 80%;
+  margin-left: 10%;
+  background: rgba(255, 255, 255, 0.295);
+  backdrop-filter: blur(2px);
+  border: 1px solid var(--borde-suave);
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(92, 74, 58, 0.12);
+}
+
+/* ---------- Responsive ---------- */
+@media (min-width: 480px) {
+  .mapa-header,
+  .mapa-contenedor {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+}
