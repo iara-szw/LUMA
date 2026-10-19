@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { usarAuth } from '../hooks/UsarAuth'
 import Buscador from '../components/Buscador'
 import Footer from '../components/Footer'
+import NotiBadge from '../components/NotiBadge'
 import { obtenerMascotasRecientes } from '../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../repositories/eventoRepository'
 import { agregarFavorito, eliminarFavorito } from '../repositories/usuarioRepository'
@@ -99,8 +100,11 @@ export default function Home() {
         <div className="inicio-header-iconos">
           {usuario ? (
             <>
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" />
-</button>
+              <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/notificaciones')}>
+                <img src="/assets/img/notificaciones.png" />
+                {/* badge */}
+                <NotiBadge />
+              </button>
         <img
   className="avatar"
   src={avatarUsuario}

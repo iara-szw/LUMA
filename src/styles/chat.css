@@ -90,7 +90,7 @@
   border-radius: 999px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 500;
   line-height: 1.2;
   text-align: center;
   cursor: pointer;
@@ -445,7 +445,7 @@
 
 .lista-chats-titulo {
   font-size: 26px;
-  font-weight: 800;
+  font-weight: 700;
   color: #463b35;
   margin: 0;
   padding: 4px 20px 18px;

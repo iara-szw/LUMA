@@ -149,14 +149,20 @@ CREATE TABLE public.solicitudes (
 CREATE TABLE public.entrevistas (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   solicitud_id uuid NOT NULL,
-  responsable_id uuid,
   fecha timestamp without time zone NOT NULL,
   modalidad character varying,
   resultado character varying,
   notas text,
+  estado_confirmacion character varying DEFAULT 'Pendiente'::character varying,
+  duracion_minutos integer DEFAULT 30,
+  lugar text,
+  fecha_respuesta timestamp without time zone,
+  adoptante_id uuid NOT NULL,
+  refugio_id uuid,
   CONSTRAINT entrevistas_pkey PRIMARY KEY (id),
   CONSTRAINT entrevistas_solicitud_id_fkey FOREIGN KEY (solicitud_id) REFERENCES public.solicitudes(id),
-  CONSTRAINT entrevistas_responsable_id_fkey FOREIGN KEY (responsable_id) REFERENCES public.usuarios(id)
+  CONSTRAINT entrevistas_adoptante_id_fkey FOREIGN KEY (adoptante_id) REFERENCES public.usuarios(id),
+  CONSTRAINT entrevistas_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id)
 );
 CREATE TABLE public.adopciones (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),

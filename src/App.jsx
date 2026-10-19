@@ -7,6 +7,7 @@ import Conversacion from './pages/chat/Conversacion.jsx'
 import Loader from './components/Loader.jsx'
 import Home from './pages/Home'
 import Perfil from './pages/adoptante/Perfil.jsx'
+import Notificaciones from './pages/Notificaciones.jsx'
 import IniciarSesion from './pages/auth/InicioSesion'
 import EditarPerfil from './pages/adoptante/editarUsuario.jsx'
 import Registro from './pages/auth/Registro'
@@ -70,6 +71,14 @@ export default function App() {
             element={
               <RutaProtegida rol="refugio">
                 <Dashboard />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/notificaciones"
+            element={
+              <RutaProtegida rol="refugio">
+                <Notificaciones />
               </RutaProtegida>
             }
           />
@@ -245,7 +254,14 @@ export default function App() {
             path="/refugio/:id"
             element={<PerfilPublicoRefugio />}
           />
-
+ <Route
+            path="/notificaciones"
+            element={
+              <RutaProtegida rol="adoptante">
+                <Notificaciones />
+              </RutaProtegida>
+            }
+          />
           <Route path="/mascota/:id" element={<Mascota />} />
 
           <Route path="/inicio" element={<Navigate to="/" replace />} />

@@ -89,7 +89,6 @@ function actualizarFotoArchivo(preguntaId, file) {
 
   async function enviarFormulario() {
     setGuardando(true)
-    console.log(info)
     try {
       const res = await guardarProgresoSolicitud({
         mascotaId,

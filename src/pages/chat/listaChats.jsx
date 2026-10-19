@@ -5,6 +5,7 @@ import { obtenerConversaciones } from '../../repositories/chatRepository'
 import Footer from '../../components/Footer'
 import FooterRefugio from '../../components/FooterRefugio'
 import '../../styles/chat.css'
+import NotiBadge from '../../components/NotiBadge'
 
 const tagPorEstado = (solicitudEstado) => {
   if (!solicitudEstado) return { texto: 'Consulta', clase: 'lista-chats-tag--consulta' }
@@ -74,7 +75,14 @@ export default function ListaChats() {
         <div className="inicio-header-iconos">
           {usuario ? (
             <>
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
+              <button
+                className="icono-campana"
+                aria-label="Notificaciones"
+                onClick={() => navigate(esRutaRefugio ? '/refugio/notificaciones' : '/notificaciones')}
+              >
+                <img src="/assets/img/notificaciones.png" alt=""/>
+                <NotiBadge />
+              </button>
               <img
                 className="avatar"
                 src={usuario.foto_url || usuario.logo_url || '/assets/img/perfil_default.jpg'}

@@ -4,6 +4,7 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import Footer from '../../components/Footer'
 import { obtenerCalendarioAdoptante } from '../../repositories/calendarioRepository'
 import '../../styles/calendario.css'
+import NotiBadge from '../../components/NotiBadge'
 
 export default function Calendario() {
   const navigate = useNavigate()
@@ -54,7 +55,10 @@ export default function Calendario() {
         <div className="inicio-header-iconos">
           {usuario ? (
             <>
-              <button className="icono-campana" aria-label="Notificaciones"><img src="/assets/img/notificaciones.png" alt=""/></button>
+              <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/notificaciones')}>
+                <img src="/assets/img/notificaciones.png" alt=""/>
+                <NotiBadge />
+              </button>
               <img
                 className="avatar"
                 src={usuario?.foto_url || '/assets/img/perfil_default.jpg'}
