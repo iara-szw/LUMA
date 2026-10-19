@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { usarAuth } from '../hooks/UsarAuth'
-import { obtenerNotisPorUsur } from '../repositories/notificacionesRepository'
+import { obtenerNotisPorUsur, marcarNotiLeida } from '../repositories/notificacionesRepository'
 import '../styles/style.css'
 import Footer from '../components/Footer'
 
 import '../styles/notificaciones.css'
-import NotiBadge from '../components/NotiBadge'
 export default function Notificaciones() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -24,7 +23,7 @@ export default function Notificaciones() {
       }
       try {
         const { data, error } = await obtenerNotisPorUsur(usuario.id)
-            console.log(data)
+        if (error) console.error(error)
 
         if (!activo) return
         setNotis(data || [])
@@ -44,6 +43,24 @@ export default function Notificaciones() {
     }
   }
 
+  const nombreEmisor = (e) => {
+    if (!e) return null
+    const refugio = Array.isArray(e.refugios) ? e.refugios[0] : e.refugios
+    return refugio?.nombre || [e.nombre, e.apellido].filter(Boolean).join(' ')
+  }
+const abrirNoti = async (n) => {
+    const res = await marcarNotiLeida(n.id)
+console.log('id:', n.id, 'resultado:', res)
+  if (!n.conversacion_id) return
+  if (!n.leida) {
+    setNotis(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))
+    await marcarNotiLeida(n.id)
+    window.dispatchEvent(new Event('luma:noti-actualizada'))
+  }
+  navigate(isRefugio
+    ? `/refugio/chats/${n.conversacion_id}`
+    : `/adoptante/chats/${n.conversacion_id}`)
+}
   return (
     <div className="pagina-notificaciones">
       <header className="inicio-header">
@@ -58,7 +75,6 @@ export default function Notificaciones() {
             alt="perfil"
             onClick={() => navigate(isRefugio ? '/refugio/perfil' : '/adoptante/perfil')}
           />
-          
         </div>
       </header>
 
@@ -67,20 +83,31 @@ export default function Notificaciones() {
           <h1>Notificaciones</h1>
         </div>
 
-
         <div className="noti-lista">
           {cargando ? (
             <p className="vacio">Cargando notificaciones...</p>
           ) : notis.length === 0 ? (
             <p className="vacio">No hay notificaciones.</p>
           ) : (
-            notis.map(n => (
-              <article key={n.id} className={`noti-item ${n.leida ? 'leida' : 'noleida'}`}>
-                {n.titulo && <h4>{n.titulo}</h4>}
-                {n.mensaje && <p>{n.mensaje}</p>}
-                <time className="noti-fecha">{formatearFecha(n.fecha)}</time>
-              </article>
-            ))
+            notis.map(n => {
+              const remitente = nombreEmisor(n.emisor)
+              const clickeable = !!n.conversacion_id
+              return (
+                <article
+                  key={n.id}
+                  className={`noti-item ${n.leida ? 'leida' : 'noleida'} ${clickeable ? 'clickeable' : ''}`}
+                  onClick={() => abrirNoti(n)}
+                  role={clickeable ? 'button' : undefined}
+                  tabIndex={clickeable ? 0 : undefined}
+                  onKeyDown={e => { if (clickeable && e.key === 'Enter') abrirNoti(n) }}
+                >
+                  {n.titulo && <h4>{n.titulo}</h4>}
+                  {remitente && <span className="noti-remitente">De: {remitente}</span>}
+                  {n.mensaje && <p>{n.mensaje}</p>}
+                  <time className="noti-fecha">{formatearFecha(n.fecha)}</time>
+                </article>
+              )
+            })
           )}
         </div>
       </main>

@@ -10,12 +10,12 @@
 }
 
 .pagina-notificaciones .notis {
-    background: linear-gradient(90deg, var(--noti-bg), #fff);
-    border-bottom-left-radius: 14px;
+     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
     padding: 18px 20px;
+    background-color: var(--crema);
     margin-bottom: 18px;
-    box-shadow: 0 2px 6px rgba(60,52,47,0.04);
+
 }
 
 .pagina-notificaciones .notis h1 {
@@ -48,8 +48,8 @@
 }
 
 .pagina-notificaciones .noti-item.noleida {
-    background: var(--noti-unread-bg);
-    border-left: 4px solid var(--noti-accent);
+    background: var( --crema);
+    border-left: 4px solid var(--verde);
 }
 
 .pagina-notificaciones .noti-item:hover {
@@ -64,9 +64,12 @@
 }
 
 .pagina-notificaciones .noti-item p {
-    margin: 0 0 8px 0;
+       margin: 0 0 8px 0;
     color: var(--noti-muted);
+    overflow-wrap: break-word;
     line-height: 1.4;
+    margin-right: 10%;
+    width: 90%;
 }
 
 .pagina-notificaciones .noti-fecha {
