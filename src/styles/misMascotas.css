@@ -9,37 +9,18 @@
 .pagina-mis-mascotas {
   min-height: 100vh;
   background-color: #FAFAFA;
-  color: #2c2c2a;
-  padding-bottom: 90px;
+  color: #463b35;
+  padding-bottom: 150px; /* espacio para barra inferior + botón "+" */
 }
 
 /* ---------- Header crema ---------- */
 .mis-header {
-  background-color:var(--crema);
-  padding: 20px 20px 16px;
+  background-color: var(--crema, #F2EADD);
+  padding: 20px 20px 22px;
   border-bottom-left-radius: 28px;
   border-bottom-right-radius: 28px;
 }
-.agregar span{
-  color:#ffffff;
-  background-color: var(--dash-verde);
-    font-size: 20px;
-}
-.agregar{
-     background-color: var(--dash-verde);
-    border: none;
-    border-radius: 35px;
-    width: 15%;
-    padding: 4%;
-    padding-left: 5%;
-    padding-right: 5%;
-        margin-left: 78%;
-    margin-right: 22%;
-    position: fixed;
-    margin-bottom: 5%;
-    margin-top: 135%;
 
-}
 .mis-header-inner {
   display: flex;
   align-items: center;
@@ -59,7 +40,7 @@
   height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #8b7355;
+  border: 2px solid #b8956a;
   flex-shrink: 0;
 }
 
@@ -67,7 +48,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #e8f0e4;
+  background: #EDE6DA;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,39 +58,58 @@
 .mis-saludo {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #2c2c2a;
+  color: #463b35;
   padding: 14px 0 0;
   line-height: 1.2;
 }
 
-/* ---------- Tabs de filtro ---------- */
+/* ---------- Chips de filtro (debajo del header) ---------- */
 .mis-filtros {
   display: flex;
   gap: 10px;
+  padding: 7px 16px 5px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mis-filtros::-webkit-scrollbar {
+  display: none;
 }
 
 .mis-filtros .filtro-btn {
+  flex-shrink: 0;
   background: #fff;
-  border: 1.5px solid #e8e4dc;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #6b6b68;
+  border: 1px solid #E6DAC6;
+  border-radius: 50px;
+  padding: 9px 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6d625d;
   cursor: pointer;
   white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
+.mis-filtros .filtro-btn:active {
+  transform: scale(0.96);
+}
+
+/* Activo: marrón claro con sombra, como en Mensajes */
 .mis-filtros .filtro-btn.activo {
-  background: #5C4A3A;
-  border-color: #5C4A3A;
+  background: #b8956a;
+  border-color: #b8956a;
   color: #fff;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(184, 149, 106, 0.4);
 }
 
 .mis-filtros .filtro-badge {
   margin-left: 6px;
-  background: #d6e0c8;
-  color: #3e5236;
+  background: #EEF5EB;
+  color: #5F8252;
   font-size: 11px;
   font-weight: 700;
   padding: 1px 7px;
@@ -118,36 +118,64 @@
 
 .titulo-mis-mascotas {
   margin: 20px 16px 12px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #2c2c2a;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #463b35;
 }
 
 /* ---------- Lista y tarjetas ---------- */
 .lista-mascotas-refugio {
-  margin: 16px 16px 0;
+  margin: 12px 16px 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+.lista-mascotas-refugio > p {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #7A6A5D;
+  background: #fff;
+  border: 1px dashed #E6DAC6;
+  border-radius: 16px;
+}
+
 .tarjeta-mascota-refugio {
   background: #fff;
-  border: 1px solid #e8e4dc;
+  border: 1px solid #EDE6DA;
   border-radius: 16px;
-  padding: 14px  !important;
+  padding: 14px !important;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tarjeta-mascota-clickeable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tarjeta-mascota-clickeable:active {
+  transform: scale(0.985);
+  box-shadow: 0 1px 4px rgba(92, 74, 58, 0.08);
+}
+
+.tarjeta-mascota-clickeable:focus-visible {
+  outline: none;
+  border-color: #b8956a;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
 }
 
 .foto-mascota {
-  width: 76px;
-  height: 76px;
-  border-radius: 12px;
+  width: 80px;
+  height: 80px;
+  border-radius: 14px;
   overflow: hidden;
   flex-shrink: 0;
-  background: #f6f6f4;
+  background: #EDE6DA;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,64 +198,111 @@
 }
 
 .datos-mascota h3 {
-  margin: 0 0 4px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #2c2c2a;
+  margin: 0 0 2px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #463b35;
   line-height: 1.3;
 }
 
 .datos-mascota p {
   margin: 0 0 10px;
-  font-size: 13px;
-  color: #6b6b68;
+  font-size: 0.8125rem;
+  color: #7A6A5D;
   line-height: 1.4;
 }
 
 .acciones-mascota {
   display: flex;
   align-items: center;
-  gap: 8px 6px;
+  gap: 8px;
   flex-wrap: wrap;
-  row-gap: 8px;
 }
 
+/* Ver postulaciones: pill con borde */
 .btn-accion-primaria {
-  background: transparent;
-  border: 1.5px solid #c8c1b4;
-  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #CBB99C;
+  border-radius: 50px;
   padding: 7px 14px;
+  font-family: inherit;
   font-size: 12.5px;
-  font-weight: 500;
-  color: #4a4a47;
+  font-weight: 700;
+  color: #463b35;
   cursor: pointer;
   white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
 }
 
+/* Editar form: pill arena */
 .btn-accion-secundaria {
-  background: #f0ece3;
+  background: #EDE6DA;
   border: none;
-  border-radius: 20px;
+  border-radius: 50px;
   padding: 7px 14px;
+  font-family: inherit;
   font-size: 12.5px;
-  font-weight: 600;
-  color: #4a4a47;
+  font-weight: 700;
+  color: #463b35;
   cursor: pointer;
   white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.btn-accion-primaria:active,
+.btn-accion-secundaria:active {
+  transform: scale(0.96);
 }
 
 .btn-ver-perfil {
   background: none;
   border: none;
+  font-family: inherit;
   font-size: 12.5px;
-  font-weight: 600;
-  color: #4a4a47;
+  font-weight: 700;
+  color: #463b35;
   cursor: pointer;
   padding: 6px 4px;
   white-space: nowrap;
 }
 
-/* ---------- Bottom nav ---------- */
+/* ---------- Botón "+" (cargar mascota) ---------- */
+.agregar {
+  position: fixed;
+  right: 18px;
+  bottom: 82px; /* arriba de la barra inferior */
+  width: 56px;
+  height: 56px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dash-verde, #9CA986);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(92, 74, 58, 0.25);
+  cursor: pointer;
+  z-index: 50;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.agregar:active {
+  transform: scale(0.94);
+}
+
+.agregar span {
+  background: none;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ---------- Bottom nav (legacy, por si algún componente lo usa) ---------- */
 .bottom-nav-refugio {
   position: fixed;
   bottom: 0;
@@ -235,7 +310,7 @@
   right: 0;
   height: 64px;
   background: #fff;
-  border-top: 1px solid #e8e4dc;
+  border-top: 1px solid #EDE6DA;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -251,15 +326,15 @@
   border: none;
   cursor: pointer;
   padding: 6px 12px;
-  color: #a0a09c;
+  color: #8A7B6E;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .nav-item-refugio img {
   width: 22px;
   height: 22px;
-  opacity: 0.45;
+  opacity: 0.55;
 }
 
 .nav-item-refugio.activo {
@@ -279,4 +354,37 @@
     margin-left: 24px;
     margin-right: 24px;
   }
+}
+ .logo {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--arena);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    margin-bottom: -10%;
+    margin-left: -5%;
+}
+/* Logo dentro del header */
+.mis-header .dash-logo {
+  display: inline-block;
+  margin: 0;
+  margin-left: -5%;
+  padding: 0;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.mis-header .dash-logo img {
+  display: block;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  position: static;
+}
+.mis-saludo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #463b35;
+  padding: 0px 0 0;
+  line-height: 1.2;
 }

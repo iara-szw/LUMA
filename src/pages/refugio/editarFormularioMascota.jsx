@@ -10,6 +10,24 @@ import {
 } from '../../repositories/formularioRepository'
 import { obtenerMascotaPorId } from '../../repositories/mascotaRepository'
 
+const TIPOS = [
+  { valor: 'text', label: 'Texto corto' },
+  { valor: 'textarea', label: 'Texto largo' },
+  { valor: 'photo', label: 'Foto' },
+  { valor: 'multiple', label: 'Opciones' },
+]
+
+function IconoBasura() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M6 6l1 14h10l1-14" />
+    </svg>
+  )
+}
+
 export default function EditarFormularioMascota() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -51,75 +69,75 @@ export default function EditarFormularioMascota() {
     void cargar()
   }, [id, usuario, navigate])
 
-function actualizarSeccion(indexSeccion, campo, valor) {
-  setBloquesFormulario(prev =>
-    prev.map((s, i) => i === indexSeccion ? { ...s, [campo]: valor } : s)
-  )
-}
+  function actualizarSeccion(indexSeccion, campo, valor) {
+    setBloquesFormulario(prev =>
+      prev.map((s, i) => (i === indexSeccion ? { ...s, [campo]: valor } : s))
+    )
+  }
 
-function actualizarPregunta(indexSeccion, indexPregunta, campo, valor) {
-  setBloquesFormulario(prev =>
-    prev.map((s, i) => {
-      if (i !== indexSeccion) return s
-      return {
-        ...s,
-        preguntas: s.preguntas.map((p, j) => {
-          if (j !== indexPregunta) return p
-          // Si se cambia el tipo a multiple y no hay opciones, inicializar
-          if (campo === 'tipo' && valor === 'multiple') {
-            return { ...p, tipo: valor, opciones: p.opciones && p.opciones.length ? p.opciones : ['Opción 1', 'Opción 2'] }
-          }
-          // Actualizar opciones completos cuando se pasa un array
-          if (campo === 'opciones') {
-            return { ...p, opciones: Array.isArray(valor) ? valor : p.opciones }
-          }
-          return { ...p, [campo]: valor }
-        }),
-      }
-    })
-  )
-}
+  function actualizarPregunta(indexSeccion, indexPregunta, campo, valor) {
+    setBloquesFormulario(prev =>
+      prev.map((s, i) => {
+        if (i !== indexSeccion) return s
+        return {
+          ...s,
+          preguntas: s.preguntas.map((p, j) => {
+            if (j !== indexPregunta) return p
+            // Si se cambia el tipo a multiple y no hay opciones, inicializar
+            if (campo === 'tipo' && valor === 'multiple') {
+              return { ...p, tipo: valor, opciones: p.opciones && p.opciones.length ? p.opciones : ['Opción 1', 'Opción 2'] }
+            }
+            // Actualizar opciones completas cuando se pasa un array
+            if (campo === 'opciones') {
+              return { ...p, opciones: Array.isArray(valor) ? valor : p.opciones }
+            }
+            return { ...p, [campo]: valor }
+          }),
+        }
+      })
+    )
+  }
 
-function agregarSeccion() {
-  setBloquesFormulario(prev => [
-    ...prev,
-    { id: `seccion_${Date.now()}`, titulo: 'Nueva sección', preguntas: [] },
-  ])
-}
+  function agregarSeccion() {
+    setBloquesFormulario(prev => [
+      ...prev,
+      { id: `seccion_${Date.now()}`, titulo: 'Nueva sección', preguntas: [] },
+    ])
+  }
 
-function agregarPregunta(indexSeccion) {
-  setBloquesFormulario(prev =>
-    prev.map((s, i) => {
-      if (i !== indexSeccion) return s
-      return {
-        ...s,
-        preguntas: [
-          ...s.preguntas,
-          { id: `pregunta_${Date.now()}`, titulo: 'Nueva pregunta', tipo: 'text', placeholder: '', obligatorio: true },
-        ],
-      }
-    })
-  )
-}
+  function agregarPregunta(indexSeccion) {
+    setBloquesFormulario(prev =>
+      prev.map((s, i) => {
+        if (i !== indexSeccion) return s
+        return {
+          ...s,
+          preguntas: [
+            ...s.preguntas,
+            { id: `pregunta_${Date.now()}`, titulo: 'Nueva pregunta', tipo: 'text', placeholder: '', obligatorio: true },
+          ],
+        }
+      })
+    )
+  }
 
-function quitarPregunta(indexSeccion, indexPregunta) {
-  const confirmar = window.confirm('¿Estás seguro que querés eliminar esta pregunta?')
-  if (!confirmar) return
+  function quitarPregunta(indexSeccion, indexPregunta) {
+    const confirmar = window.confirm('¿Estás seguro que querés eliminar esta pregunta?')
+    if (!confirmar) return
 
-  setBloquesFormulario(prev =>
-    prev.map((s, i) => {
-      if (i !== indexSeccion) return s
-      return { ...s, preguntas: s.preguntas.filter((_, j) => j !== indexPregunta) }
-    })
-  )
-}
+    setBloquesFormulario(prev =>
+      prev.map((s, i) => {
+        if (i !== indexSeccion) return s
+        return { ...s, preguntas: s.preguntas.filter((_, j) => j !== indexPregunta) }
+      })
+    )
+  }
 
-function quitarSeccion(indexSeccion) {
-  const confirmar = window.confirm('¿Estás seguro que querés eliminar esta sección?')
-  if (!confirmar) return
+  function quitarSeccion(indexSeccion) {
+    const confirmar = window.confirm('¿Estás seguro que querés eliminar esta sección?')
+    if (!confirmar) return
 
-  setBloquesFormulario(prev => prev.filter((_, i) => i !== indexSeccion))
-} 
+    setBloquesFormulario(prev => prev.filter((_, i) => i !== indexSeccion))
+  }
 
   async function guardar(e) {
     e.preventDefault()
@@ -139,120 +157,177 @@ function quitarSeccion(indexSeccion) {
   if (cargando) return <Loader />
 
   return (
-    <div className="pagina-formulario-adopcion">
-      <div className="formulario-shell">
-        <header className="formulario-topbar">
-          <button className="btn-formulario volver" onClick={() => navigate(-1)}>← Volver</button>
-          <strong>{mascota?.nombre || 'Formulario'}</strong>
-        </header>
-
-        <section className="formulario-card">
-          <h2>Editar formulario de adopción</h2>
-          <p>Armá los bloques que verán los adoptantes. El orden define el recorrido por páginas.</p>
-
-          <form onSubmit={guardar} className="formulario-editor-lista">
-           {bloquesFormulario.map((seccion, indexSeccion) => (
-  <div key={seccion.id || indexSeccion} className="formulario-editor-seccion">
-    <label>
-      Título de la sección
-      <input
-        className="formulario-input"
-        value={seccion.titulo || ''}
-        onChange={(e) => actualizarSeccion(indexSeccion, 'titulo', e.target.value)}
-      />
-    </label>
-
-    {seccion.preguntas.map((pregunta, indexPregunta) => (
-      <div key={pregunta.id || indexPregunta} className="formulario-editor-bloque">
-        <div className="row">
-          <label>
-            Título
-            <input
-              className="formulario-input"
-              value={pregunta.titulo || ''}
-              onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'titulo', e.target.value)}
-            />
-          </label>
-
-          <label>
-            Tipo
-            <select
-              className="formulario-select"
-              value={pregunta.tipo || 'text'}
-              onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'tipo', e.target.value)}
-            >
-              <option value="text">Texto corto</option>
-              <option value="textarea">Texto largo</option>
-              <option value="photo">Foto</option>
-              <option value="multiple">Multiple choice</option>
-            </select>
-          </label>
+    <div className="fe-pagina">
+      <header className="fe-header">
+        <button type="button" className="fe-btn-volver" onClick={() => navigate(-1)} aria-label="Volver">←</button>
+        <div className="fe-header-info">
+          <h1 className="fe-titulo">Formulario de adopción</h1>
+          <span className="fe-subtitulo">Para {mascota?.nombre || 'tu mascota'}</span>
         </div>
+      </header>
 
-        <label>
-          Placeholder
-          <input
-            className="formulario-input"
-            value={pregunta.placeholder || ''}
-            onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'placeholder', e.target.value)}
-          />
-        </label>
+      <form className="fe-contenido" onSubmit={guardar}>
+        <p className="fe-intro">
+          Armá las preguntas que verán los adoptantes. El orden de las secciones define el recorrido por páginas.
+        </p>
 
-        {pregunta.tipo === 'multiple' && (
-          <div className="editor-opciones">
-            <label>Opciones</label>
-            {(pregunta.opciones || []).map((op, idx) => (
-              <div key={idx} className="row" style={{ gap: 8, alignItems: 'center' }}>
-                <input
-                  className="formulario-input"
-                  value={op}
-                  onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'opciones', (pregunta.opciones || []).map((o, i) => i === idx ? e.target.value : o))}
-                />
-                <button type="button" className="btn-formulario-eliminar" onClick={() => {
-                  const nueva = (pregunta.opciones || []).filter((_, i) => i !== idx)
-                  actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
-                }}>Eliminar</button>
+        {bloquesFormulario.map((seccion, indexSeccion) => (
+          <section key={seccion.id || indexSeccion} className="fe-seccion">
+            <div className="fe-seccion-cabecera">
+              <span className="fe-seccion-numero">{indexSeccion + 1}</span>
+              <input
+                className="fe-input fe-input--seccion"
+                value={seccion.titulo || ''}
+                placeholder="Título de la sección"
+                aria-label="Título de la sección"
+                onChange={(e) => actualizarSeccion(indexSeccion, 'titulo', e.target.value)}
+              />
+              <button
+                type="button"
+                className="fe-icono-btn"
+                aria-label="Quitar sección"
+                onClick={() => quitarSeccion(indexSeccion)}
+              >
+                <IconoBasura />
+              </button>
+            </div>
+
+            {seccion.preguntas.length === 0 && (
+              <p className="fe-vacio">Esta sección todavía no tiene preguntas.</p>
+            )}
+
+            {seccion.preguntas.map((pregunta, indexPregunta) => (
+              <div key={pregunta.id || indexPregunta} className="fe-pregunta">
+                <div className="fe-pregunta-cabecera">
+                  <span className="fe-pregunta-etiqueta">Pregunta {indexPregunta + 1}</span>
+                  <button
+                    type="button"
+                    className="fe-link-peligro"
+                    onClick={() => quitarPregunta(indexSeccion, indexPregunta)}
+                  >
+                    Quitar
+                  </button>
+                </div>
+
+                <label className="fe-campo">
+                  <span>Pregunta</span>
+                  <input
+                    className="fe-input"
+                    value={pregunta.titulo || ''}
+                    placeholder="Ej: ¿Cuánto tiempo podés dedicarle?"
+                    onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'titulo', e.target.value)}
+                  />
+                </label>
+
+                <div className="fe-campo">
+                  <span>Tipo de respuesta</span>
+                  <div className="fe-chips" role="group" aria-label="Tipo de respuesta">
+                    {TIPOS.map(t => (
+                      <button
+                        key={t.valor}
+                        type="button"
+                        className={`fe-chip ${(pregunta.tipo || 'text') === t.valor ? 'activo' : ''}`}
+                        onClick={() => actualizarPregunta(indexSeccion, indexPregunta, 'tipo', t.valor)}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {(pregunta.tipo === 'text' || pregunta.tipo === 'textarea' || !pregunta.tipo) && (
+                  <label className="fe-campo">
+                    <span>Texto de ayuda (placeholder)</span>
+                    <input
+                      className="fe-input"
+                      value={pregunta.placeholder || ''}
+                      placeholder="Ej: 2 horas por día"
+                      onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'placeholder', e.target.value)}
+                    />
+                  </label>
+                )}
+
+                {pregunta.tipo === 'multiple' && (
+                  <div className="fe-campo">
+                    <span>Opciones</span>
+                    <ul className="fe-opciones">
+                      {(pregunta.opciones || []).map((op, idx) => (
+                        <li key={idx} className="fe-opcion">
+                          <span className="fe-opcion-punto" aria-hidden="true" />
+                          <input
+                            className="fe-input"
+                            value={op}
+                            onChange={(e) =>
+                              actualizarPregunta(
+                                indexSeccion,
+                                indexPregunta,
+                                'opciones',
+                                (pregunta.opciones || []).map((o, i) => (i === idx ? e.target.value : o))
+                              )
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="fe-icono-btn fe-icono-btn--chico"
+                            aria-label="Eliminar opción"
+                            onClick={() => {
+                              const nueva = (pregunta.opciones || []).filter((_, i) => i !== idx)
+                              actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
+                            }}
+                          >
+                            ×
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      className="fe-btn-texto"
+                      onClick={() => {
+                        const nueva = [...(pregunta.opciones || []), `Opción ${(pregunta.opciones || []).length + 1}`]
+                        actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
+                      }}
+                    >
+                      + Añadir opción
+                    </button>
+                  </div>
+                )}
+
+                <label className="fe-switch">
+                  <input
+                    type="checkbox"
+                    checked={pregunta.obligatorio !== false}
+                    onChange={(e) => actualizarPregunta(indexSeccion, indexPregunta, 'obligatorio', e.target.checked)}
+                  />
+                  <span className="fe-switch-pista" />
+                  <span>Respuesta obligatoria</span>
+                </label>
               </div>
             ))}
 
-            <button type="button" className="btn-anadir-pregunta" onClick={() => {
-              const nueva = [ ...(pregunta.opciones || []), `Opción ${(pregunta.opciones || []).length + 1}` ]
-              actualizarPregunta(indexSeccion, indexPregunta, 'opciones', nueva)
-            }}>+ Añadir opción</button>
-          </div>
-        )}
+            <button type="button" className="fe-btn-agregar" onClick={() => agregarPregunta(indexSeccion)}>
+              + Agregar pregunta
+            </button>
+          </section>
+        ))}
 
-        <button type="button" className="btn-formulario quitar" onClick={() => quitarPregunta(indexSeccion, indexPregunta)}>
-          Quitar pregunta
+        <button type="button" className="fe-btn-agregar fe-btn-agregar--seccion" onClick={agregarSeccion}>
+          + Agregar sección
         </button>
-      </div>
-    ))}
 
-    <button type="button" className="btn-anadir-pregunta" onClick={() => agregarPregunta(indexSeccion)}>
-      + Agregar pregunta a esta sección
-    </button>
-
-    <button type="button" className="btn-formulario quitar" onClick={() => quitarSeccion(indexSeccion)}>
-      Quitar sección
-    </button>
-  </div>
-))}
-
-<button type="button" className="btn-anadir-bloque" onClick={agregarSeccion}>
-  + Agregar sección
-</button>
-
-            <div className="formulario-bloque-acciones">
-              <button type="button" className="btn-formulario ghost" onClick={() => navigate(`/refugio/editarMascota/${id}`)}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-guardar-formulario" disabled={guardando}>
-                {guardando ? 'Guardando...' : 'Guardar formulario'}
-              </button>
-            </div>
-          </form>
-        </section>
-      </div>
+        <div className="fe-barra-acciones">
+          <button
+            type="button"
+            className="fe-btn fe-btn--secundario"
+            onClick={() => navigate(`/refugio/editarMascota/${id}`)}
+          >
+            Cancelar
+          </button>
+          <button type="submit" className="fe-btn fe-btn--primario" disabled={guardando}>
+            {guardando ? 'Guardando...' : 'Guardar formulario'}
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

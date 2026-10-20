@@ -75,16 +75,18 @@ export default function SolicitudesRefugio() {
 
   return (
 
-<div className="pagina-solicitudes">
+    <div className="pagina-solicitudes">
 
       <div className="solicitudes-contenedor">
         <div className="nav">
 
-        <h1 className="solicitudes-titulo">Solicitudes</h1>
+          <h1 className="solicitudes-titulo">Solicitudes</h1>
 
-        {/* Filtros */}
+          {/* Filtros */}
+
+        </div>
         <div className="solicitudes-filtros">
-          
+
           {FILTROS.map(f => (
             <button
               key={f}
@@ -98,7 +100,6 @@ export default function SolicitudesRefugio() {
             </button>
           ))}
         </div>
-</div>
         {/* Resumen */}
         <div className="solicitudes-resumen">
           <span>Tenés {solicitudesFiltradas.length} solicitudes</span>
@@ -148,48 +149,48 @@ function TarjetaSolicitud({ solicitud: s, onVerFormulario, onVerPerfil, onCoordi
 
   return (
     <>
-    <article className="tarjeta-solicitud-refugio">
-      {esNueva && <span className="punto-nuevo" aria-label="Nueva solicitud" />}
+      <article className="tarjeta-solicitud-refugio">
+        {esNueva && <span className="punto-nuevo" aria-label="Nueva solicitud" />}
 
-      <div className="solicitud-fila-superior">
-        {s.usuarios?.foto_url ? (
-          <img
-            className="solicitud-avatar"
-            src={s.usuarios.foto_url}
-            alt={s.usuarios.nombre}
-          />
-        ) : (
-          <div className="solicitud-avatar-placeholder">🐾</div>
-        )}
+        <div className="solicitud-fila-superior">
+          {s.usuarios?.foto_url ? (
+            <img
+              className="solicitud-avatar"
+              src={s.usuarios.foto_url}
+              alt={s.usuarios.nombre}
+            />
+          ) : (
+            <div className="solicitud-avatar-placeholder">🐾</div>
+          )}
 
-        <div className="solicitud-datos">
-          <h4>{s.usuarios?.nombre}</h4>
-          <p>Para {s.mascotas?.nombre} · {tiempoRelativo(s.creado_en)}</p>
+          <div className="solicitud-datos">
+            <h4>{s.usuarios?.nombre}</h4>
+            <p>Para {s.mascotas?.nombre} · {tiempoRelativo(s.creado_en)}</p>
+          </div>
+          <span className={`badge-estado-sol badge-${estadoKey}`}>
+            {estadoKey === 'revision' ? 'En revisión'
+              : estadoKey === 'aprobada' ? 'Aprobada'
+                : estadoKey === 'rechazada' ? 'Rechazada'
+                  : 'Pendiente'}
+          </span>
         </div>
-        <span className={`badge-estado-sol badge-${estadoKey}`}>
-          {estadoKey === 'revision' ? 'En revisión'
-            : estadoKey === 'aprobada' ? 'Aprobada'
-            : estadoKey === 'rechazada' ? 'Rechazada'
-            : 'Pendiente'}
-        </span>
-      </div>
 
 
-      <div className="solicitud-acciones">
-        {estadoKey === 'Aprobada' ? (
-          <button className="btn-accion-verde" onClick={onCoordinar}>
-            Coordinar entrevista
+        <div className="solicitud-acciones">
+          {estadoKey === 'Aprobada' ? (
+            <button className="btn-accion-verde" onClick={onCoordinar}>
+              Coordinar entrevista
+            </button>
+          ) : (
+            <button className="btn-accion-primaria" onClick={onVerFormulario}>
+              Ver formulario
+            </button>
+          )}
+          <button className="btn-ver-perfil" onClick={onVerPerfil}>
+            Ver perfil
           </button>
-        ) : (
-          <button className="btn-accion-primaria" onClick={onVerFormulario}>
-            Ver formulario
-          </button>
-        )}
-        <button className="btn-ver-perfil" onClick={onVerPerfil}>
-          Ver perfil
-        </button>
-      </div>
-    </article>
-      </>
+        </div>
+      </article>
+    </>
   )
 }

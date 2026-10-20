@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
+import Footer from '../../components/Footer'
+
 import {
   obtenerPostulacionesDeUsuario,
   obtenerCursosDeUsuario,
@@ -203,6 +205,7 @@ export default function Perfil() {
       >
         Cerrar sesión
       </button>
+                  <Footer />
     </div>
   )
 }

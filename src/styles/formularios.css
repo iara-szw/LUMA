@@ -1,483 +1,475 @@
-/* =========================================================
-   Formulario de adopción — Luma
-   Paleta base del proyecto: tan #b8956a, sage #9CA788,
-   crema #faf7f2 / #f8f2ea, texto #5f5f5f
-   ========================================================= */
+/* ── Editor de formulario de adopción (estilo LUMA) ───────────
+   Clases con prefijo .fe- para no tocar formularios.css, que
+   también usa el formulario que completa el adoptante.        */
 
-.pagina-formulario-adopcion {
+.fe-pagina {
+  max-width: 720px;
   min-height: 100vh;
-  background-color: #F2EBE0;
-  padding: 20px 16px 96px;
-  border: 0px;
-
-}
-
-.formulario-shell {
-  max-width: 680px;
+  min-height: 100dvh;
   margin: 0 auto;
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 12px 36px rgba(30, 30, 30, 0.08);
-  padding: 20px;
-  border: 0px;
+  background: #faf8f5;
+  font-family: var(--font, inherit);
+  color: #463b35;
 }
 
-/* ---------- Topbar ---------- */
-
-.formulario-topbar {
+/* Header crema */
+.fe-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #f0e4d3;
+  padding: 16px 16px 18px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  background: #f2ebe0;
+  border-radius: 0 0 28px 28px;
 }
 
-.formulario-topbar strong {
-  font-size: 1rem;
-  color: #3f3a33;
+.fe-btn-volver {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.15);
+  font-size: 18px;
+  color: #463b35;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fe-header-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fe-titulo {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.fe-subtitulo {
+  font-size: 0.82rem;
+  color: #7a6b63;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* ---------- Steps ---------- */
-
-.formulario-steps {
+/* Contenido */
+.fe-contenido {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 16px 0;
 }
 
-.formulario-step {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: #d8c5ae;
-  transition: width 0.25s ease, background 0.25s ease;
-}
-
-.formulario-step.activo {
-  background: #b8956a;
-  width: 28px;
-}
-
-/* ---------- Card ---------- */
-
-.formulario-card {
-  background: #fff;
-  border: 0px solid #f0e4d3;
-  border-radius: 18px;
-  padding: 20px 18px;
-  margin-bottom: 16px;
-}
-
-.formulario-card h2 {
-  margin: 0 0 6px;
-  font-size: 1.2rem;
-  color: #3f3a33;
-  letter-spacing: -0.01em;
-}
-
-.formulario-card p {
-  margin: 0 0 18px;
-  color: #7a7a7a;
+.fe-intro {
+  margin: 0 4px;
+  font-size: 0.88rem;
   line-height: 1.5;
-  font-size: 0.92rem;
+  color: #7a6b63;
 }
 
-/* ---------- Inputs ---------- */
-
-.formulario-input,
-.formulario-textarea,
-.formulario-select {
-  width: 100%;
-  border: 1px solid #d9c6a8;
-  border-radius: 14px;
-  padding: 12px 14px;
-  font: inherit;
-  color: #3f3a33;
+/* Tarjeta de sección */
+.fe-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
   background: #fff;
+  border: 1px solid #f1e8da;
+  border-radius: 22px;
+  box-shadow: 0 4px 14px rgba(92, 74, 58, 0.08);
+}
+
+.fe-seccion-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fe-seccion-numero {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #b8956a;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+/* Inputs */
+.fe-input {
+  width: 100%;
+  min-width: 0;
   box-sizing: border-box;
-  margin-bottom: 12px;
+  margin: 0;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid #e3d8c6;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #463b35;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.formulario-input::placeholder,
-.formulario-textarea::placeholder {
+.fe-input::placeholder {
   color: #b3ab9f;
 }
 
-.formulario-input:hover,
-.formulario-textarea:hover,
-.formulario-select:hover {
-  border-color: #c9ac80;
+.fe-input:hover {
+  border-color: #cbb99c;
 }
 
-.formulario-input:focus,
-.formulario-textarea:focus,
-.formulario-select:focus {
+.fe-input:focus {
   outline: none;
   border-color: #b8956a;
   box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
 }
 
-.formulario-textarea {
-  min-height: 100px;
-  resize: vertical;
+.fe-input--seccion {
+  font-size: 1rem;
+  font-weight: 800;
+  background: transparent;
+  border-color: transparent;
+  padding-left: 6px;
 }
 
-select {
-  border-radius: 14px;
-  padding: 12px 14px;
-  border: 1px solid #d9c6a8;
+.fe-input--seccion:hover,
+.fe-input--seccion:focus {
   background: #fff;
-  color: #3f3a33;
-  appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, #b8956a 50%),
-    linear-gradient(135deg, #b8956a 50%, transparent 50%);
-  background-position: calc(100% - 18px) center, calc(100% - 13px) center;
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-color: #cbb99c;
 }
 
-select:hover {
-  border-color: #c9ac80;
-}
-
-select:focus {
-  outline: none;
-  border-color: #b8956a;
-  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
-}
-
-/* ---------- Checkbox ---------- */
-
-input[type='checkbox'] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  border-radius: 6px;
-  border: 2px solid #b8956a;
-  box-sizing: border-box;
-  cursor: pointer;
-  position: relative;
-  background: #fff;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-input[type='checkbox']:hover {
-  border-color: #9c7a51;
-}
-
-input[type='checkbox']:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.25);
-}
-
-input[type='checkbox']:checked {
-  background-color: #b8956a;
-  border-color: #b8956a;
-}
-
-input[type='checkbox']:checked::after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 1px;
-  width: 5px;
-  height: 10px;
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.92rem;
-  color: #4a4a4a;
-}
-
-/* Opciones multiple-choice dentro del formulario */
-.formulario-opciones {
+/* Campo con etiqueta */
+.fe-campo {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  align-items: stretch;
+  gap: 6px;
 }
 
-.formulario-opciones label {
-  gap: 12px;
+.fe-campo > span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #7a6b63;
 }
 
-/* ---------- Botones ---------- */
-
-.btn-anadir-pregunta,
-.btn-anadir-bloque {
-  margin-top: 7.5%;
-  margin-bottom: 7.5%;
-  width: 75%;
-  margin-left: 13%;
-  padding: 3%;
-  border-radius: 12px;
-  background-color: #bea67f;
-  border: 0px solid #534536;
-  color: #ffffff;
-}
-
-.btn-anadir-bloque {
-  margin-top: 7.5%;
-  margin-bottom: 7.5%;
-  width: 50%;
-  margin-left: 0%;
-  padding: 10px 16px;
-}
-
-.btn-anadir-pregunta:hover,
-.btn-anadir-bloque:hover {
-  background-color: #9c7a51;
-}
-
-
-.btn-formulario,
-.btn-guardar-formulario {
-  border: none;
-  border-radius: 12px;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-weight: 600;
-  font: inherit;
-  font-size: 0.92rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
-}
-
-.btn-formulario {
-  background: #b8956a;
-  color: #fff;
-}
-
-.btn-formulario:hover {
-  background: #a5814f;
-}
-
-.btn-formulario.quitar,
-.btn-formulario-eliminar {
-  background: transparent;
-  color: #7b5730;
-  border: 1px solid #b8956a;
-  margin-left: 27%;
-  margin-bottom: 5%;
-  margin-top: -2%;
-}
-
-.btn-formulario-volver
- {
-  background: transparent;
-  border: 1px solid #b8956a;
-  color: #7b5730;
-  margin-left: 25%;
-}
-.btn-formulario.ghost
- {
-  background: transparent;
-  border: 1px solid #b8956a;
-  color: #7b5730;
-  margin-left: 10%;
-}
-.btn-formulario-volver{
-    background: transparent;
-  border: 0px solid #b8956a;
-  color: #7b5730;
-    margin:2%;
-    font-size: 16px;
-}
-
-.btn-formulario.quitar
- {
-  background: transparent;
-  border: 1px solid #b8956a;
-  color: #7b5730;
-  margin-left: 25%;
-}
-.btn-formulario.ghost:hover {
-  background: #f5ebdc;
-}
-
-.btn-guardar-formulario {
-  background: #9ca788;
-  color: #fff;
-}
-
-.btn-guardar-formulario:hover {
-  background: #889374;
-}
-
-.btn-guardar-formulario:active,
-.btn-anadir-bloque:active,
-.btn-formulario:active {
-  transform: scale(0.98);
-}
-
-.formulario-pregunta label {
-  font-weight:900;
-}
-.formulario-opciones label{
-  font-weight: 500;
-}
-.pagina-formulario-adopcion .btn-formulario.ghost{
-  margin:0%
-}
-.btn-guardar-formulario:disabled {
-  background: #c3cab5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-formulario:focus-visible,
-.btn-guardar-formulario:focus-visible,
-.btn-anadir-bloque:focus-visible {
-  outline: 2px solid #7b5730;
-  outline-offset: 2px;
-}
-
-.btn-anadir-bloque {
-  width: 100%;
-  text-align: center;
-}
-
-/* ---------- Editor de bloques ---------- */
-
-.formulario-editor-lista {
+/* Tarjeta de pregunta */
+.fe-pregunta {
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
-
-.formulario-editor-seccion {
-
-  border-bottom: 1px solid #f0e4d3;
-  margin-bottom: 5%;
-}
-
-.formulario-editor-bloque {
-  padding: 16px;
-  background: #faf7f2;
-  border: 1px solid #ecdcc2;
-  border-radius: 14px;
-  margin-bottom: 10px;
+  padding: 14px;
+  background: #faf6ee;
+  border: 1px solid #efe3d1;
+  border-radius: 18px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.formulario-editor-bloque:focus-within {
+.fe-pregunta:focus-within {
   border-color: #d9c6a8;
-  box-shadow: 0 4px 14px rgba(184, 149, 106, 0.12);
+  box-shadow: 0 4px 14px rgba(184, 149, 106, 0.14);
 }
 
-.formulario-editor-bloque .row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.fe-pregunta-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fe-pregunta-etiqueta {
+  padding: 4px 10px;
+  background: #ede6da;
+  color: #7a5c3a;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+/* Chips de tipo de respuesta */
+.fe-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fe-chip {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #e3d8c6;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6d625d;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fe-chip:hover {
+  border-color: #cbb99c;
+  background: #f6f0e6;
+}
+
+.fe-chip.activo {
+  background: #b8956a;
+  border-color: #b8956a;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(184, 149, 106, 0.3);
+}
+
+/* Opciones (multiple choice) */
+.fe-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fe-opcion {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-.formulario-editor-bloque label {
-  flex-direction: column;
-  align-items: stretch;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #6b6259;
-  gap: 6px;
-  margin-bottom: 4px;
+.fe-opcion-punto {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 2px solid #cbb99c;
+  border-radius: 50%;
 }
 
-.formulario-editor-bloque button {
-  margin-top: 10px;
-  padding: 8px 14px;
-  font-size: 0.85rem;
+/* Botones */
+.fe-icono-btn {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   background: transparent;
-  border: 1px solid #ad8877;
-  color: #a15c3f;
+  border: none;
+  border-radius: 50%;
+  color: #a8998d;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.formulario-editor-bloque button:hover {
-  background: #fbe9e1;
+.fe-icono-btn:hover {
+  background: #f8e3dd;
+  color: #b5523b;
 }
 
-.formulario-bloque-acciones {
+.fe-icono-btn--chico {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+}
+
+.fe-link-peligro {
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #b5523b;
+  cursor: pointer;
+}
+
+.fe-link-peligro:hover {
+  background: #f8e3dd;
+}
+
+.fe-btn-texto {
+  align-self: flex-start;
+  padding: 7px 14px;
+  background: #fff;
+  border: 1px dashed #cbb99c;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #7a5c3a;
+  cursor: pointer;
+}
+
+.fe-btn-texto:hover {
+  background: #f6f0e6;
+}
+
+.fe-btn-agregar {
+  width: 100%;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1.5px dashed #cbb99c;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #7a5c3a;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fe-btn-agregar:hover {
+  background: #f6f0e6;
+  border-color: #b8956a;
+}
+
+.fe-btn-agregar--seccion {
+  padding: 16px;
+  background: transparent;
+  border-radius: 22px;
+}
+
+.fe-vacio {
+  margin: 0;
+  padding: 6px 4px;
+  font-size: 0.85rem;
+  color: #a8998d;
+  text-align: center;
+}
+
+/* Switch "Respuesta obligatoria" */
+.fe-switch {
+  position: relative;
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid #f0e4d3;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6d625d;
+  cursor: pointer;
 }
 
-.btn-formulario-eliminar {
-  border-radius: 15px;
-  margin-left: 0%;
-  border: 1px solid #aa9479;
-
+.fe-switch input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  min-width: 0;
+  border: none;
+  background: none;
 }
 
-/* ---------- Resumen de solicitud ---------- */
-.btn-formulario.ghost.-anterior{
-  margin-left:10%;
+.fe-switch input[type='checkbox']:checked::after {
+  content: none;
 }
-.solicitud-resumen {
+
+.fe-switch-pista {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  flex-shrink: 0;
+  background: #e3d8c6;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.fe-switch-pista::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.fe-switch input[type='checkbox']:checked + .fe-switch-pista {
+  background: #9ca788;
+}
+
+.fe-switch input[type='checkbox']:checked + .fe-switch-pista::after {
+  transform: translateX(16px);
+}
+
+.fe-switch input[type='checkbox']:focus-visible + .fe-switch-pista {
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.3);
+}
+
+/* Barra de acciones fija abajo */
+.fe-barra-acciones {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 0%;
-}
-.solicitud-resumen-item:first-child {
-  margin-top: 5%;
-}
-
-.solicitud-resumen-item {
-    background: #faf7f2;
-    border: 2px solid #f0e4d3;
-    border-radius: 12px;
-    padding: 14px;
-}
-.formulario-seccion-resumen {
-  margin-bottom: 10px;
+  gap: 10px;
+  margin: 8px -16px 0;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid #f1e8da;
+  box-shadow: 0 -4px 16px rgba(92, 74, 58, 0.08);
 }
 
-/* ---------- Responsive ---------- */
+.fe-btn {
+  flex: 1;
+  padding: 13px 16px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
 
-@media (max-width: 640px) {
-  .formulario-shell {
-    border-radius: 18px;
-    padding: 16px;
-  }
+.fe-btn:active {
+  transform: scale(0.98);
+}
 
-  .formulario-editor-bloque .row {
-    grid-template-columns: 1fr;
-  }
+.fe-btn--primario {
+  flex: 1.4;
+  background: #b8956a;
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(92, 74, 58, 0.18);
+}
 
-  .formulario-bloque-acciones {
-    flex-direction: column-reverse;
-  }
+.fe-btn--primario:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
 
-  .formulario-bloque-acciones button {
-    width: 80%;
-    font-weight: 600;
-    border-radius: 20px;
-    margin-left: 10%;
-    margin-right: 10%;
-    font-family: var(--font);
-    ;
-  }
+.fe-btn--secundario {
+  background: #fff;
+  color: #463b35;
+  border: 1px solid #cbb99c;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  .fe-pagina * {
     transition: none !important;
   }
 }
