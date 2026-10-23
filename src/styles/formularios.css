@@ -1,475 +1,445 @@
-/* ── Editor de formulario de adopción (estilo LUMA) ───────────
-   Clases con prefijo .fe- para no tocar formularios.css, que
-   también usa el formulario que completa el adoptante.        */
+/* ── Formularios de adopción (estilo LUMA) ────────────
+   Usado por: SolicitudFormulario (refugio) y
+   FormularioAdopcion (adoptante).
+   El editor del formulario usa editarFormulario.css (.fe-)  */
 
-.fe-pagina {
-  max-width: 720px;
+.pagina-formulario-adopcion {
   min-height: 100vh;
   min-height: 100dvh;
-  margin: 0 auto;
-  background: #faf8f5;
+  background: #FAFAFA;
+  color: #463b35;
   font-family: var(--font, inherit);
-  color: #463b35;
+  padding-bottom: 32px;
 }
 
-/* Header crema */
-.fe-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 16px 18px;
-  padding-top: max(16px, env(safe-area-inset-top));
-  background: #f2ebe0;
-  border-radius: 0 0 28px 28px;
-}
-
-.fe-btn-volver {
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.92);
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.15);
-  font-size: 18px;
-  color: #463b35;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.fe-header-info {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.fe-titulo {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #463b35;
-}
-
-.fe-subtitulo {
-  font-size: 0.82rem;
-  color: #7a6b63;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Contenido */
-.fe-contenido {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 18px 16px 0;
-}
-
-.fe-intro {
-  margin: 0 4px;
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: #7a6b63;
-}
-
-/* Tarjeta de sección */
-.fe-seccion {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background: #fff;
-  border: 1px solid #f1e8da;
-  border-radius: 22px;
-  box-shadow: 0 4px 14px rgba(92, 74, 58, 0.08);
-}
-
-.fe-seccion-cabecera {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.fe-seccion-numero {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #b8956a;
-  color: #fff;
-  border-radius: 50%;
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-/* Inputs */
-.fe-input {
-  width: 100%;
-  min-width: 0;
+.pagina-formulario-adopcion * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 11px 14px;
-  background: #fff;
-  border: 1px solid #e3d8c6;
-  border-radius: 14px;
-  font-family: inherit;
-  font-size: 14px;
-  color: #463b35;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.fe-input::placeholder {
-  color: #b3ab9f;
+.formulario-shell {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
-.fe-input:hover {
-  border-color: #cbb99c;
-}
-
-.fe-input:focus {
-  outline: none;
-  border-color: #b8956a;
-  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
-}
-
-.fe-input--seccion {
-  font-size: 1rem;
-  font-weight: 800;
-  background: transparent;
-  border-color: transparent;
-  padding-left: 6px;
-}
-
-.fe-input--seccion:hover,
-.fe-input--seccion:focus {
-  background: #fff;
-  border-color: #cbb99c;
-}
-
-/* Campo con etiqueta */
-.fe-campo {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-}
-
-.fe-campo > span {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #7a6b63;
-}
-
-/* Tarjeta de pregunta */
-.fe-pregunta {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 14px;
-  background: #faf6ee;
-  border: 1px solid #efe3d1;
-  border-radius: 18px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.fe-pregunta:focus-within {
-  border-color: #d9c6a8;
-  box-shadow: 0 4px 14px rgba(184, 149, 106, 0.14);
-}
-
-.fe-pregunta-cabecera {
+/* ── Header crema ─────────────────────────────────── */
+.formulario-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 20px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  background: var(--crema, #F2EADD);
+  border-radius: 0 0 28px 28px;
 }
 
-.fe-pregunta-etiqueta {
-  padding: 4px 10px;
-  background: #ede6da;
-  color: #7a5c3a;
-  border-radius: 999px;
-  font-size: 0.72rem;
+.formulario-topbar > strong {
+  font-size: 1.1rem;
   font-weight: 800;
+  color: #463b35;
 }
 
-/* Chips de tipo de respuesta */
-.fe-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.fe-chip {
-  padding: 8px 14px;
-  background: #fff;
-  border: 1px solid #e3d8c6;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #6d625d;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.fe-chip:hover {
-  border-color: #cbb99c;
-  background: #f6f0e6;
-}
-
-.fe-chip.activo {
-  background: #b8956a;
-  border-color: #b8956a;
-  color: #fff;
-  box-shadow: 0 3px 10px rgba(184, 149, 106, 0.3);
-}
-
-/* Opciones (multiple choice) */
-.fe-opciones {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fe-opcion {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.fe-opcion-punto {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-  border: 2px solid #cbb99c;
-  border-radius: 50%;
-}
-
-/* Botones */
-.fe-icono-btn {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 50%;
-  color: #a8998d;
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.fe-icono-btn:hover {
-  background: #f8e3dd;
-  color: #b5523b;
-}
-
-.fe-icono-btn--chico {
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-}
-
-.fe-link-peligro {
-  padding: 4px 8px;
+.btn-formulario-volver {
   background: none;
   border: none;
-  border-radius: 8px;
+  padding: 0;
   font-family: inherit;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #b5523b;
+  color: #463b35;
   cursor: pointer;
-}
-
-.fe-link-peligro:hover {
-  background: #f8e3dd;
-}
-
-.fe-btn-texto {
-  align-self: flex-start;
-  padding: 7px 14px;
-  background: #fff;
-  border: 1px dashed #cbb99c;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #7a5c3a;
-  cursor: pointer;
-}
-
-.fe-btn-texto:hover {
-  background: #f6f0e6;
-}
-
-.fe-btn-agregar {
-  width: 100%;
-  padding: 12px 16px;
-  background: #fff;
-  border: 1.5px dashed #cbb99c;
-  border-radius: 16px;
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: #7a5c3a;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.fe-btn-agregar:hover {
-  background: #f6f0e6;
-  border-color: #b8956a;
-}
-
-.fe-btn-agregar--seccion {
-  padding: 16px;
-  background: transparent;
-  border-radius: 22px;
-}
-
-.fe-vacio {
-  margin: 0;
-  padding: 6px 4px;
-  font-size: 0.85rem;
-  color: #a8998d;
-  text-align: center;
-}
-
-/* Switch "Respuesta obligatoria" */
-.fe-switch {
-  position: relative;
+/* ── Progreso (formulario del adoptante) ──────────── */
+.formulario-steps {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #6d625d;
-  cursor: pointer;
+  gap: 6px;
+  padding: 16px 16px 0;
 }
 
-.fe-switch input[type='checkbox'] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  min-width: 0;
-  border: none;
-  background: none;
-}
-
-.fe-switch input[type='checkbox']:checked::after {
-  content: none;
-}
-
-.fe-switch-pista {
-  position: relative;
-  width: 40px;
-  height: 24px;
-  flex-shrink: 0;
-  background: #e3d8c6;
+.formulario-step {
+  flex: 1;
+  height: 6px;
+  background: #E6DAC6;
   border-radius: 999px;
   transition: background 0.2s ease;
 }
 
-.fe-switch-pista::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
+.formulario-step.activo {
+  background: #b8956a;
+}
+
+/* ── Tarjeta principal ────────────────────────────── */
+.formulario-card {
+  margin: 16px;
+  padding: 20px 16px 18px;
   background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+  border: 1px solid #EDE6DA;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(92, 74, 58, 0.07);
 }
 
-.fe-switch input[type='checkbox']:checked + .fe-switch-pista {
-  background: #9ca788;
-}
-
-.fe-switch input[type='checkbox']:checked + .fe-switch-pista::after {
-  transform: translateX(16px);
-}
-
-.fe-switch input[type='checkbox']:focus-visible + .fe-switch-pista {
-  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.3);
-}
-
-/* Barra de acciones fija abajo */
-.fe-barra-acciones {
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-  display: flex;
-  gap: 10px;
-  margin: 8px -16px 0;
-  padding: 12px 16px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
-  background: rgba(255, 255, 255, 0.96);
-  border-top: 1px solid #f1e8da;
-  box-shadow: 0 -4px 16px rgba(92, 74, 58, 0.08);
-}
-
-.fe-btn {
-  flex: 1;
-  padding: 13px 16px;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 0.92rem;
+.formulario-card h2 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
   font-weight: 800;
+  color: #463b35;
+  line-height: 1.2;
+}
+
+.formulario-card > div > div > p,
+.formulario-card > p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #7A6A5D;
+  line-height: 1.5;
+}
+
+/* ── Resumen de respuestas (vista del refugio) ────── */
+.formulario-seccion-resumen {
+  margin-top: 22px;
+}
+
+.formulario-seccion-resumen h3 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.solicitud-resumen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.solicitud-resumen-item {
+  padding: 12px 14px;
+  background: #F2EADD;
+  border-radius: 14px;
+}
+
+.solicitud-resumen-item strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7A6A5D;
+}
+
+.solicitud-resumen-item p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #463b35;
+  overflow-wrap: anywhere;
+}
+
+.solicitud-resumen-item img {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* ── Preguntas (formulario del adoptante) ─────────── */
+.formulario-pregunta {
+  margin-top: 18px;
+}
+
+.formulario-pregunta > label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.formulario-pregunta > p {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: #7A6A5D;
+  line-height: 1.4;
+}
+
+.formulario-input,
+.formulario-textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: #FDFBF7;
+  border: 1px solid #E6DAC6;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #463b35;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.formulario-input::placeholder,
+.formulario-textarea::placeholder {
+  color: #A39486;
+}
+
+.formulario-input:focus,
+.formulario-textarea:focus {
+  outline: none;
+  background: #fff;
+  border-color: #b8956a;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
+}
+
+.formulario-textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Opciones (radio) */
+.formulario-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formulario-opciones label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.7rem 0.9rem;
+  background: #FDFBF7;
+  border: 1px solid #E6DAC6;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #463b35;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.fe-btn:active {
-  transform: scale(0.98);
+.formulario-opciones input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  background: #fff;
+  border: 2px solid #CBB99C;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
 }
 
-.fe-btn--primario {
-  flex: 1.4;
+.formulario-opciones input[type="radio"]::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #b8956a;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.12s ease;
+}
+
+.formulario-opciones input[type="radio"]:checked {
+  border-color: #b8956a;
+}
+
+.formulario-opciones input[type="radio"]:checked::after {
+  transform: scale(1);
+}
+
+/* ── Botones ──────────────────────────────────────── */
+.btn-formulario {
+  padding: 0.8rem 1.25rem;
   background: #b8956a;
   color: #fff;
   border: none;
-  box-shadow: 0 4px 12px rgba(92, 74, 58, 0.18);
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(184, 149, 106, 0.35);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
-.fe-btn--primario:disabled {
+.btn-formulario:active {
+  transform: scale(0.97);
+}
+
+.btn-formulario:disabled {
   opacity: 0.6;
   cursor: default;
 }
 
-.fe-btn--secundario {
+/* Botón secundario: pill blanca con borde */
+.btn-formulario.ghost {
   background: #fff;
   color: #463b35;
-  border: 1px solid #cbb99c;
+  border: 1px solid #CBB99C;
+  box-shadow: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .fe-pagina * {
-    transition: none !important;
+.formulario-topbar .btn-formulario.ghost {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.formulario-topbar .btn-formulario.ghost strong {
+  font-weight: 800;
+}
+
+.formulario-bloque-acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #EDE6DA;
+}
+
+.formulario-bloque-acciones .btn-formulario {
+  flex: 1;
+}
+
+/* ── Overlay "Cambiar estado" (refugio) ───────────── */
+.filtro-overlay {
+  padding: 16px;
+  backdrop-filter: blur(2px);
+}
+
+/* El JSX trae estilos inline, por eso !important */
+.filtro-panel {
+  border-radius: 22px !important;
+  padding: 20px !important;
+  box-shadow: 0 12px 32px rgba(92, 74, 58, 0.22) !important;
+}
+
+.filtro-panel h3 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.filtro-panel > p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #7A6A5D;
+  line-height: 1.4;
+}
+
+.filtro-panel .btn-formulario {
+  width: 100%;
+  padding: 0.8rem 1rem;
+}
+
+/* Opciones de estado: neutras en reposo (blancas, borde suave).
+   El color aparece solo al tocarlas; un puntito indica a qué estado corresponde. */
+.filtro-panel .btn-formulario.ghost {
+  position: relative;
+  background: #fff;
+  color: #463b35;
+  border: 1px solid #E6DAC6;
+  box-shadow: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.filtro-panel #aprobada::before,
+.filtro-panel #revision::before,
+.filtro-panel #rechazada::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+}
+
+.filtro-panel #aprobada::before  { background: #9CA788; }
+.filtro-panel #revision::before  { background: #B8956A; }
+.filtro-panel #rechazada::before { background: #D9826B; }
+
+/* Coordinar entrevista → verde salvia suave */
+.filtro-panel #aprobada:active,
+.filtro-panel #aprobada:focus-visible {
+  background: #EEF5EB;
+  border-color: #9CA788;
+  color: #5F8252;
+  outline: none;
+}
+
+/* En revisión → beige */
+.filtro-panel #revision:active,
+.filtro-panel #revision:focus-visible {
+  background: #EDE6DA;
+  border-color: #B8956A;
+  color: #7A5C3A;
+  outline: none;
+}
+
+/* Rechazar → terracota suave */
+.filtro-panel #rechazada:active,
+.filtro-panel #rechazada:focus-visible {
+  background: #F8E3DD;
+  border-color: #D9826B;
+  color: #B5523B;
+  outline: none;
+}
+
+/* Hover solo en dispositivos con mouse (en el celular quedaría "pegado") */
+@media (hover: hover) {
+  .filtro-panel #aprobada:hover:not(:disabled) {
+    background: #EEF5EB;
+    border-color: #9CA788;
+    color: #5F8252;
+  }
+
+  .filtro-panel #revision:hover:not(:disabled) {
+    background: #EDE6DA;
+    border-color: #B8956A;
+    color: #7A5C3A;
+  }
+
+  .filtro-panel #rechazada:hover:not(:disabled) {
+    background: #F8E3DD;
+    border-color: #D9826B;
+    color: #B5523B;
+  }
+}
+
+/* Cancelar: acción de salida, no una opción más → enlace de texto centrado */
+.filtro-panel > div > .btn-formulario.ghost:last-child {
+  width: auto;
+  align-self: center;
+  margin-top: 2px;
+  padding: 0.5rem 1.25rem;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: #7A6A5D;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: #CBB99C;
+  text-underline-offset: 4px;
+}
+
+.filtro-panel > div > .btn-formulario.ghost:last-child:active,
+.filtro-panel > div > .btn-formulario.ghost:last-child:focus-visible {
+  background: none;
+  color: #463b35;
+  outline: none;
+}
+
+@media (hover: hover) {
+  .filtro-panel > div > .btn-formulario.ghost:last-child:hover {
+    background: none;
+    color: #463b35;
   }
 }

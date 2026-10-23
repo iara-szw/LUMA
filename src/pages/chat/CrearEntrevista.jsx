@@ -5,6 +5,7 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import { enviarMensaje, obtenerConversacionPorId } from '../../repositories/chatRepository'
 import { obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
 import { crearEntrevista } from '../../repositories/entrevistaRepository'
+import '../../styles/crearEntrevista.css'
 
 export default function CrearEntrevista() {
   const { id } = useParams()
@@ -93,13 +94,6 @@ export default function CrearEntrevista() {
       if (errorEntrevista) throw errorEntrevista
 
       const mascotaSeleccionada = mascotas.find(m => String(m.id) === String(mascotaId))
-      const fechaFormateada = new Date(fecha).toLocaleString('es-AR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
 
       const msj = '__ENTREVISTA__' + JSON.stringify({
         id: entrevista?.id,
@@ -125,82 +119,75 @@ export default function CrearEntrevista() {
   if (cargando) return <Loader />
 
   return (
-    <div className="pagina-formulario-adopcion" style={{ paddingBottom: 32 }}>
-      <div className="formulario-shell">
-        <header className="formulario-topbar">
-          <button className="btn-formulario-volver" type="button" onClick={() => navigate(-1)}>← Volver</button>
-        </header>
-
-        <section className="formulario-card" style={{ maxWidth: 720, margin: '20px auto' }}>
+    <div className="pagina-crear-entrevista">
+      <header className="entrevista-header">
+        <button className="entrevista-volver" type="button" onClick={() => navigate(-1)} aria-label="Volver">
+          ←
+        </button>
+        <div>
           <h2>Programar entrevista</h2>
-          <p style={{ color: '#5d5d58', marginTop: 4 }}>
-            Proponé una entrevista para esta conversación con el adoptante.
-          </p>
+          <p>Proponé una entrevista para esta conversación con el adoptante.</p>
+        </div>
+      </header>
 
-          {error && (
-            <div style={{ marginTop: 12, padding: 10, borderRadius: 10, background: '#fdf2f2', color: '#8a2e2e' }}>
-              {error}
-            </div>
-          )}
+      <form className="entrevista-form" onSubmit={handleSubmit}>
+        {error && <div className="entrevista-error">{error}</div>}
 
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16, marginTop: 18 }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Mascota</label>
-              <select value={mascotaId} onChange={(e) => setMascotaId(e.target.value)} style={{ width: '100%', padding: 10, borderRadius: 10, border: '1px solid #d5d2cc' }}>
-                <option value="">Seleccioná una mascota</option>
-                {mascotas.map((m) => (
-                  <option key={m.id} value={m.id}>{m.nombre}</option>
-                ))}
-              </select>
-            </div>
+        <div className="entrevista-campo">
+          <label htmlFor="ent-mascota">Mascota</label>
+          <select id="ent-mascota" value={mascotaId} onChange={(e) => setMascotaId(e.target.value)}>
+            <option value="">Seleccioná una mascota</option>
+            {mascotas.map((m) => (
+              <option key={m.id} value={m.id}>{m.nombre}</option>
+            ))}
+          </select>
+        </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Fecha y hora</label>
-              <input
-                type="datetime-local"
-                value={fecha}
-                onChange={(e) => setFecha(e.target.value)}
-                style={{ width: '100%', padding: 10, borderRadius: 10, border: '1px solid #d5d2cc' }}
-              />
-            </div>
+        <div className="entrevista-campo">
+          <label htmlFor="ent-fecha">Fecha y hora</label>
+          <input
+            id="ent-fecha"
+            type="datetime-local"
+            value={fecha}
+            onChange={(e) => setFecha(e.target.value)}
+          />
+        </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Modalidad</label>
-              <select value={modalidad} onChange={(e) => setModalidad(e.target.value)} style={{ width: '100%', padding: 10, borderRadius: 10, border: '1px solid #d5d2cc' }}>
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
-                <option value="En refugio">En refugio</option>
-              </select>
-            </div>
+        <div className="entrevista-campo">
+          <label htmlFor="ent-modalidad">Modalidad</label>
+          <select id="ent-modalidad" value={modalidad} onChange={(e) => setModalidad(e.target.value)}>
+            <option value="Presencial">Presencial</option>
+            <option value="Virtual">Virtual</option>
+            <option value="En refugio">En refugio</option>
+          </select>
+        </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Lugar</label>
-              <input
-                type="text"
-                value={lugar}
-                onChange={(e) => setLugar(e.target.value)}
-                placeholder="Dirección o enlace"
-                style={{ width: '100%', padding: 10, borderRadius: 10, border: '1px solid #d5d2cc' }}
-              />
-            </div>
+        <div className="entrevista-campo">
+          <label htmlFor="ent-lugar">Lugar</label>
+          <input
+            id="ent-lugar"
+            type="text"
+            value={lugar}
+            onChange={(e) => setLugar(e.target.value)}
+            placeholder="Dirección o enlace"
+          />
+        </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Notas / información adicional</label>
-              <textarea
-                value={notas}
-                onChange={(e) => setNotas(e.target.value)}
-                rows={4}
-                placeholder="Ej: traer documentación, horario, etc."
-                style={{ width: '100%', padding: 10, borderRadius: 10, border: '1px solid #d5d2cc', resize: 'vertical' }}
-              />
-            </div>
+        <div className="entrevista-campo">
+          <label htmlFor="ent-notas">Notas / información adicional</label>
+          <textarea
+            id="ent-notas"
+            value={notas}
+            onChange={(e) => setNotas(e.target.value)}
+            rows={4}
+            placeholder="Ej: traer documentación, horario, etc."
+          />
+        </div>
 
-            <button type="submit" className="btn-formulario" disabled={guardando}>
-              {guardando ? 'Enviando...' : 'Enviar propuesta de entrevista'}
-            </button>
-          </form>
-        </section>
-      </div>
+        <button type="submit" className="entrevista-enviar" disabled={guardando}>
+          {guardando ? 'Enviando...' : 'Enviar propuesta de entrevista'}
+        </button>
+      </form>
     </div>
   )
 }

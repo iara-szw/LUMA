@@ -15,7 +15,7 @@ const CENTRO_DEFAULT = [-34.6037, -58.3816]
 // Pin propio con la paleta LUMA (evita el problema de íconos rotos de Leaflet con Vite/webpack)
 const iconoRefugio = L.divIcon({
     className: 'mapa-pin',
-    html: '<span>🐾</span>',
+    html: '<span><img src="/assets/img/refugio_mapa.png" alt="refugio" /></span>',
     iconSize: [40, 40],
     iconAnchor: [20, 20],
     popupAnchor: [0, -22],

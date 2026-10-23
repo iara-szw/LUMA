@@ -1,28 +1,30 @@
 /* ===========================
-   Perfil Refugio – perfilRefugio.css
+   Perfil Refugio – perfilRefugio.css (estilo LUMA)
    =========================== */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
-  :root {
+
+:root {
   --font: 'Nunito', sans-serif;
-  }
+}
+
 * {
-    font-family: var(--font);
+  font-family: var(--font);
 }
 
 .pagina-perfil-refugio {
-  min-height: 100vh;
-  background-color: #fafafa;
-  font-family: 'Segoe UI', sans-serif;
-  color: #2c2c2a;
-  padding-bottom: 80px;
-  max-width: 430px;
-  width: 100%;
-  margin: 0 auto;
-  overflow-x: hidden;
   position: relative;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding-bottom: 96px;
+  background-color: #faf8f5;
+  color: #463b35;
+  overflow-x: hidden;
 }
 
-/* ── Header flotante ── */
+/* ── Header flotante sobre la portada ── */
 .perfil-refugio-header {
   position: absolute;
   top: 0;
@@ -33,37 +35,37 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
+  padding-top: max(14px, env(safe-area-inset-top));
 }
 
-.perfil-refugio-header button {
-  background: rgba(255, 255, 255, 0.85);
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 16px;
-  cursor: pointer;
+.perfil-refugio-header button,
+.perfil-refugio-header-iconos button {
+  position: relative;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2c2c2a;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.2);
+  font-size: 17px;
+  color: #463b35;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.perfil-refugio-header button:active,
+.perfil-refugio-header-iconos button:active {
+  transform: scale(0.92);
 }
 
 .perfil-refugio-header-iconos {
   display: flex;
   gap: 8px;
-}
-
-.perfil-refugio-header-iconos button {
-  background: rgba(255, 255, 255, 0.85);
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .perfil-refugio-header-iconos button img {
@@ -72,37 +74,45 @@
   object-fit: contain;
 }
 
-/* ── Foto portada ── */
+/* ── Portada ── */
 .perfil-refugio-portada {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 230px;
   overflow: hidden;
-  margin-bottom:3%;
+  background: #ede6da;
 }
 
 .perfil-refugio-portada img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-/* ── Avatar / logo del refugio, superpuesto sobre el borde de la portada ── */
+.perfil-refugio-portada::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Avatar / logo (si lo volvés a usar en el JSX) */
 .perfil-refugio-avatar {
-    position: absolute;
-    bottom: 0px;
-    left: 16px;
-    width: 20%;
-    height: 35%;
-    border-radius: 50%;
-    background: #fff;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  z-index: 5;
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 .perfil-refugio-avatar img {
@@ -115,72 +125,82 @@
   font-size: 26px;
 }
 
-/* ── Info principal ── */
+/* ── Info principal: tarjeta que sube sobre la portada ── */
 .perfil-refugio-info {
-  background: #FAFAFA;
-  padding: 30px 16px 16px;
-  border-top:1px solid #e8e4dc;
   position: relative;
-  margin-top: -20px;
-  z-index: 0;
-  width: 100%;
-  margin-top: -8%;
-    border-radius: 35px 35px 0px 0px;
-
+  z-index: 1;
+  margin-top: -28px;
+  padding: 24px 20px 6px;
+  background: #faf8f5;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -4px 24px rgba(92, 74, 58, 0.1);
 }
 
 .perfil-refugio-info h2 {
-  font-size: 22px;
+  margin: 0 0 6px;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #3d2e1e;
-  margin: 1% 5% 6px;
+  line-height: 1.2;
+  color: #463b35;
+  overflow-wrap: anywhere;
 }
 
 .perfil-refugio-ubicacion {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: #6b6b68;
+  gap: 6px;
   margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a6b63;
 }
 
 .perfil-refugio-ubicacion img {
   width: 14px;
   height: 14px;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
-/* ── Secciones genéricas ── */
+/* ── Secciones: tarjetas blancas ── */
 .seccion-refugio {
-  background:var(--crema);
-  margin: 5% 7%;
-  border-radius: 16px;
+  margin: 14px 16px;
   padding: 16px;
-  border: 0px solid #e8e4dc;
-
+  background: #fff;
+  border: 1px solid #f1e8da;
+  border-radius: 22px;
+  box-shadow: 0 4px 14px rgba(92, 74, 58, 0.08);
 }
 
-.seccion-refugio .scroll-horizontal{
-  background-color: transparent;
-  margin:0%;
+.seccion-refugio-titulo {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #463b35;
 }
+
 .perfil-lista-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
+
 .perfil-lista-header .seccion-refugio-titulo {
-  
-  margin-left: -5%;
-}
-.seccion-refugio-titulo {
-  font-size: 15px;
-  font-weight: 600;
-  color: #2c2c2a;
   margin: 0;
+}
+
+.exp-ver-mas {
+  padding: 6px 12px;
+  background: #ede6da;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  color: #7a5c3a;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ── Resumen general ── */
@@ -192,19 +212,19 @@
 }
 
 .resumen-header h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: #2c2c2a;
   margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #463b35;
 }
 
 .resumen-periodo {
+  padding: 4px 12px;
+  background: #ede6da;
+  border-radius: 999px;
   font-size: 12px;
-  color: #6b6b68;
-  background: #f5f3ee;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid #e0ddd5;
+  font-weight: 700;
+  color: #7a5c3a;
 }
 
 .resumen-grid {
@@ -214,94 +234,124 @@
 }
 
 .resumen-stat {
-  background: #f9f8f5;
-  border: 0px solid #e8e4dc;
-  border-radius: 20px;
-  padding: 14px 12px;
-}
-
-.resumen-stat-label {
-  font-size: 12px;
-  color: #8a8a86;
-  margin: 0 0 6px;
+  padding: 14px 14px 12px;
+  background: #f2eadd;
+  border-radius: 16px;
 }
 
 .resumen-stat-valor {
-  font-size: 26px;
-  font-weight: 700;
-  color: #2c2c2a;
   margin: 0;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #463b35;
+}
+
+.resumen-stat-label {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a6b63;
 }
 
 /* ── Sobre nosotros ── */
 .sobre-nosotros-texto {
-  font-size: 14px;
-  color: #4a4a47;
-  line-height: 1.6;
   margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6d625d;
 }
 
-/* ── Mascotas en adopción ── */
-.scroll-horizontal-refugio {
+/* ── Carrusel "Mascotas en adopción" ──
+   Pisa los estilos globales de home.css (.scroll-horizontal / .tarjeta-mascota)
+   solo dentro de esta pantalla. */
+.pagina-perfil-refugio .seccion-refugio .scroll-horizontal {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  margin: 0 -16px;            /* el carrusel llega hasta los bordes de la tarjeta */
+  padding: 4px 16px 8px;      /* y la 1ª tarjeta queda alineada con el título */
+  background: transparent;
   overflow-x: auto;
-  padding-bottom: 4px;
+  overflow-y: hidden;
+  scroll-snap-type: none;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
-.scroll-horizontal-refugio::-webkit-scrollbar {
+.pagina-perfil-refugio .seccion-refugio .scroll-horizontal::-webkit-scrollbar {
   display: none;
 }
 
-.tarjeta-mascota-refugio {
-  flex: 0 0 100px;
-  background: #f9f8f5;
-  border: 1px solid #e8e4dc;
-  border-radius: 12px;
+.pagina-perfil-refugio .seccion-refugio .tarjeta-mascota {
+  position: relative;
+  flex: 0 0 136px;
+  width: 136px;
+  margin: 0;
+  padding: 0 0 12px;
+  background: #fff;
+  border: 1px solid #efe3d1;
+  border-radius: 18px;
+  box-shadow: 0 3px 10px rgba(92, 74, 58, 0.1);
   overflow: hidden;
   cursor: pointer;
+  scroll-snap-align: none;
+  -webkit-tap-highlight-color: transparent;
   transition: transform 0.15s ease;
-  padding: 0%;
 }
 
-.tarjeta-mascota-refugio:active {
+.pagina-perfil-refugio .seccion-refugio .tarjeta-mascota:active {
   transform: scale(0.97);
 }
 
-.tarjeta-mascota-refugio img {
-  width: 100px;
-  height: 100px;
+.pagina-perfil-refugio .seccion-refugio .tarjeta-mascota > img,
+.pagina-perfil-refugio .seccion-refugio .tarjeta-tarjeta-placeholder {
+  display: block;
+  width: 100%;
+  height: 120px;
   object-fit: cover;
+  border-radius: 0;
+  background: #ede6da;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
-.tarjeta-mascota-refugio-info {
-  padding: 6px 8px 8px;
+.pagina-perfil-refugio .seccion-refugio .tarjeta-mascota h4 {
+  margin: 9px 12px 2px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #463b35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.tarjeta-mascota-refugio-info h4 {
-  font-size: 13px;
+.pagina-perfil-refugio .seccion-refugio .tarjeta-mascota span:not(.badge-urgente) {
+  display: block;
+  margin: 0 12px;
+  font-size: 12px;
   font-weight: 600;
-  color: #2c2c2a;
-  margin: 0 0 2px;
+  color: #7a6b63;
 }
 
-.tarjeta-mascota-refugio-info p {
-  font-size: 11px;
-  color: #8a8a86;
+/* Urgente: píldora roja en la esquina superior izquierda de la foto */
+.pagina-perfil-refugio .seccion-refugio .tarjeta-mascota .badge-urgente {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
   margin: 0;
-}
-
-.badge-urgente-refugio {
-  display: inline-block;
-  font-size: 10px;
-  background: #fdecea;
-  color: #c0392b;
-  border-radius: 6px;
-  padding: 2px 6px;
-  margin-top: 3px;
-  font-weight: 600;
+  padding: 4px 9px;
+  background: #d9826b;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  font-size: 0.62rem !important;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff !important;
 }
 
 /* ── Solicitudes recientes ── */
@@ -315,132 +365,163 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f9f8f5;
-  border: 1px solid #e8e4dc;
-  border-radius: 12px;
-  padding: 12px;
+  padding: 10px 12px;
+  background: #faf6ee;
+  border: 1px solid #efe3d1;
+  border-radius: 16px;
   cursor: pointer;
-  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .tarjeta-solicitud:active {
-  background: #f0ece3;
+  background: #f2eadd;
+  transform: scale(0.985);
 }
 
 .tarjeta-solicitud img {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
+  border: 2px solid #ede6da;
 }
 
 .solicitud-info {
   flex: 1;
+  min-width: 0;
 }
-article{
-  padding: 0%;
-}
+
 .solicitud-info h4 {
-  font-size: 14px;
-  font-weight: 600;
-  color: #2c2c2a;
   margin: 0 0 2px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #463b35;
 }
 
 .solicitud-info p {
-  font-size: 12px;
-  color: #8a8a86;
   margin: 0;
+  font-size: 12px;
+  color: #7a6b63;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* ── Badges de estado ── */
+article {
+  padding: 0%;
+}
+
+/* ── Chips de estado (cubren las mayúsculas/minúsculas que guardás) ── */
 .badge-estado {
-font-size: 11px;
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 20px;
-    white-space: nowrap;
+  flex-shrink: 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
 }
 
-.badge-Revision {
-  background: #fef9ec;
-  color: #a07000;
+.badge-estado.badge-revision,
+.badge-estado.badge-Revision,
+.badge-estado.badge-en_revision {
+  background: #ede6da;
+  color: #7a5c3a;
 }
 
-.badge-Aprobada {
-  background: var(--verde);
-  color: var(--crema);
+.badge-estado.badge-aprobada,
+.badge-estado.badge-Aprobada {
+  background: #dce7d2;
+  color: #4f7243;
 }
 
-.badge-Rechazada {
-  background: var(--rojo);
-  color: var(--crema);
+.badge-estado.badge-rechazada,
+.badge-estado.badge-Rechazada {
+  background: #f8e3dd;
+  color: #b5523b;
 }
 
-/* ── Botón editar perfil ── */
+.badge-estado.badge-pendiente,
+.badge-estado.badge-Pendiente {
+  background: #f3eee6;
+  color: #7a6b63;
+}
+
+/* ── Botones ── */
 .btn-editar-perfil {
   display: block;
-  width: calc(100% - 24px);
-  margin: 10px 12px;
-  background: #9CA788;
+  width: calc(100% - 32px);
+  margin: 18px 16px 10px;
+  padding: 14px;
+  background: #b8956a;
   color: #fff;
   border: none;
-  padding: 15px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(184, 149, 106, 0.35);
+  font-family: inherit;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
-  letter-spacing: 0.2px;
-  transition: background 0.2s;
-  border-radius: 30px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
 
 .btn-editar-perfil:hover {
-  background: #6a8e5f;
+  background: #a5814f;
 }
 
-/* ── Botón cerrar sesión ── */
+.btn-editar-perfil:active {
+  transform: scale(0.98);
+}
+
 .btn-cerrar-sesion-refugio {
   display: block;
-  width: calc(100% - 24px);
-  margin: 6px 12px 16px;
-  background: transparent;
-  color: var(--texto);
-  border: 1.5px solid var(--texto-suave);
-  border-radius: 30px;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
   padding: 13px;
+  background: #fff;
+  color: #463b35;
+  border: 1px solid #cbb99c;
+  border-radius: 999px;
+  font-family: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
-  transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.btn-cerrar-sesion-refugio:hover {
-  background: #fdecea;
+.btn-cerrar-sesion-refugio:hover,
+.btn-cerrar-sesion-refugio:active {
+  background: #f8e3dd;
+  border-color: #d9826b;
+  color: #b5523b;
 }
 
 /* ── Vacío ── */
 .vacio-refugio {
-  font-size: 13px;
-  color: #a0a09c;
-  text-align: center;
-  padding: 12px 0;
   margin: 0;
+  padding: 12px 0;
+  font-size: 13px;
+  color: #a8998d;
+  text-align: center;
 }
 
-/* ── Bottom nav ── */
+/* ── Bottom nav (compartida) ── */
 .bottom-nav-refugio {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
   height: 64px;
-  background: #fff;
-  border-top: 1px solid #e8e4dc;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  z-index: 100;
+  background: #fff;
+  border-top: 1px solid #e8e4dc;
 }
 
 .nav-item-refugio {
@@ -448,11 +529,11 @@ font-size: 11px;
   flex-direction: column;
   align-items: center;
   gap: 3px;
+  padding: 6px 12px;
   background: none;
   border: none;
-  cursor: pointer;
-  padding: 6px 12px;
   color: #a0a09c;
+  cursor: pointer;
   transition: color 0.15s;
 }
 
@@ -474,8 +555,4 @@ font-size: 11px;
 .nav-item-refugio.activo img {
   opacity: 1;
   filter: invert(50%) sepia(30%) saturate(500%) hue-rotate(60deg);
-}
-
-.tarjeta-mascota-refugio{
-  padding: 0% !important;
 }

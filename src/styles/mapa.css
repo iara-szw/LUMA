@@ -83,6 +83,11 @@
   font-size: 18px;
   box-shadow: 0 4px 10px rgba(92, 74, 58, 0.3);
 }
+span img{
+  width: 90% !important;
+  margin-top: -5%;
+}
+
 .leaflet-marker-icon.mapa-pin {
   background: none !important;
   border: none !important;
