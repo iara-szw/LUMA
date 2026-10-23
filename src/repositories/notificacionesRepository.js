@@ -14,9 +14,15 @@ export const obtenerNotisPorUsur = (usuarioId) =>
     .eq('usuario_id', usuarioId)
     .order('fecha', { ascending: false })
 
-    export const marcarNotiLeida = (id) =>
-        
-    Supabase.from('notificaciones').update({ leida: true }).eq('id', id)
+export const marcarNotiLeida = (id) =>
+  Supabase.from('notificaciones').update({ leida: true }).eq('id', id)
+
+export const marcarTodasComoLeidas = (usuarioId) =>
+  Supabase
+    .from('notificaciones')
+    .update({ leida: true })
+    .eq('usuario_id', usuarioId)
+    .eq('leida', false)
 
 export async function obtenerCantidadNoLeidas(usuarioId) {
   // usa el count exacto de supabase cuando está disponible
@@ -29,23 +35,31 @@ export async function obtenerCantidadNoLeidas(usuarioId) {
   return query
 }
 
-export async function crearNotificacion({ usuarioId, titulo, mensaje, leida = false }) {
-  if (!usuarioId) return { data: null, error: { message: 'usuarioId faltante' } }
-  try {
-    const res = await Supabase
-      .from('notificaciones')
-      .insert({ usuario_id: usuarioId, titulo, mensaje, leida })
-      .select()
-      .maybeSingle()
+export async function crearNotificacion({
+  usuarioId,
+  titulo,
+  mensaje,
+  leida = false
+}) {
+  const { data: { user }, error: authError } = await Supabase.auth.getUser()
 
-    if (res.error) {
-      console.error('crearNotificacion error:', res.error)
-      return res
-    }
-
-    return res
-  } catch (err) {
-    console.error('crearNotificacion exception:', err)
-    return { data: null, error: err }
+  if (authError || !user?.id) {
+    return { data: null, error: { message: 'No hay sesión activa' } }
   }
-}   
+
+  const payload = {
+    usuario_id: usuarioId,
+    emisor_id: user.id,
+    titulo,
+    mensaje,
+    leida
+  }
+
+  const { error } = await Supabase
+    .from('notificaciones')
+    .insert(payload)
+
+  if (error) return { data: null, error }
+
+  return { data: { ok: true }, error: null }
+}

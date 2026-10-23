@@ -7,7 +7,7 @@ import Bandeja from '../../../cliente/public/assets/img/bandeja-entrada.png'
 import Animal from '../../../cliente/public/assets/img/animal.png'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
-import { obtenerRefugio,obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
+import { obtenerRefugio, obtenerSolicitudesDeRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/dashboard.css'
 
 export default function Dashboard() {
@@ -16,38 +16,41 @@ export default function Dashboard() {
 
   const [mascotas, setMascotas] = useState([])
   const [eventos, setEventos] = useState([])
-    const [forms, setforms] = useState([])
+  const [solicitudes, setSolicitudes] = useState([])
 
   const [cargandoMascotas, setCargandoMascotas] = useState(true)
-  const [cargandoFormularios, setCargandoFormularios] = useState(true)
+  const [cargandoSolicitudes, setCargandoSolicitudes] = useState(true)
   const [cargandoEventos, setCargandoEventos] = useState(true)
   const [refugio, setRefugio] = useState(null)
 
   const publicadas = mascotas.length
   const urgentes = mascotas.filter(m => m.urgente).length
-  const formularios = forms.length
+  const solicitudesEntrantes = solicitudes.filter(s => {
+    const estado = String(s.estado || '').toLowerCase()
+    return estado === 'revision' || estado === 'en_revision' || estado === 'pendiente'
+  }).length
 
   useEffect(() => {
     let activo = true
 
     const obtenerDatos = async () => {
       try {
-        const [refugioRes, mascotasRes, eventosRes,formsRes] = await Promise.all([
+        const [refugioRes, mascotasRes, eventosRes, solicitudesRes] = await Promise.all([
           obtenerRefugio(usuario?.id),
           obtenerMascotasRefugio(usuario?.id),
           obtenerEventosProximos(),
-          obtenerMascotasDeRefugio(usuario?.id)
+          obtenerSolicitudesDeRefugio(usuario?.id)
         ])
         if (!activo) return
         setRefugio(refugioRes?.data || null)
         setMascotas(mascotasRes?.data || [])
         setEventos(eventosRes?.data || [])
-        setforms(formsRes?.data || [])
+        setSolicitudes(solicitudesRes?.data || [])
       } finally {
         if (activo) {
           setCargandoMascotas(false)
           setCargandoEventos(false)
-          setCargandoFormularios(false)
+          setCargandoSolicitudes(false)
         }
       }
     }
@@ -76,9 +79,9 @@ export default function Dashboard() {
           <img src="/assets/img/logo.png" alt="LUMA" />
         </Link>
         <div className="dash-header-iconos">
-         <button className="dash-icono-campana" aria-label="Mensajes" onClick={() => navigate('/refugio/notificaciones')}>
-  <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
-</button>
+          <button className="dash-icono-campana" aria-label="Mensajes" onClick={() => navigate('/refugio/notificaciones')}>
+            <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
+          </button>
           <img
             className="dash-avatar"
             src={refugio?.logo_url || '/assets/img/perfil_default.jpg'}
@@ -93,8 +96,7 @@ export default function Dashboard() {
 
       {/* Buscador */}
       <div className="dash-buscador">
-        <Buscador ></Buscador>
-
+        <Buscador />
       </div>
 
       {/* Dashboard stats */}
@@ -117,8 +119,8 @@ export default function Dashboard() {
               <span className="dash-stat-valor">{cargandoMascotas ? '–' : publicadas}</span>
             </div>
             <div className="dash-stat-item">
-              <span className="dash-stat-label">Solicitudes nuevas</span>
-              <span className="dash-stat-valor">{cargandoFormularios ? '-':formularios}</span>
+              <span className="dash-stat-label">Solicitudes entrantes</span>
+              <span className="dash-stat-valor">{cargandoSolicitudes ? '-' : solicitudesEntrantes}</span>
             </div>
             <div className="dash-stat-item">
               <span className="dash-stat-label">Eventos proximos</span>
@@ -135,7 +137,7 @@ export default function Dashboard() {
       {/* Acciones rápidas */}
       <div className="dash-acciones">
         <button className="dash-accion-btn" onClick={() => navigate('/refugio/solicitudes')}>
-          <span className="dash-accion-icono"><img src={Bandeja} alt="" style={{ filter: "invert(100%)" }} /></span>
+          <span className="dash-accion-icono"><img src={Bandeja} alt="" style={{ filter: 'invert(100%)' }} /></span>
           <span>Solicitudes</span>
         </button>
         <button className="dash-accion-btn dash-accion-btn--verde" onClick={() => navigate('/refugio/cargarMascota')}>
@@ -143,7 +145,7 @@ export default function Dashboard() {
           <span>Cargar</span>
         </button>
         <button className="dash-accion-btn" onClick={() => navigate('/refugio/misMascotas')}>
-          <span className="dash-accion-icono"><img src={Animal} alt="" style={{ filter: "invert(100%)" }} /></span>
+          <span className="dash-accion-icono"><img src={Animal} alt="" style={{ filter: 'invert(100%)' }} /></span>
           <span>Animales</span>
         </button>
       </div>
@@ -219,22 +221,6 @@ export default function Dashboard() {
             <p className="dash-vacio">No hay eventos próximos.</p>
           )}
         </div>
-
-        <button
-          type="button"
-          className="dash-btn-ver-todos"
-          onClick={() => navigate('/refugio/calendario')}
-        >
-          Ver todos
-        </button>
-
-        <button
-          type="button"
-          className="dash-btn-agregar-evento"
-          onClick={() => navigate('/refugio/eventos/crear')}
-        >
-          Agregar evento
-        </button>
       </section>
 
       <FooterRefugio />

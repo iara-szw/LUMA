@@ -5,7 +5,7 @@ import Loader from '../../components/Loader'
 import '../../styles/formularios.css'
 import { obtenerSolicitudFormularioPorId, obtenerFormularioMascota, guardarProgresoSolicitud } from '../../repositories/formularioRepository'
 import { obtenerOCrearConversacion } from '../../repositories/chatRepository'
-
+import { crearNotificacion } from '../../repositories/notificacionesRepository'
 export default function SolicitudFormulario() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -76,43 +76,59 @@ export default function SolicitudFormulario() {
     return Object.entries(solicitud.info || {}).filter(([key]) => !idsConSeccion.has(key))
   }, [solicitud, idsConSeccion])
 
-  const cambiarEstadoSolicitud = async (nuevoEstado) => {
-    if (!solicitud?.mascotas?.id || !solicitud?.usuarios?.id) return
-    setGuardandoEstado(true)
-    const { data, error } = await guardarProgresoSolicitud({
-      mascotaId: solicitud.mascotas.id,
-      adoptanteId: solicitud.usuarios.id,
-      info: solicitud.info || {},
-      estado: nuevoEstado,
-    })
-    SetEstado(nuevoEstado)
-    setGuardandoEstado(false)
+const cambiarEstadoSolicitud = async (nuevoEstado) => {
+  if (!solicitud?.mascotas?.id || !solicitud?.usuarios?.id) return
 
-    if (error) {
-      alert(error.message || 'Error al cambiar el estado de la solicitud')
+  setGuardandoEstado(true)
+
+  const { data, error } = await guardarProgresoSolicitud({
+    mascotaId: solicitud.mascotas.id,
+    adoptanteId: solicitud.usuarios.id,
+    info: solicitud.info || {},
+    estado: nuevoEstado,
+  })
+
+  setGuardandoEstado(false)
+
+  if (error) {
+    alert(error.message || 'Error al cambiar el estado de la solicitud')
+    return
+  }
+
+  setSolicitud(prev => ({ ...prev, estado: nuevoEstado }))
+
+  const mensajeEstado = {
+    Aprobada: 'aprobada',
+    Revision: 'en revisión',
+    Rechazada: 'rechazada'
+  }[nuevoEstado] || nuevoEstado
+
+const notif = await crearNotificacion({
+  usuarioId: solicitud.usuarios.id,
+  titulo: 'Actualización de tu solicitud',
+  mensaje: `Tu solicitud para ${solicitud.mascotas?.nombre || 'esta mascota'} esta ${mensajeEstado}.`
+})
+
+  if (notif?.error) {
+    console.error('No se pudo crear la notificación:', notif.error)
+  }
+
+  if (nuevoEstado === 'Aprobada') {
+    const { data: conversacion, error: errorConversacion } = await obtenerOCrearConversacion(
+      usuario.id,
+      solicitud.usuarios.id,
+      solicitud.mascotas.id,
+      solicitud.id
+    )
+
+    if (errorConversacion) {
+      console.error('Error creando/abriendo conversación:', errorConversacion)
       return
     }
 
-    setSolicitud(prev => ({ ...prev, estado: nuevoEstado }))
-
-    // Al aceptar la solicitud, se crea (o reabre) la conversación con el
-    // adoptante para coordinar la entrevista, y se navega directo al chat.
-    if (nuevoEstado === 'Aprobada') {
-      const { data: conversacion, error: errorConversacion } = await obtenerOCrearConversacion(
-        usuario.id,
-        solicitud.usuarios.id,
-        solicitud.mascotas.id,
-        solicitud.id
-      )
-
-      if (errorConversacion) {
-        console.error('Error creando/abriendo conversación:', errorConversacion)
-        return
-      }
-
-      if (conversacion) navigate(`/refugio/chats/${conversacion.id}`)
-    }
+    if (conversacion) navigate(`/refugio/chats/${conversacion.id}`)
   }
+}
 
   if (cargando) return <Loader />
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { usarAuth } from '../hooks/UsarAuth'
-import { obtenerNotisPorUsur, marcarNotiLeida } from '../repositories/notificacionesRepository'
+import { obtenerNotisPorUsur, marcarNotiLeida, marcarTodasComoLeidas } from '../repositories/notificacionesRepository'
 import '../styles/style.css'
 import Footer from '../components/Footer'
 
@@ -48,18 +48,33 @@ export default function Notificaciones() {
     const refugio = Array.isArray(e.refugios) ? e.refugios[0] : e.refugios
     return refugio?.nombre || [e.nombre, e.apellido].filter(Boolean).join(' ')
   }
-const abrirNoti = async (n) => {
-    const res = await marcarNotiLeida(n.id)
-  if (!n.conversacion_id) return
-  if (!n.leida) {
-    setNotis(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))
-    await marcarNotiLeida(n.id)
-    window.dispatchEvent(new Event('luma:noti-actualizada'))
+
+  const abrirNoti = async (n) => {
+    if (!n.conversacion_id) return
+
+    if (!n.leida) {
+      setNotis(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))
+      await marcarNotiLeida(n.id)
+      window.dispatchEvent(new Event('luma:noti-actualizada'))
+    }
+
+    navigate(isRefugio
+      ? `/refugio/chats/${n.conversacion_id}`
+      : `/adoptante/chats/${n.conversacion_id}`)
   }
-  navigate(isRefugio
-    ? `/refugio/chats/${n.conversacion_id}`
-    : `/adoptante/chats/${n.conversacion_id}`)
-}
+
+  const marcarTodasLeidas = async () => {
+    if (!usuario?.id) return
+
+    const { error } = await marcarTodasComoLeidas(usuario.id)
+    if (!error) {
+      setNotis(prev => prev.map(n => ({ ...n, leida: true })))
+      window.dispatchEvent(new Event('luma:noti-actualizada'))
+    } else {
+      console.error('Error al marcar notificaciones como leídas:', error)
+    }
+  }
+
   return (
     <div className="pagina-notificaciones">
       <header className="inicio-header">
@@ -78,8 +93,18 @@ const abrirNoti = async (n) => {
       </header>
 
       <main className="notis-seccion">
-        <div className="notis">
+        <div className="notis" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
           <h1>Notificaciones</h1>
+          {notis.some(n => !n.leida) && (
+            <button
+              className="btn-formulario ghost"
+              type="button"
+              onClick={marcarTodasLeidas}
+              style={{ padding: '8px 12px', fontSize: 14 }}
+            >
+              Marcar leídas
+            </button>
+          )}
         </div>
 
         <div className="noti-lista">
