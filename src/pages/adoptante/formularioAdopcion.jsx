@@ -5,7 +5,7 @@ import Loader from '../../components/Loader'
 import '../../styles/formularios.css'
 import { obtenerFormularioMascota, guardarProgresoSolicitud, obtenerSolicitudFormularioPorMascotaYAdoptante } from '../../repositories/formularioRepository'
 import { obtenerMascotaPorId } from '../../repositories/mascotaRepository'
-
+import { crearNotificacion } from '../../repositories/notificacionesRepository'
 const DEFAULT_BLOQUES = [
   { id: 'foto_hogar', titulo: 'Foto del hogar', tipo: 'photo', placeholder: 'Subí una foto del espacio donde viviría la mascota' },
   { id: 'tipo_vivienda', titulo: '¿Qué tipo de vivienda tenés?', tipo: 'textarea', placeholder: 'Contanos si es casa, departamento, jardín, etc.' },
@@ -100,6 +100,22 @@ function actualizarFotoArchivo(preguntaId, file) {
       if (res.error) {
         alert(res.error.message || 'No se pudo enviar la solicitud')
         return
+      }
+
+      const solicitudId = res?.data?.id
+      const usuarioDestino = mascota?.refugio_id || mascota?.refugios?.id || mascota?.refugios?.usuario_id || mascota?.refugios?.usuarioId
+
+      if (solicitudId && usuarioDestino) {
+        const notifRes = await crearNotificacion({
+          usuarioId: usuarioDestino,
+          titulo: 'Solicitud de adopción',
+          mensaje: `El adoptante ${usuario?.nombre || 'un usuario'} ha enviado una solicitud de adopción para ${mascota?.nombre || 'tu mascota'}.`,
+          link: `/refugio/solicitud/${solicitudId}/formulario`,
+        })
+
+        if (notifRes?.error) {
+          console.error('Error al crear notificación:', notifRes.error)
+        }
       }
 
       navigate('/adoptante/perfil')

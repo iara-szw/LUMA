@@ -159,3 +159,51 @@ export async function obtenerEntrevistasRefugio(refugioId) {
     .eq('refugio_id', refugioId)
     .order('fecha', { ascending: true })
 }
+
+export async function obtenerEntrevistaPorId(id) {
+  if (!id) return { data: null, error: { message: 'entrevista_id faltante' } }
+
+  return Supabase
+    .from('entrevistas')
+    .select(`
+      id,
+      fecha,
+      modalidad,
+      lugar,
+      duracion_minutos,
+      notas,
+      resultado,
+      estado_confirmacion,
+      solicitud_id,
+      adoptante_id,
+      refugio_id,
+      refugios:refugio_id (
+        id,
+        nombre,
+        logo_url
+      ),
+      usuarios:adoptante_id (
+        id,
+        nombre,
+        apellido,
+        foto_url
+      ),
+      solicitudes!inner (
+        id,
+        adoptante_id,
+        mascota_id,
+        mascotas!inner (
+          id,
+          nombre,
+          foto_url,
+          refugios!inner (
+            id,
+            nombre,
+            logo_url
+          )
+        )
+      )
+    `)
+    .eq('id', id)
+    .maybeSingle()
+}

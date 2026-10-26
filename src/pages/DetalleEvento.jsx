@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { usarAuth } from '../hooks/UsarAuth'
 import { obtenerEventoPorId } from '../repositories/eventoRepository'
+import { registrarRecordatorio, quitarRecordatorio, estaRecordado } from '../services/recordatorios'
 import Footer from '../components/Footer'
 import '../styles/detalleEvento.css'
 
 export default function DetalleEvento() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { usuario } = usarAuth()
 
   const [evento, setEvento] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
+  const [recordarme, setRecordarme] = useState(false)
 
   useEffect(() => {
     let activo = true
@@ -26,6 +30,31 @@ export default function DetalleEvento() {
     if (id) obtenerDatos()
     return () => { activo = false }
   }, [id])
+
+  useEffect(() => {
+    if (!usuario?.id || !evento?.id) return
+    setRecordarme(estaRecordado({ usuarioId: usuario.id, tipo: 'evento', itemId: evento.id }))
+  }, [usuario, evento])
+
+  const handleRecordarme = () => {
+    if (!usuario?.id || !evento?.id || !evento?.fecha_evento) return
+
+    if (recordarme) {
+      quitarRecordatorio({ usuarioId: usuario.id, tipo: 'evento', itemId: evento.id })
+      setRecordarme(false)
+      return
+    }
+
+    registrarRecordatorio({
+      usuarioId: usuario.id,
+      tipo: 'evento',
+      itemId: evento.id,
+      titulo: evento.titulo,
+      fecha: new Date(new Date(evento.fecha_evento).getTime() - 24 * 60 * 60 * 1000).toISOString(),
+      link: `/eventos/${evento.id}`,
+    })
+    setRecordarme(true)
+  }
 
   if (cargando) {
     return <p className="det-evento-vacio">Cargando evento...</p>
@@ -92,6 +121,10 @@ export default function DetalleEvento() {
             <p>{evento.descripcion}</p>
           </section>
         )}
+
+        <button type="button" className="btn-formulario" onClick={handleRecordarme}>
+          {recordarme ? 'Recordarme activado' : 'Recordarme'}
+        </button>
       </div>
 
       <Footer />

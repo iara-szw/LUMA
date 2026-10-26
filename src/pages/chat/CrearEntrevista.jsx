@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { enviarMensaje, obtenerConversacionPorId } from '../../repositories/chatRepository'
-import { obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
+import { obtenerMascotasDeRefugio, obtenerRefugio } from '../../repositories/perfilRefugioRepository'
 import { crearEntrevista } from '../../repositories/entrevistaRepository'
 import '../../styles/crearEntrevista.css'
 
@@ -22,6 +22,7 @@ export default function CrearEntrevista() {
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(true)
+  const [refugioDireccion, setRefugioDireccion] = useState('')
 
   useEffect(() => {
     if (!usuario?.id || !esRefugio || !id) {
@@ -33,15 +34,18 @@ export default function CrearEntrevista() {
 
     const cargar = async () => {
       try {
-        const [convRes, mascotasRes] = await Promise.all([
+        const [convRes, mascotasRes, refugioRes] = await Promise.all([
           obtenerConversacionPorId(id),
           obtenerMascotasDeRefugio(usuario.id),
+          obtenerRefugio(usuario.id),
         ])
 
         if (!activo) return
 
         const conv = convRes?.data || null
         setConversacion(conv)
+        const direccionRefugio = refugioRes?.data?.direccion || [refugioRes?.data?.ciudad, refugioRes?.data?.provincia].filter(Boolean).join(', ') || 'Refugio'
+        setRefugioDireccion(direccionRefugio)
 
         if (conv?.mascotas?.id) {
           setMascotaId(String(conv.mascotas.id))
@@ -77,13 +81,19 @@ export default function CrearEntrevista() {
     setError('')
 
     try {
+      const lugarFinal = (
+        modalidad === 'En refugio'
+          ? (lugar || refugioDireccion || 'En refugio')
+          : (lugar || 'No especificado')
+      )
+
       const payload = {
         solicitud_id: conversacion?.solicitud_id || null,
         adoptante_id: conversacion?.adoptante_id || null,
         refugio_id: conversacion?.refugio_id || usuario.id,
         fecha: new Date(fecha).toISOString(),
         modalidad,
-        lugar: lugar || 'No especificado',
+        lugar: lugarFinal,
         duracion_minutos: 30,
         notas: notas || '',
         estado_confirmacion: 'Pendiente',

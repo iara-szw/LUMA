@@ -97,7 +97,8 @@ export default function Calendario() {
                     key={`${item.tipo}-${item.id}`}
                     className={`cal-tarjeta ${esEntrevista ? 'cal-tarjeta--entrevista' : 'cal-tarjeta--evento'}`}
                     onClick={() => {
-                      if (!esEntrevista) navigate(`/eventos/${item.id}`)
+                      if (esEntrevista) navigate(`/entrevistas/${item.id}`)
+                      else navigate(`/eventos/${item.id}`)
                     }}
                   >
                     <div className="cal-tarjeta-fecha">

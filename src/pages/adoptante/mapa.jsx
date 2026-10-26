@@ -1,6 +1,8 @@
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import NotiBadge from '../../components/NotiBadge'
+
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { usarAuth } from '../../hooks/UsarAuth'
@@ -32,6 +34,9 @@ function VolarA({ destino }) {
 export default function Mapa() {
     const navigate = useNavigate()
     const { esRefugio } = usarAuth()
+  const { usuario } = usarAuth()
+  const nombre = usuario?.nombre?.split(' ')[0]
+  const avatarUsuario = usuario?.foto_url || '/assets/img/perfil_default.jpg'
 
     const [refugios, setRefugios] = useState([])
     const [cargando, setCargando] = useState(true)
@@ -76,6 +81,30 @@ export default function Mapa() {
     }
 
     return (
+        <>
+         <header className="inicio-header">
+        <Link to="/" className="logo"><img src="/assets/img/logo.png" alt="LUMA" /></Link>
+        <div className="inicio-header-iconos">
+                        <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/notificaciones')}>
+                          <img src="/assets/img/notificaciones.png" />
+                          <NotiBadge />
+                        </button>
+
+          {usuario ? (
+            <img
+              className="avatar"
+              src={avatarUsuario}
+              alt="perfil"
+              onClick={() => navigate('/adoptante/perfil')}
+            />
+          ) : (
+            <nav className="nav-auth">
+              <Link to="/login">Iniciar sesión</Link>
+              <Link to="/registro" className="btn-registro">Registrarse</Link>
+            </nav>
+          )}
+        </div>
+      </header>
         <div className="mapa-pagina">
             <header className="mapa-header">
                 <h2 className="mapa-titulo">Refugios cerca tuyo</h2>
@@ -136,5 +165,6 @@ export default function Mapa() {
 
             {esRefugio ? <FooterRefugio /> : <Footer />}
         </div>
+        </>
     )
 }

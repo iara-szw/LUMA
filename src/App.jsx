@@ -33,6 +33,9 @@ import CalendarioRefugio from './pages/refugio/calendario.jsx'
 import PerfilAdoptante from './pages/refugio/PerfilAdoptante.jsx'
 import CrearEntrevista from './pages/chat/CrearEntrevista.jsx'
 import Mapa from './pages/adoptante/mapa.jsx'
+import DetalleEntrevista from './pages/DetalleEntrevista.jsx'
+import { useEffect } from 'react'
+import { iniciarRecordatoriosPendientes } from './services/recordatorios'
 
 
 function RutaProtegida({ children, rol }) {
@@ -57,6 +60,10 @@ function RutaInicio() {
 }
 
 export default function App() {
+  useEffect(() => {
+    iniciarRecordatoriosPendientes()
+  }, [])
+
   return (
     <BrowserRouter>
       <ProveedorAuth>
@@ -112,6 +119,7 @@ export default function App() {
                       }
                     />
                     <Route path="/eventos/:id" element={<DetalleEvento />} />
+          <Route path="/entrevistas/:id" element={<DetalleEntrevista />} />
           {/* Perfil del refugio */}
           <Route
             path="/refugio/perfil"

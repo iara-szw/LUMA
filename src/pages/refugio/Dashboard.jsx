@@ -221,6 +221,13 @@ export default function Dashboard() {
             <p className="dash-vacio">No hay eventos próximos.</p>
           )}
         </div>
+        <button
+          type="button"
+          className="dash-btn-ver-todos"
+          onClick={() => navigate('/refugio/calendario')}
+        >
+          Ver todos
+        </button>
       </section>
 
       <FooterRefugio />

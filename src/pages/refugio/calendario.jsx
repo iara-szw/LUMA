@@ -121,7 +121,10 @@ export default function CalendarioRefugio() {
                   <article
                     key={`${item.tipo}-${item.id}`}
                     className={`cal-tarjeta ${item.tipo === 'entrevista' ? 'cal-tarjeta--entrevista' : 'cal-tarjeta--evento'}`}
-                    onClick={() => { if (item.tipo !== 'entrevista' && item.id) navigate(`/eventos/${item.id}`) }}
+                    onClick={() => {
+                      if (item.tipo === 'entrevista') navigate(`/entrevistas/${item.id}`)
+                      else if (item.id) navigate(`/eventos/${item.id}`)
+                    }}
                   >
                     <div className="cal-tarjeta-fecha">
                       <span className="cal-tarjeta-diasemana">{diaSemana}</span>

@@ -18,7 +18,7 @@ export default function Footer() {
         <span>Buscar</span>
       </Link>
 
- <Link to="/adoptante/mapa" className={`footer-item footer-central ${pathname.includes('mapa') ? 'activo' : ''}`}>
+ <Link to="/adoptante/mapa" className={`footer-item footer-central`}>
   <img src="/assets/img/mapa.png" alt="Mapa" className="footer-icono" />
 </Link>
 

@@ -50,13 +50,18 @@ export default function Notificaciones() {
   }
 
   const abrirNoti = async (n) => {
-    if (!n.conversacion_id) return
-
     if (!n.leida) {
       setNotis(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))
       await marcarNotiLeida(n.id)
       window.dispatchEvent(new Event('luma:noti-actualizada'))
     }
+
+    if (n.link) {
+      navigate(n.link)
+      return
+    }
+
+    if (!n.conversacion_id) return
 
     navigate(isRefugio
       ? `/refugio/chats/${n.conversacion_id}`
@@ -115,7 +120,7 @@ export default function Notificaciones() {
           ) : (
             notis.map(n => {
               const remitente = nombreEmisor(n.emisor)
-              const clickeable = !!n.conversacion_id
+              const clickeable = !!(n.link || n.conversacion_id)
               return (
                 <article
                   key={n.id}

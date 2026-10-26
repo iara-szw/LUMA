@@ -5,7 +5,7 @@ export const obtenerNotisPorUsur = (usuarioId) =>
   Supabase
     .from('notificaciones')
     .select(`
-      id, titulo, mensaje, leida, fecha, conversacion_id,
+      id, titulo, mensaje, leida, fecha, conversacion_id, link,
       emisor:usuarios!notificaciones_emisor_id_fkey (
         nombre, apellido, foto_url,
         refugios ( nombre, logo_url )
@@ -39,6 +39,7 @@ export async function crearNotificacion({
   usuarioId,
   titulo,
   mensaje,
+  link = null,
   leida = false
 }) {
   const { data: { user }, error: authError } = await Supabase.auth.getUser()
@@ -52,6 +53,7 @@ export async function crearNotificacion({
     emisor_id: user.id,
     titulo,
     mensaje,
+    link,
     leida
   }
 

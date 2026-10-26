@@ -6,6 +6,7 @@ import Buscador from '../components/Buscador'
 import Footer from '../components/Footer'
 import NotiBadge from '../components/NotiBadge'
 import { obtenerMascotasRecientes } from '../repositories/mascotaRepository'
+import { obtenerCalendarioAdoptante } from '../repositories/calendarioRepository'
 import { obtenerEventosProximos } from '../repositories/eventoRepository'
 import { agregarFavorito, eliminarFavorito } from '../repositories/usuarioRepository'
 import { obtenerGuardadosDeUsuario } from '../repositories/perfilRepository'
@@ -27,12 +28,12 @@ export default function Home() {
       try {
         const [mascotasRes, eventosRes] = await Promise.all([
           obtenerMascotasRecientes(),
-          obtenerEventosProximos(2), // solo los próximos 2 en la home
+          usuario?.id ? obtenerCalendarioAdoptante(usuario.id) : obtenerEventosProximos(2),
         ])
 
         if (!activo) return
         setMascotas(mascotasRes.data || [])
-        setEventos(eventosRes.data || [])
+        setEventos((eventosRes.data || []).slice(0, 2))
       } finally {
         if (activo) {
           setCargandoMascotas(false)
@@ -82,8 +83,6 @@ export default function Home() {
     }
   }
 
-  // La tabla eventos usa `titulo` y `fecha_evento` (timestamp único);
-  // acá lo separamos en mes/día/hora para el badge de fecha de la tarjeta
   const formatearFechaEvento = (fechaStr) => {
     const fecha = new Date(fechaStr)
     return {
@@ -101,16 +100,15 @@ export default function Home() {
           {usuario ? (
             <>
               <button className="icono-campana" aria-label="Notificaciones" onClick={() => navigate('/notificaciones')}>
-                <img src="/assets/img/notificaciones.png" />
-                {/* badge */}
+                <img src="/assets/img/notificaciones.png" alt="" />
                 <NotiBadge />
               </button>
-        <img
-  className="avatar"
-  src={avatarUsuario}
-  alt="perfil"
-  onClick={() => navigate('/adoptante/perfil')}
-/>
+              <img
+                className="avatar"
+                src={avatarUsuario}
+                alt="perfil"
+                onClick={() => navigate('/adoptante/perfil')}
+              />
             </>
           ) : (
             <nav className="nav-auth">
@@ -120,16 +118,18 @@ export default function Home() {
           )}
         </div>
       </header>
-        <div className='inicioDiv'>
-      <h2 className="saludo">
-        {nombre ? `Hola, ${nombre} 🐾` : 'Bienvenido a LUMA 🐾'}
-      </h2>
 
-      <Buscador
-        placeholder="Buscar por nombre o refugio..."
-        onBuscar={(query) => navigate(`/adoptante/buscar?q=${query}`)}
-      />
-</div>
+      <div className='inicioDiv'>
+        <h2 className="saludo">
+          {nombre ? `Hola, ${nombre} 🐾` : 'Bienvenido a LUMA 🐾'}
+        </h2>
+
+        <Buscador
+          placeholder="Buscar por nombre o refugio..."
+          onBuscar={(query) => navigate(`/adoptante/buscar?q=${query}`)}
+        />
+      </div>
+
       <section className="banner-test-match">
         <p>Descubrí tu mascota ideal con nuestro test de compatibilidad</p>
         <button type="button" onClick={() => navigate('/adoptante/test-match')}>
@@ -160,10 +160,9 @@ export default function Home() {
                 >
                   <img src={favoritos.has(m.id) ? '/assets/img/corazon-seleccionado.png' : '/assets/img/corazon.png'} alt="" />
                 </button>
-      <img src={m.foto_url || '/assets/img/perfil_default.jpg'} alt={m.nombre} />
+                <img src={m.foto_url || '/assets/img/perfil_default.jpg'} alt={m.nombre} />
                 <h4>{m.nombre}</h4>
                 {m.edad && <span>{m.edad}</span>}
-                
                 {m.urgente && <span className="badge-urgente">Urgente</span>}
               </article>
             ))
@@ -180,16 +179,33 @@ export default function Home() {
             <p className="vacio">Cargando eventos...</p>
           ) : eventos.length > 0 ? (
             eventos.map(e => {
-              const { mes, dia, hora } = formatearFechaEvento(e.fecha_evento)
+              const fecha = e.fecha_evento || e.fecha
+              const { dia, hora } = formatearFechaEvento(fecha)
+              const esEntrevista = e.tipo === 'entrevista'
+
               return (
-                <article key={e.id} className="tarjeta-evento">
-                  <div className="evento-fecha">
-                    <span className="evento-mes">{mes}</span>
-                    <span className="evento-dia">{dia}</span>
+                <article
+                  key={`${e.tipo}-${e.id}`}
+                  className={`cal-tarjeta ${esEntrevista ? 'cal-tarjeta--entrevista' : 'cal-tarjeta--evento'}`}
+                  onClick={() => {
+                    if (esEntrevista) navigate(`/entrevistas/${e.id}`)
+                    else navigate(`/eventos/${e.id}`)
+                  }}
+                >
+                  <div className="cal-tarjeta-fecha">
+                    <span className="cal-tarjeta-dia">{dia}</span>
                   </div>
-                  <div className="evento-info">
+                  <div className="cal-tarjeta-info">
+                    <span className={`cal-badge ${esEntrevista ? 'cal-badge--entrevista' : 'cal-badge--evento'}`}>
+                      {esEntrevista ? 'Entrevista' : 'Evento'}
+                    </span>
                     <h4>{e.titulo}</h4>
-                    <p>{e.lugar}{hora ? ` · ${hora}` : ''}</p>
+                    <p>
+                      {hora}
+                      {e.lugar ? ` · ${e.lugar}` : ''}
+                      {e.modalidad ? ` · ${e.modalidad}` : ''}
+                      {e.refugio ? ` · ${e.refugio}` : ''}
+                    </p>
                   </div>
                 </article>
               )
