@@ -45,6 +45,8 @@ CREATE TABLE public.refugios (
   cantidad_voluntarios integer DEFAULT 0,
   activo boolean DEFAULT true,
   fecha_creacion timestamp without time zone DEFAULT now(),
+  latitud double precision,
+  longitud double precision,
   CONSTRAINT refugios_pkey PRIMARY KEY (id),
   CONSTRAINT refugios_id_fkey FOREIGN KEY (id) REFERENCES public.usuarios(id)
 );
@@ -114,9 +116,9 @@ CREATE TABLE public.eventos (
   lugar character varying,
   direccion text,
   imagen_url text,
-  fecha_evento timestamp without time zone NOT NULL,
+  fecha_evento timestamp with time zone NOT NULL,
   activo boolean DEFAULT true,
-  fecha_creacion timestamp without time zone DEFAULT now(),
+  fecha_creacion timestamp with time zone,
   CONSTRAINT eventos_pkey PRIMARY KEY (id),
   CONSTRAINT eventos_refugio_id_fkey FOREIGN KEY (refugio_id) REFERENCES public.refugios(id)
 );
@@ -141,6 +143,7 @@ CREATE TABLE public.solicitudes (
   info jsonb,
   fecha_solicitud timestamp without time zone DEFAULT now(),
   ultima_actualizacion timestamp without time zone DEFAULT now(),
+  eliminada boolean DEFAULT false,
   CONSTRAINT solicitudes_pkey PRIMARY KEY (id),
   CONSTRAINT solicitudes_mascota_id_fkey FOREIGN KEY (mascota_id) REFERENCES public.mascotas(id),
   CONSTRAINT solicitudes_adoptante_id_fkey FOREIGN KEY (adoptante_id) REFERENCES public.usuarios(id),
@@ -183,16 +186,6 @@ CREATE TABLE public.seguimientos (
   fecha timestamp without time zone DEFAULT now(),
   CONSTRAINT seguimientos_pkey PRIMARY KEY (id),
   CONSTRAINT seguimientos_adopcion_id_fkey FOREIGN KEY (adopcion_id) REFERENCES public.adopciones(id)
-);
-CREATE TABLE public.notificaciones (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  usuario_id uuid NOT NULL,
-  titulo character varying,
-  mensaje text,
-  leida boolean DEFAULT false,
-  fecha timestamp without time zone DEFAULT now(),
-  CONSTRAINT notificaciones_pkey PRIMARY KEY (id),
-  CONSTRAINT notificaciones_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id)
 );
 CREATE TABLE public.favoritos (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -260,4 +253,32 @@ CREATE TABLE public.mensajes (
   CONSTRAINT mensajes_pkey PRIMARY KEY (id),
   CONSTRAINT mensajes_conversacion_id_fkey FOREIGN KEY (conversacion_id) REFERENCES public.conversaciones(id),
   CONSTRAINT mensajes_emisor_id_fkey FOREIGN KEY (emisor_id) REFERENCES public.usuarios(id)
+);
+CREATE TABLE public.notificaciones (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  usuario_id uuid NOT NULL,
+  titulo character varying,
+  mensaje text,
+  leida boolean DEFAULT false,
+  fecha timestamp without time zone DEFAULT now(),
+  emisor_id uuid,
+  conversacion_id uuid,
+  link text,
+  CONSTRAINT notificaciones_pkey PRIMARY KEY (id),
+  CONSTRAINT notificaciones_conversacion_id_fkey FOREIGN KEY (conversacion_id) REFERENCES public.conversaciones(id),
+  CONSTRAINT notificaciones_emisor_id_fkey FOREIGN KEY (emisor_id) REFERENCES public.usuarios(id),
+  CONSTRAINT notificaciones_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES public.usuarios(id)
+);
+CREATE TABLE public.recordatorios (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  usuario_id uuid NOT NULL,
+  tipo text NOT NULL CHECK (tipo = ANY (ARRAY['evento'::text, 'entrevista'::text])),
+  item_id text NOT NULL,
+  titulo text NOT NULL,
+  fecha_recordatorio timestamp with time zone NOT NULL,
+  link text,
+  activo boolean NOT NULL DEFAULT true,
+  notificado boolean NOT NULL DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT recordatorios_pkey PRIMARY KEY (id)
 );

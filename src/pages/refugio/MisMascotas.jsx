@@ -4,14 +4,23 @@ import Loader from '../../components/Loader'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
+import { archivarMascota } from '../../repositories/mascotaRepository'
 import '../../styles/misMascotas.css'
 import FooterRefugio from '../../components/FooterRefugio'
+import ConfirmModal from '../../components/ConfirmModal'
 
 export default function MisMascotas() {
   const { usuario } = usarAuth()
   const navigate = useNavigate()
   const [mascotas, setMascotas] = useState([])
   const [cargando, setCargando] = useState(true)
+  const [confirmacion, setConfirmacion] = useState({ isOpen: false, mascotaId: null, nombre: '' })
+
+  const cargarMascotas = async () => {
+    if (!usuario) return
+    const res = await obtenerMascotasDeRefugio(usuario.id)
+    setMascotas(res.data || [])
+  }
 
   useEffect(() => {
     if (!usuario) return
@@ -28,6 +37,18 @@ export default function MisMascotas() {
     cargar()
     return () => { activo = false }
   }, [usuario])
+
+  const handleArchivarMascota = async () => {
+    if (!confirmacion.mascotaId) return
+
+    const { error } = await archivarMascota(confirmacion.mascotaId)
+
+    if (!error) {
+      setMascotas(prev => prev.filter(m => m.id !== confirmacion.mascotaId))
+    }
+
+    setConfirmacion({ isOpen: false, mascotaId: null, nombre: '' })
+  }
 
   if (cargando) return <Loader />
 
@@ -95,6 +116,19 @@ export default function MisMascotas() {
                     >
                       Editar form
                     </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setConfirmacion({
+                          isOpen: true,
+                          mascotaId: m.id,
+                          nombre: m.nombre,
+                        })
+                      }}
+                      className="btn-accion-terciaria"
+                    >
+                      Archivar
+                    </button>
                   </div>
                 </div>
               </article>
@@ -106,6 +140,16 @@ export default function MisMascotas() {
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={confirmacion.isOpen}
+        title="Archivar mascota"
+        message={`¿Querés archivar a ${confirmacion.nombre || 'esta mascota'}? No se mostrará en la vista pública.`}
+        confirmText="Archivar"
+        onConfirm={handleArchivarMascota}
+        onCancel={() => setConfirmacion({ isOpen: false, mascotaId: null, nombre: '' })}
+      />
+
       <FooterRefugio />
     </>
   )

@@ -141,6 +141,9 @@ export default function CalendarioRefugio() {
                         {item.modalidad ? ` · ${item.modalidad}` : ''}
                         {item.refugio ? ` · ${item.refugio}` : ''}
                       </p>
+                      {item.tipo === 'entrevista' && item.resultado && (
+                        <p className="cal-tarjeta-resultado">Resultado: {item.resultado}</p>
+                      )}
                     </div>
                   </article>
                 )

@@ -4,6 +4,18 @@ import { usarAuth } from '../../hooks/UsarAuth'
 import { crearEvento } from '../../repositories/eventoRepository'
 import '../../styles/cargarMascota.css'
 
+const toSupabaseDateTime = (value) => {
+  if (!value) return null
+
+  const [datePart, timePart] = value.split('T')
+  if (!datePart || !timePart) return null
+
+  const [year, month, day] = datePart.split('-').map(Number)
+  const [hour, minute] = timePart.split(':').map(Number)
+
+  return new Date(year, month - 1, day, hour, minute).toISOString()
+}
+
 const ESTADO_INICIAL = {
   titulo: '',
   fechaEvento: '',
@@ -52,6 +64,8 @@ export default function CargarEvento() {
     setGuardando(true)
 
     try {
+      const fechaEventoISO = toSupabaseDateTime(form.fechaEvento)
+
       const res = await crearEvento({
         refugio_id: usuario.id,
         titulo: form.titulo.trim(),
@@ -59,7 +73,7 @@ export default function CargarEvento() {
         lugar: form.lugar.trim() || null,
         direccion: form.direccion.trim() || null,
         imagen_url: form.imagenUrl.trim() || null,
-        fecha_evento: new Date(form.fechaEvento).toISOString(),
+        fecha_evento: fechaEventoISO,
       })
 
       if (res?.error) {

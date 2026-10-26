@@ -45,12 +45,14 @@ export default function DetalleEvento() {
       return
     }
 
+    const fechaRecordatorio = new Date(evento.fecha_evento)
+
     registrarRecordatorio({
       usuarioId: usuario.id,
       tipo: 'evento',
       itemId: evento.id,
       titulo: evento.titulo,
-      fecha: new Date(new Date(evento.fecha_evento).getTime() - 24 * 60 * 60 * 1000).toISOString(),
+      fecha: fechaRecordatorio,
       link: `/eventos/${evento.id}`,
     })
     setRecordarme(true)

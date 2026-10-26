@@ -176,3 +176,29 @@ export async function actualizarMascota(id, datos) {
     .select()
     .single()
 }
+
+export async function archivarMascota(id) {
+  if (!id) {
+    return { data: null, error: { message: 'id faltante' } }
+  }
+
+  return Supabase
+    .from('mascotas')
+    .update({ publicado: false })
+    .eq('id', id)
+    .select()
+    .single()
+}
+
+export async function reactivarMascota(id) {
+  if (!id) {
+    return { data: null, error: { message: 'id faltante' } }
+  }
+
+  return Supabase
+    .from('mascotas')
+    .update({ publicado: true })
+    .eq('id', id)
+    .select()
+    .single()
+}

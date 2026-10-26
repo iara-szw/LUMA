@@ -7,6 +7,7 @@ import Bandeja from '../../../cliente/public/assets/img/bandeja-entrada.png'
 import Animal from '../../../cliente/public/assets/img/animal.png'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
+import {obtenerEntrevistasRefugio} from '../../repositories/entrevistaRepository'
 import { obtenerRefugio, obtenerSolicitudesDeRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/dashboard.css'
 
@@ -17,9 +18,10 @@ export default function Dashboard() {
   const [mascotas, setMascotas] = useState([])
   const [eventos, setEventos] = useState([])
   const [solicitudes, setSolicitudes] = useState([])
-
+  const [entrevistas, setEntrevistas] = useState([])
   const [cargandoMascotas, setCargandoMascotas] = useState(true)
   const [cargandoSolicitudes, setCargandoSolicitudes] = useState(true)
+  const [cargandoEntrevistas, setCargandoEntrevistas] = useState(true)
   const [cargandoEventos, setCargandoEventos] = useState(true)
   const [refugio, setRefugio] = useState(null)
 
@@ -35,22 +37,27 @@ export default function Dashboard() {
 
     const obtenerDatos = async () => {
       try {
-        const [refugioRes, mascotasRes, eventosRes, solicitudesRes] = await Promise.all([
+        const [refugioRes, mascotasRes, eventosRes, solicitudesRes,entrevistasRes] = await Promise.all([
           obtenerRefugio(usuario?.id),
           obtenerMascotasRefugio(usuario?.id),
           obtenerEventosProximos(),
-          obtenerSolicitudesDeRefugio(usuario?.id)
+          obtenerSolicitudesDeRefugio(usuario?.id),
+          obtenerEntrevistasRefugio(usuario?.id)
         ])
+      
         if (!activo) return
         setRefugio(refugioRes?.data || null)
         setMascotas(mascotasRes?.data || [])
         setEventos(eventosRes?.data || [])
         setSolicitudes(solicitudesRes?.data || [])
+        setEntrevistas(entrevistasRes?.data || [])
       } finally {
         if (activo) {
           setCargandoMascotas(false)
           setCargandoEventos(false)
           setCargandoSolicitudes(false)
+          setCargandoEntrevistas(false)
+        
         }
       }
     }
@@ -127,8 +134,8 @@ export default function Dashboard() {
               <span className="dash-stat-valor">{cargandoEventos ? '–' : eventos.length}</span>
             </div>
             <div className="dash-stat-item">
-              <span className="dash-stat-label">Visitas agendadas</span>
-              <span className="dash-stat-valor">–</span>
+              <span className="dash-stat-label">Entrevistas pendientes</span>
+              <span className="dash-stat-valor">{cargandoEntrevistas ? '–' : entrevistas.length}</span>
             </div>
           </div>
         </div>
@@ -201,7 +208,7 @@ export default function Dashboard() {
           {cargandoEventos ? (
             <p className="dash-vacio">Cargando eventos...</p>
           ) : eventos.length > 0 ? (
-            eventos.slice(0, 3).map(e => {
+            eventos.slice(0, 2).map(e => {
               const { mes, dia, hora } = formatearFecha(e.fecha_evento)
               return (
                 <article key={e.id} className="dash-tarjeta-evento" onClick={() => { if (e.tipo !== 'entrevista' && e.id) navigate(`/eventos/${e.id}`) }}>

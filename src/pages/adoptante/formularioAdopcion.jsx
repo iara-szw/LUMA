@@ -95,6 +95,7 @@ function actualizarFotoArchivo(preguntaId, file) {
         adoptanteId: usuario.id,
         info,
         estado: 'revision',
+        eliminada: false
       })
 
       if (res.error) {

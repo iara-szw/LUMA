@@ -187,6 +187,47 @@ export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, info, e
   }
 }
 
+export async function eliminarSolicitudAdoptante({ solicitudId, adoptanteId }) {
+  if (!solicitudId || !adoptanteId) {
+    return { data: null, error: { message: 'solicitudId y adoptanteId son obligatorios' } }
+  }
+
+  const { data, error } = await Supabase
+    .from('solicitudes')
+    .update({
+      eliminada: true,
+      ultima_actualizacion: new Date().toISOString(),
+    })
+    .eq('id', solicitudId)
+    .eq('adoptante_id', adoptanteId)
+    .select()
+    .single()
+
+  if (error) return { data: null, error }
+  return { data, error: null }
+}
+
+export async function restaurarSolicitudAdoptante({ solicitudId, adoptanteId }) {
+  if (!solicitudId || !adoptanteId) {
+    return { data: null, error: { message: 'solicitudId y adoptanteId son obligatorios' } }
+  }
+
+  const { data, error } = await Supabase
+    .from('solicitudes')
+    .update({
+      eliminada: false,
+      ultima_actualizacion: new Date().toISOString(),
+      estado: 'Pendiente',
+    })
+    .eq('id', solicitudId)
+    .eq('adoptante_id', adoptanteId)
+    .select()
+    .single()
+
+  if (error) return { data: null, error }
+  return { data, error: null }
+}
+
 export async function obtenerSolicitudFormularioPorId(solicitudId) {
   const { data, error } = await Supabase
     .from('solicitudes')

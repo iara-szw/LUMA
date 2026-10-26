@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { usarAuth } from '../hooks/UsarAuth'
-import { obtenerNotisPorUsur, marcarNotiLeida, marcarTodasComoLeidas } from '../repositories/notificacionesRepository'
+import { obtenerNotisPorUsur, marcarNotiLeida, marcarTodasComoLeidas, borrarNotificacion } from '../repositories/notificacionesRepository'
 import '../styles/style.css'
 import Footer from '../components/Footer'
-
+import ConfirmModal from '../components/ConfirmModal'
+import FooterRefugio from '../components/FooterRefugio'
 import '../styles/notificaciones.css'
 export default function Notificaciones() {
   const navigate = useNavigate()
   const location = useLocation()
   const isRefugio = location.pathname.startsWith('/refugio')
-  const { usuario } = usarAuth()
   const [notis, setNotis] = useState([])
   const [cargando, setCargando] = useState(true)
-
+  const [modalConfirmacion, setModalConfirmacion] = useState({ isOpen: false, id: null })
+  const { usuario, esRefugio } = usarAuth() 
   useEffect(() => {
     let activo = true
     const cargar = async () => {
@@ -80,6 +81,18 @@ export default function Notificaciones() {
     }
   }
 
+  const handleBorrarNotificacion = async (id) => {
+    if (!usuario?.id) return
+
+    const { error } = await borrarNotificacion(id)
+    if (!error) {
+      setNotis(prev => prev.filter(n => n.id !== id))
+      window.dispatchEvent(new Event('luma:noti-actualizada'))
+    } else {
+      console.error('Error al eliminar la notificación:', error)
+    }
+  }
+
   return (
     <div className="pagina-notificaciones">
       <header className="inicio-header">
@@ -134,13 +147,26 @@ export default function Notificaciones() {
                   {remitente && <span className="noti-remitente">De: {remitente}</span>}
                   {n.mensaje && <p>{n.mensaje}</p>}
                   <time className="noti-fecha">{formatearFecha(n.fecha)}</time>
+                  <button className="btn-borrar" onClick={(e) => { e.stopPropagation(); setModalConfirmacion({ isOpen: true, id: n.id }) }}>
+                    <img src="/assets/img/borrar.png" alt="Borrar" />
+                  </button>
                 </article>
               )
             })
           )}
         </div>
       </main>
-      <Footer />
+         {esRefugio ? <FooterRefugio /> : <Footer />}
+   
+
+      <ConfirmModal
+        isOpen={modalConfirmacion.isOpen}
+        title="Eliminar notificación"
+        message="¿Estás seguro que querés eliminar esta notificación?"
+        confirmText="Eliminar"
+        onConfirm={() => handleBorrarNotificacion(modalConfirmacion.id)}
+        onCancel={() => setModalConfirmacion({ isOpen: false, id: null })}
+      />
     </div>
   )
 }

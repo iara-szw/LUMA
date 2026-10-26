@@ -5,6 +5,7 @@ export async function obtenerPostulacionesDeUsuario(usuarioId) {
     .from('solicitudes')
     .select('id, estado, fecha_solicitud, mascotas(id, nombre, foto_url, refugios(nombre))')
     .eq('adoptante_id', usuarioId)
+    .eq('eliminada', false)
     .order('fecha_solicitud', { ascending: false })
 
   if (data) {

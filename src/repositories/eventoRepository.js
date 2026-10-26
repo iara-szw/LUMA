@@ -46,3 +46,25 @@ export async function actualizarEvento(id, cambios) {
 export async function desactivarEvento(id) {
   return Supabase.from('eventos').update({ activo: false }).eq('id', id)
 }
+
+export async function archivarEvento(id) {
+  if (!id) return { data: null, error: { message: 'id faltante' } }
+
+  return Supabase
+    .from('eventos')
+    .update({ activo: false })
+    .eq('id', id)
+    .select()
+    .single()
+}
+
+export async function reactivarEvento(id) {
+  if (!id) return { data: null, error: { message: 'id faltante' } }
+
+  return Supabase
+    .from('eventos')
+    .update({ activo: true })
+    .eq('id', id)
+    .select()
+    .single()
+}

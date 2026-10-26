@@ -12,6 +12,7 @@ export async function obtenerMascotasDeRefugio(refugioId) {
     .select('id, nombre, edad, foto_url, urgente, especie_id, especies(nombre)')
     .eq('refugio_id', refugioId)
     .eq('estado_id', ESTADOS.publicada)
+    .eq('publicado', true)
     .order('fecha_publicacion', { ascending: false })
 }
 
@@ -22,6 +23,7 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
       'id, estado, fecha_solicitud, info, usuarios:adoptante_id(id, nombre, foto_url), mascotas!inner(id, nombre, foto_url, refugio_id)'
     )
     .eq('mascotas.refugio_id', refugioId)
+    .eq('eliminada', false)
     .order('fecha_solicitud', { ascending: false })
   if (data) {
     const mapped = data.map(s => {

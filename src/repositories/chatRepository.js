@@ -221,6 +221,63 @@ export async function ocultarConversacion(conversacionId, esRefugio) {
 }
 
 /**
+ * Archiva una conversación del lado del usuario actual (soft delete).
+ * No borra la fila ni afecta lo que ve la otra parte.
+ */
+export async function archivarConversacion(conversacionId, esRefugio) {
+  if (!conversacionId) return { data: null, error: { message: 'conversacion_id faltante' } }
+
+  const campo = esRefugio ? 'eliminado_refugio' : 'eliminado_adoptante'
+
+  try {
+    const res = await Supabase
+      .from('conversaciones')
+      .update({ [campo]: true, archivada: true })
+      .eq('id', conversacionId)
+      .select()
+      .single()
+
+    if (res.error) {
+      console.error('archivarConversacion error:', res.error)
+      return res
+    }
+
+    return res
+  } catch (err) {
+    console.error('archivarConversacion exception:', err)
+    return { data: null, error: err }
+  }
+}
+
+/**
+ * Reabre una conversación archivada del lado del usuario actual.
+ */
+export async function reabrirConversacion(conversacionId, esRefugio) {
+  if (!conversacionId) return { data: null, error: { message: 'conversacion_id faltante' } }
+
+  const campo = esRefugio ? 'eliminado_refugio' : 'eliminado_adoptante'
+
+  try {
+    const res = await Supabase
+      .from('conversaciones')
+      .update({ [campo]: false, archivada: false })
+      .eq('id', conversacionId)
+      .select()
+      .single()
+
+    if (res.error) {
+      console.error('reabrirConversacion error:', res.error)
+      return res
+    }
+
+    return res
+  } catch (err) {
+    console.error('reabrirConversacion exception:', err)
+    return { data: null, error: err }
+  }
+}
+
+/**
  * Cuenta el total de mensajes no leídos del usuario across todas sus
  * conversaciones (para el badge del header). Trae solo el count, no las filas.
  */

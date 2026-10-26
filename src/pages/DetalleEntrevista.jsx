@@ -45,12 +45,14 @@ export default function DetalleEntrevista() {
       return
     }
 
+    const fechaRecordatorio = new Date(entrevista.fecha)
+
     registrarRecordatorio({
       usuarioId: usuario.id,
       tipo: 'entrevista',
       itemId: entrevista.id,
       titulo: `Entrevista · ${entrevista.solicitudes?.mascotas?.nombre || 'Mascota'}`,
-      fecha: new Date(new Date(entrevista.fecha).getTime() - 24 * 60 * 60 * 1000).toISOString(),
+      fecha: fechaRecordatorio,
       link: `/entrevistas/${entrevista.id}`,
     })
     setRecordarme(true)
@@ -133,8 +135,14 @@ export default function DetalleEntrevista() {
           <section className="det-evento-seccion">
             <h3>Detalles</h3>
             {entrevista.notas && <p>{entrevista.notas}</p>}
-            {entrevista.resultado && <p><strong>Resultado:</strong> {entrevista.resultado}</p>}
           </section>
+        )}
+
+        {entrevista.resultado && (
+          <div className="det-evento-dato">
+            <span className="det-evento-dato-icono">📌</span>
+            <span className="det-evento-dato-texto">Resultado: {entrevista.resultado}</span>
+          </div>
         )}
 
         <button type="button" className="btn-formulario" onClick={handleRecordarme}>

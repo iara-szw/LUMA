@@ -11,7 +11,7 @@ import {
   obtenerConversacionPorId,
 } from '../../repositories/chatRepository'
 import { Supabase } from '../../services/supabase'
-import { responderEntrevista } from '../../repositories/entrevistaRepository'
+import { responderEntrevista, actualizarEntrevista, obtenerEntrevistasPorSolicitud } from '../../repositories/entrevistaRepository'
 import '../../styles/chat.css'
 
 function parsearEntrevistaMensaje(contenido) {
@@ -63,9 +63,45 @@ export default function Conversacion() {
   const [conversacionData, setConversacionData] = useState(null)
   const [procesoEntrevistaId, setProcesoEntrevistaId] = useState(null)
   const [respondiendoEntrevista, setRespondiendoEntrevista] = useState(false)
+  const [modalResultadoAbierto, setModalResultadoAbierto] = useState(false)
+  const [resultadoEntrevistaSeleccionado, setResultadoEntrevistaSeleccionado] = useState('')
+  const [guardandoResultadoEntrevista, setGuardandoResultadoEntrevista] = useState(false)
+  const [entrevistaActiva, setEntrevistaActiva] = useState(null)
+  const [tieneEntrevistaEnCurso, setTieneEntrevistaEnCurso] = useState(false)
 
   const finRef = useRef(null)
   const channelRef = useRef(null)
+
+  const buscarEntrevistaActiva = async (conv) => {
+    if (!conv) return null
+
+    if (conv.solicitud_id) {
+      const { data, error } = await obtenerEntrevistasPorSolicitud(conv.solicitud_id)
+      if (!error && Array.isArray(data) && data.length > 0) {
+        return data
+          .filter(e => !!e?.fecha)
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0] || null
+      }
+    }
+
+    if (conv.adoptante_id && conv.refugio_id) {
+      const { data, error } = await Supabase
+        .from('entrevistas')
+        .select('id, fecha, resultado, estado_confirmacion, solicitud_id, adoptante_id, refugio_id')
+        .eq('adoptante_id', conv.adoptante_id)
+        .eq('refugio_id', conv.refugio_id)
+        .order('fecha', { ascending: false })
+        .limit(10)
+
+      if (!error && Array.isArray(data) && data.length > 0) {
+        return data
+          .filter(e => !!e?.fecha)
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0] || null
+      }
+    }
+
+    return null
+  }
 
   // Carga inicial + suscripción realtime + marcar como leído al entrar
   useEffect(() => {
@@ -93,7 +129,6 @@ export default function Conversacion() {
         setMascota(null)
       }
 
-      // determinar avatar del interlocutor: si yo soy refugio, muestro foto del adoptante, y viceversa
       const conv = conversacionRes.data
       if (conv) {
         const pick = (obj, keys) => {
@@ -113,6 +148,15 @@ export default function Conversacion() {
 
         setInterlocutorAvatar(avatar)
         setConversacionData(conv)
+
+        const entrevistaRelacionada = await buscarEntrevistaActiva(conv)
+        if (entrevistaRelacionada) {
+          setEntrevistaActiva(entrevistaRelacionada)
+          setTieneEntrevistaEnCurso(true)
+        } else {
+          setEntrevistaActiva(null)
+          setTieneEntrevistaEnCurso(false)
+        }
       }
 
       const conversacion = conversacionRes.data
@@ -157,7 +201,7 @@ export default function Conversacion() {
       desuscribirse(channelRef.current)
       channelRef.current = null
     }
-  }, [conversacionId, usuario?.id])
+  }, [conversacionId, usuario?.id, esRefugio, refrescarContador])
 
   // Auto-scroll al último mensaje
   useEffect(() => {
@@ -302,6 +346,75 @@ export default function Conversacion() {
     }
   }
 
+  const abrirModalResultado = () => {
+    setResultadoEntrevistaSeleccionado('')
+    setModalResultadoAbierto(true)
+  }
+
+  const cerrarModalResultado = () => {
+    setModalResultadoAbierto(false)
+    setResultadoEntrevistaSeleccionado('')
+  }
+
+  const guardarResultadoEntrevista = async () => {
+    const entrevistaId = entrevistaActiva?.id || conversacionData?.solicitud_id
+    if (!entrevistaId || !resultadoEntrevistaSeleccionado) return
+
+    setGuardandoResultadoEntrevista(true)
+    try {
+      const hoy = new Date().toISOString()
+
+      if (resultadoEntrevistaSeleccionado === 'otra_entrevista') {
+        const { error } = await actualizarEntrevista(entrevistaId, {
+          resultado: 'Otra entrevista programada',
+          notas: 'Se programó otra entrevista desde el chat del refugio.',
+          fecha_respuesta: hoy,
+        })
+
+        if (error) throw error
+
+        setError(null)
+        setModalResultadoAbierto(false)
+        setResultadoEntrevistaSeleccionado('')
+        navigate(`/refugio/chats/${conversacionId}/entrevista`)
+        return
+      }
+
+      const mapaResultados = {
+        no_presento: { texto: 'No se presentó', estado: 'Rechazada' },
+        no_resulto: { texto: 'No resultó', estado: 'Rechazada' },
+        resulto: { texto: 'Resultó - Adoptado', estado: 'Confirmada' },
+      }
+
+      const seleccion = mapaResultados[resultadoEntrevistaSeleccionado]
+      const { error } = await actualizarEntrevista(entrevistaId, {
+        resultado: seleccion.texto,
+        estado_confirmacion: seleccion.estado,
+        fecha_respuesta: hoy,
+      })
+
+      if (error) throw error
+
+      setEntrevistaActiva(prev => prev ? { ...prev, resultado: seleccion.texto } : prev)
+      setError(null)
+      setModalResultadoAbierto(false)
+      setResultadoEntrevistaSeleccionado('')
+    } catch (err) {
+      console.error('Error guardando resultado de entrevista:', err)
+      setError('No se pudo guardar el resultado de la entrevista.')
+    } finally {
+      setGuardandoResultadoEntrevista(false)
+    }
+  }
+
+  // Abrir el modal automáticamente si la entrevista ya pasó
+  useEffect(() => {
+    if (!esRefugio || !conversacionData?.solicitud_id || !entrevistaActiva) return
+    if (new Date(entrevistaActiva.fecha) <= new Date()) {
+      setModalResultadoAbierto(false)
+    }
+  }, [esRefugio, conversacionData?.solicitud_id, entrevistaActiva])
+
   return (
     <div className="chat-pagina">
       <header className="chat-header">
@@ -326,6 +439,16 @@ export default function Conversacion() {
             onClick={() => navigate(`/refugio/chats/${conversacionId}/entrevista`)}
           >
             Programar entrevista
+          </button>
+        )}
+
+        {esRefugio && tieneEntrevistaEnCurso && (
+          <button
+            type="button"
+            className="chat-btn-entrevista chat-btn-entrevista--resultado"
+            onClick={abrirModalResultado}
+          >
+            Resultado
           </button>
         )}
       </header>
@@ -415,6 +538,12 @@ export default function Conversacion() {
                         <dd>{data.notas}</dd>
                       </div>
                     )}
+                    {data?.resultado && (
+                      <div className="chat-entrevista-fila">
+                        <dt>Resultado</dt>
+                        <dd>{data.resultado}</dd>
+                      </div>
+                    )}
                   </dl>
 
                   {!esPropio && estadoEntrevista === 'pendiente' && (
@@ -469,6 +598,113 @@ export default function Conversacion() {
           ➤
         </button>
       </form>
+
+      {modalResultadoAbierto && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.45)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2000,
+            padding: 20,
+          }}
+          onClick={cerrarModalResultado}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: 420,
+              background: '#fff',
+              borderRadius: 16,
+              boxShadow: '0 20px 50px rgba(0,0,0,0.22)',
+              padding: 24,
+              border: '1px solid #e5e7eb',
+            }}
+          >
+            <h3 style={{ margin: '0 0 12px', fontSize: 22, color: '#1f2937' }}>¿Cómo fue la entrevista?</h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
+              {/*
+                { value: 'no_presento', label: 'No se presentó' },
+                { value: 'no_resulto', label: 'No resultó' },
+                { value: 'resulto', label: 'Resultó (Adoptado el animal)' },
+                { value: 'otra_entrevista', label: 'Otra entrevista (programar otra entrevista)' },
+              */}
+              {['no_presento', 'no_resulto', 'resulto', 'otra_entrevista'].map(value => {
+                let label = ''
+                if (value === 'no_presento') label = 'No se presentó'
+                if (value === 'no_resulto') label = 'No resultó'
+                if (value === 'resulto') label = 'Resultó (Adoptado el animal)'
+                if (value === 'otra_entrevista') label = 'Otra entrevista (programar otra entrevista)'
+
+                return (
+                  <label
+                    key={value}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      border: '1px solid #e5e7eb',
+                      borderRadius: 10,
+                      padding: '12px 14px',
+                      cursor: 'pointer',
+                      background: resultadoEntrevistaSeleccionado === value ? '#f5efe8' : '#fff',
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="resultadoEntrevista"
+                      value={value}
+                      checked={resultadoEntrevistaSeleccionado === value}
+                      onChange={(e) => setResultadoEntrevistaSeleccionado(e.target.value)}
+                    />
+                    <span style={{ color: '#374151', fontWeight: 600 }}>{label}</span>
+                  </label>
+                )
+              })}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+              <button
+                type="button"
+                onClick={cerrarModalResultado}
+                style={{
+                  border: '1px solid #d1d5db',
+                  background: '#fff',
+                  color: '#374151',
+                  borderRadius: 10,
+                  padding: '10px 16px',
+                  cursor: 'pointer',
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={guardarResultadoEntrevista}
+                disabled={!resultadoEntrevistaSeleccionado || guardandoResultadoEntrevista}
+                style={{
+                  border: 'none',
+                  background: resultadoEntrevistaSeleccionado ? '#9CA986' : '#d1d5db',
+                  color: '#fff',
+                  borderRadius: 10,
+                  padding: '10px 16px',
+                  cursor: resultadoEntrevistaSeleccionado ? 'pointer' : 'not-allowed',
+                  fontWeight: 600,
+                }}
+              >
+                {guardandoResultadoEntrevista ? 'Guardando...' : 'Guardar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

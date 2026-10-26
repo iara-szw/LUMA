@@ -9,6 +9,7 @@ import {
   FORMULARIO_DEFAULT,
 } from '../../repositories/formularioRepository'
 import { obtenerMascotaPorId } from '../../repositories/mascotaRepository'
+import ConfirmModal from '../../components/ConfirmModal'
 
 const TIPOS = [
   { valor: 'text', label: 'Texto corto' },
@@ -37,6 +38,7 @@ export default function EditarFormularioMascota() {
   const [guardando, setGuardando] = useState(false)
   const [mascota, setMascota] = useState(null)
   const [bloquesFormulario, setBloquesFormulario] = useState(FORMULARIO_DEFAULT)
+  const [modalConfirmacion, setModalConfirmacion] = useState({ isOpen: false, indexSeccion: null, indexPregunta: null, tipo: null })
 
   useEffect(() => {
     async function cargar() {
@@ -121,22 +123,37 @@ export default function EditarFormularioMascota() {
   }
 
   function quitarPregunta(indexSeccion, indexPregunta) {
-    const confirmar = window.confirm('¿Estás seguro que querés eliminar esta pregunta?')
-    if (!confirmar) return
-
-    setBloquesFormulario(prev =>
-      prev.map((s, i) => {
-        if (i !== indexSeccion) return s
-        return { ...s, preguntas: s.preguntas.filter((_, j) => j !== indexPregunta) }
-      })
-    )
+    setModalConfirmacion({
+      isOpen: true,
+      indexSeccion,
+      indexPregunta,
+      tipo: 'pregunta',
+    })
   }
 
   function quitarSeccion(indexSeccion) {
-    const confirmar = window.confirm('¿Estás seguro que querés eliminar esta sección?')
-    if (!confirmar) return
+    setModalConfirmacion({
+      isOpen: true,
+      indexSeccion,
+      tipo: 'seccion',
+    })
+  }
 
-    setBloquesFormulario(prev => prev.filter((_, i) => i !== indexSeccion))
+  async function confirmarAccion() {
+    setModalConfirmacion(prev => ({ ...prev, isOpen: false }))
+
+    if (modalConfirmacion.tipo === 'pregunta') {
+      const { indexSeccion, indexPregunta } = modalConfirmacion
+      setBloquesFormulario(prev =>
+        prev.map((s, i) => {
+          if (i !== indexSeccion) return s
+          return { ...s, preguntas: s.preguntas.filter((_, j) => j !== indexPregunta) }
+        })
+      )
+    } else if (modalConfirmacion.tipo === 'seccion') {
+      const { indexSeccion } = modalConfirmacion
+      setBloquesFormulario(prev => prev.filter((_, i) => i !== indexSeccion))
+    }
   }
 
   async function guardar(e) {
@@ -328,6 +345,17 @@ export default function EditarFormularioMascota() {
           </button>
         </div>
       </form>
+
+      <ConfirmModal
+        isOpen={modalConfirmacion.isOpen}
+        title={modalConfirmacion.tipo === 'pregunta' ? 'Eliminar pregunta' : 'Eliminar sección'}
+        message={modalConfirmacion.tipo === 'pregunta'
+          ? '¿Estás seguro que querés eliminar esta pregunta?'
+          : '¿Estás seguro que querés eliminar esta sección?'}
+        confirmText="Eliminar"
+        onConfirm={confirmarAccion}
+        onCancel={() => setModalConfirmacion({ isOpen: false, indexSeccion: null, indexPregunta: null, tipo: null })}
+      />
     </div>
   )
 }

@@ -7,6 +7,18 @@ import { obtenerMascotasDeRefugio, obtenerRefugio } from '../../repositories/per
 import { crearEntrevista } from '../../repositories/entrevistaRepository'
 import '../../styles/crearEntrevista.css'
 
+const toSupabaseDateTime = (value) => {
+  if (!value) return null
+
+  const [datePart, timePart] = value.split('T')
+  if (!datePart || !timePart) return null
+
+  const [year, month, day] = datePart.split('-').map(Number)
+  const [hour, minute] = timePart.split(':').map(Number)
+
+  return new Date(year, month - 1, day, hour, minute).toISOString()
+}
+
 export default function CrearEntrevista() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -91,7 +103,7 @@ export default function CrearEntrevista() {
         solicitud_id: conversacion?.solicitud_id || null,
         adoptante_id: conversacion?.adoptante_id || null,
         refugio_id: conversacion?.refugio_id || usuario.id,
-        fecha: new Date(fecha).toISOString(),
+        fecha: toSupabaseDateTime(fecha),
         modalidad,
         lugar: lugarFinal,
         duracion_minutos: 30,

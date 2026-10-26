@@ -10,6 +10,7 @@ import {
   obtenerGuardadosDeUsuario,
 } from '../../repositories/perfilRepository'
 import { agregarFavorito, eliminarFavorito } from '../../repositories/usuarioRepository'
+import { eliminarSolicitudAdoptante } from '../../repositories/formularioRepository'
 import '../../styles/perfil.css'
 import NotiBadge from '../../components/NotiBadge'
 
@@ -22,6 +23,20 @@ export default function Perfil() {
   const [guardados, setGuardados] = useState([])
   const [cargando, setCargando] = useState(true)
   const [cargandoFavorito, setCargandoFavorito] = useState(false)
+
+  const handleEliminarSolicitud = async (e, solicitudId) => {
+    e.stopPropagation()
+    if (!usuario?.id || !solicitudId) return
+
+    const { error } = await eliminarSolicitudAdoptante({
+      solicitudId,
+      adoptanteId: usuario.id,
+    })
+
+    if (!error) {
+      setPostulaciones(prev => prev.filter(item => item.id !== solicitudId))
+    }
+  }
 
   useEffect(() => {
     if (!usuario) {
@@ -132,6 +147,14 @@ export default function Perfil() {
                   <p>Tu solicitud fue rechazada. Tu perfil no encajaba con las necesidades del animal</p>
                 )}
               </div>
+              <button
+                type="button"
+                className="btn-accion-secundaria"
+                onClick={(e) => handleEliminarSolicitud(e, p.id)}
+                style={{ marginTop: 12 }}
+              >
+                Eliminar solicitud
+              </button>
             </article>
           ))
         )}
