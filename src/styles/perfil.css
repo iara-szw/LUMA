@@ -438,3 +438,6 @@
 .pagina-perfil-usuario .tarjeta-postulacion .postulacion-mascota p:only-of-type {
   grid-column: 1 / -1;
 }
+.perfil-avatar-editar img{
+  width: 65%;
+}

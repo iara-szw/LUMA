@@ -94,7 +94,7 @@ export default function Perfil() {
             alt={usuario.nombre}
           />
           <button className="perfil-avatar-editar" onClick={() => navigate('/adoptante/editarUsuario')}>
-            📷
+                            <img src="/assets/img/pencil.png"></img>
           </button>
         </div>
         <h2>{usuario.nombre} </h2>
