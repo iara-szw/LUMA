@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { obtenerMascotasDeRefugio } from '../../repositories/perfilRefugioRepository'
 import { archivarMascota } from '../../repositories/mascotaRepository'
+import { ESTADOS } from '../../services/authService'
 import '../../styles/misMascotas.css'
 import FooterRefugio from '../../components/FooterRefugio'
 import ConfirmModal from '../../components/ConfirmModal'
@@ -15,12 +16,29 @@ export default function MisMascotas() {
   const [mascotas, setMascotas] = useState([])
   const [cargando, setCargando] = useState(true)
   const [confirmacion, setConfirmacion] = useState({ isOpen: false, mascotaId: null, nombre: '' })
+  const [filtro, setFiltro] = useState('todas')
 
   const cargarMascotas = async () => {
     if (!usuario) return
     const res = await obtenerMascotasDeRefugio(usuario.id)
     setMascotas(res.data || [])
   }
+
+  const esActiva = (m) => m.publicado === true || m.estado_id === ESTADOS.publicada
+  const esAdoptada = (m) => m.adoptado === true || m.estado_id === ESTADOS.adoptada
+
+  const mascotasFiltradas = [...(mascotas || [])]
+    .sort((a, b) => {
+      const aActiva = esActiva(a)
+      const bActiva = esActiva(b)
+      if (aActiva !== bActiva) return Number(bActiva) - Number(aActiva)
+      return new Date(b.fecha_publicacion || b.created_at || 0) - new Date(a.fecha_publicacion || a.created_at || 0)
+    })
+    .filter(m => {
+      if (filtro === 'activas') return esActiva(m)
+      if (filtro === 'adoptadas') return esAdoptada(m)
+      return true
+    })
 
   useEffect(() => {
     if (!usuario) return
@@ -63,16 +81,16 @@ export default function MisMascotas() {
         </div>
 
         <div className="mis-filtros">
-          <button className="filtro-btn activo">Todas</button>
-          <button className="filtro-btn">Activas</button>
-          <button className="filtro-btn">Adoptadas</button>
+          <button className={`filtro-btn ${filtro === 'todas' ? 'activo' : ''}`} onClick={() => setFiltro('todas')}>Todas</button>
+          <button className={`filtro-btn ${filtro === 'activas' ? 'activo' : ''}`} onClick={() => setFiltro('activas')}>Activas</button>
+          <button className={`filtro-btn ${filtro === 'adoptadas' ? 'activo' : ''}`} onClick={() => setFiltro('adoptadas')}>Adoptadas</button>
         </div>
 
         <div className="lista-mascotas-refugio">
-          {mascotas.length === 0 ? (
-            <p>No tenés mascotas publicadas.</p>
+          {mascotasFiltradas.length === 0 ? (
+            <p>No tenés mascotas {filtro === 'adoptadas' ? 'adoptadas' : filtro === 'activas' ? 'activas' : 'publicadas'}.</p>
           ) : (
-            mascotas.map(m => (
+            mascotasFiltradas.map(m => (
               <article
                 key={m.id}
                 className="tarjeta-mascota-refugio tarjeta-mascota-clickeable"

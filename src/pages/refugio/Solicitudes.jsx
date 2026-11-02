@@ -58,8 +58,8 @@ export default function SolicitudesRefugio() {
   // Filtrado por tab
   const solicitudesFiltradas = solicitudes.filter(s => {
     if (filtroActivo === 'Todas') return true
-    if (filtroActivo === 'En revisión') return s.estado === 'revision'
-    if (filtroActivo === 'Aprobadas') return s.estado === 'aprobada'
+    if (filtroActivo === 'En revisión') return s.estado === 'revision' || s.estado === 'en_revision'
+    if (filtroActivo === 'Aprobadas') return s.estado === 'aprobada' || s.estado === 'aprobada'
     if (filtroActivo === 'Rechazadas') return s.estado === 'rechazada'
     return true
   })
@@ -168,10 +168,11 @@ function TarjetaSolicitud({ solicitud: s, onVerFormulario, onVerPerfil, onCoordi
             <p>Para {s.mascotas?.nombre} · {tiempoRelativo(s.creado_en)}</p>
           </div>
           <span className={`badge-estado-sol badge-${estadoKey}`}>
-            {estadoKey === 'revision' ? 'En revisión'
+            {estadoKey === 'revision' || estadoKey === 'en_revision' ? 'En revisión'
               : estadoKey === 'aprobada' ? 'Aprobada'
-                : estadoKey === 'rechazada' ? 'Rechazada'
-                  : 'Pendiente'}
+                : estadoKey === 'adoptada' ? 'Adoptada'
+                  : estadoKey === 'rechazada' ? 'Rechazada'
+                    : 'Pendiente'}
           </span>
         </div>
 

@@ -104,9 +104,11 @@ export default function PerfilUsuario() {
               <p>
                 {perfil?.estado === 'Aprobada'
                   ? 'Aprobada'
-                  : perfil?.estado === 'Rechazada'
-                    ? 'Rechazada'
-                    : 'En revisión'}
+                  : perfil?.estado === 'Adoptada'
+                    ? 'Adoptada'
+                    : perfil?.estado === 'Rechazada'
+                      ? 'Rechazada'
+                      : 'En revisión'}
               </p>
               {perfil?.fecha_solicitud && (
                 <p>

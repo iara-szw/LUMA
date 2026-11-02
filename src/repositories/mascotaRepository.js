@@ -13,6 +13,7 @@ export async function obtenerMascotasRecientes(cantidad) {
     .from('mascotas')
     .select('id, nombre, foto_url, urgente, edad, refugios(nombre)')
     .eq('estado_id', ESTADOS.publicada)
+    .or('adoptado.is.null,adoptado.eq.false')
     .order('fecha_publicacion', { ascending: false })
 
   return aplicarLimite(query, cantidad)
@@ -24,6 +25,7 @@ export async function obtenerPerros(cantidad) {
     .select('id, nombre, edad, foto_url, urgente, descripcion, refugio_id, refugios(nombre)')
     .eq('especie_id', ESPECIE_PERRO)
     .eq('estado_id', ESTADOS.publicada)
+    .or('adoptado.is.null,adoptado.eq.false')
 
   return aplicarLimite(query, cantidad)
 }
@@ -34,6 +36,7 @@ export async function obtenerGatos(cantidad) {
     .select('id, nombre, edad, foto_url, urgente, descripcion, refugio_id, refugios(nombre)')
     .eq('especie_id', ESPECIE_GATO)
     .eq('estado_id', ESTADOS.publicada)
+    .or('adoptado.is.null,adoptado.eq.false')
 
   return aplicarLimite(query, cantidad)
 }
@@ -44,6 +47,7 @@ export async function obtenerMascotasRefugio(refugioId, cantidad) {
     .select('id, nombre, edad, urgente, foto_url, especie_id, refugios(nombre)')
     .eq('refugio_id', refugioId)
     .eq('estado_id', ESTADOS.publicada)
+    .or('adoptado.is.null,adoptado.eq.false')
     
   return aplicarLimite(query, cantidad)
 }
@@ -129,6 +133,7 @@ export async function obtenerOtrasMascotas(excluirId, refugioId, cantidad = 6) {
       .eq('refugio_id', refugioId)
       .neq('id', excluirId)
       .eq('estado_id', ESTADOS.publicada)
+      .or('adoptado.is.null,adoptado.eq.false')
       .order('fecha_publicacion', { ascending: false })
 
     query = aplicarLimite(query, cantidad)

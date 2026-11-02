@@ -69,7 +69,8 @@ export async function crearNotificacion({
     titulo,
     mensaje,
     link,
-    leida
+    leida,
+    fecha: new Date().toISOString()
   }
 
   const { data, error } = await Supabase
@@ -86,7 +87,7 @@ export async function eliminarNotificacion(id) {
 
   return Supabase
     .from('notificaciones')
-    .update({ leida: true })
+    .delete()
     .eq('id', id)
     .select()
     .single()
@@ -99,7 +100,7 @@ export async function limpiarNotificacionesUsuario(usuarioId) {
 
   return Supabase
     .from('notificaciones')
-    .update({ leida: true })
+    .delete()
     .eq('usuario_id', usuarioId)
     .select()
 }

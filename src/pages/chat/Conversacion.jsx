@@ -12,6 +12,7 @@ import {
 } from '../../repositories/chatRepository'
 import { Supabase } from '../../services/supabase'
 import { responderEntrevista, actualizarEntrevista, obtenerEntrevistasPorSolicitud } from '../../repositories/entrevistaRepository'
+import { crearNotificacion } from '../../repositories/notificacionesRepository'
 import { ESTADOS } from '../../services/authService'
 import '../../styles/chat.css'
 
@@ -72,6 +73,7 @@ export default function Conversacion() {
 
   const finRef = useRef(null)
   const channelRef = useRef(null)
+  const mensajesRef = useRef(null)
 
   const buscarEntrevistaActiva = async (conv) => {
     if (!conv) return null
@@ -206,8 +208,12 @@ export default function Conversacion() {
 
   // Auto-scroll al último mensaje
   useEffect(() => {
-    finRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [mensajes])
+    if (!mensajesRef.current) return
+
+    requestAnimationFrame(() => {
+      mensajesRef.current.scrollTop = mensajesRef.current.scrollHeight
+    })
+  }, [mensajes, cargando])
 
   const handleEnviar = async (e) => {
     e.preventDefault()
@@ -404,27 +410,6 @@ export default function Conversacion() {
         const solicitudId = conversacionData?.solicitud_id || entrevistaActiva?.solicitud_id
 
         if (solicitudId) {
-          const { data: adopcionExistente, error: errorAdopcionExistente } = await Supabase
-            .from('adopciones')
-            .select('id')
-            .eq('solicitud_id', solicitudId)
-            .limit(1)
-
-          if (!errorAdopcionExistente && (!adopcionExistente || adopcionExistente.length === 0)) {
-            const { error: errorAdopcion } = await Supabase
-              .from('adopciones')
-              .insert({
-                solicitud_id: solicitudId,
-                fecha_adopcion: hoy,
-                contrato_firmado: false,
-                seguimiento_activo: true,
-              })
-
-            if (errorAdopcion) {
-              console.error('Error creando adopción:', errorAdopcion)
-            }
-          }
-
           const { error: errorSolicitud } = await Supabase
             .from('solicitudes')
             .update({ estado: 'Adoptada', ultima_actualizacion: hoy })
@@ -441,7 +426,6 @@ export default function Conversacion() {
             .update({
               estado_id: ESTADOS.adoptada,
               adoptado: true,
-              publicado: false,
               fecha_adopcion: hoy,
             })
             .eq('id', mascotaId)
@@ -455,11 +439,12 @@ export default function Conversacion() {
         if (solicitudId && conversacionData?.adoptante_id) {
           const mensajeAdopcion = `__ADOPCION__${JSON.stringify({
             mascota: mascota?.nombre || 'tu mascota',
-            texto: '¡Felicitaciones! La mascota fue adoptada y ya formó parte de tu hogar.',
+            texto: '¡Felicitaciones! La mascota fue adoptada y ya puede empezar a formar parte de tu hogar.',
             fecha: hoy,
           })}`
 
           await enviarMensaje(conversacionId, usuario.id, mensajeAdopcion)
+
         }
       }
 
@@ -491,19 +476,18 @@ export default function Conversacion() {
   const debeMostrarFeedbackPostEntrevista = esRefugio &&
     tieneEntrevistaEnCurso &&
     !!entrevistaActiva &&
-    !entrevistaActiva.resultado &&
     new Date(entrevistaActiva.fecha) <= new Date()
 
-  // Abrir el modal automáticamente si la entrevista ya pasó
+  // Abrir el modal automáticamente si la entrevista ya pasó y todavía no tiene resultado
   useEffect(() => {
-    if (!debeMostrarFeedbackPostEntrevista) {
+    if (!debeMostrarFeedbackPostEntrevista || entrevistaActiva?.resultado) {
       setModalResultadoAbierto(false)
       return
     }
 
     setResultadoEntrevistaSeleccionado('')
     setModalResultadoAbierto(true)
-  }, [debeMostrarFeedbackPostEntrevista])
+  }, [debeMostrarFeedbackPostEntrevista, entrevistaActiva?.resultado])
 
   return (
     <div className="chat-pagina">
@@ -567,7 +551,7 @@ export default function Conversacion() {
         </div>
       )}
 
-      <div className="chat-mensajes">
+      <div className="chat-mensajes" ref={mensajesRef}>
         {cargando ? (
           <p className="chat-vacio">Cargando mensajes...</p>
         ) : error ? (

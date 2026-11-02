@@ -27,6 +27,7 @@ export default function Mascota() {
 
   // ✅ calcular esDueño después de tener usuario y mascota
   const esDueño = esRefugio && usuario && mascota && usuario.id === mascota.refugio_id
+  const mascotaAdoptada = Boolean(mascota?.adoptado || mascota?.estado_id === '31d5d4a1-2d4f-4f56-8f31-68b76c8ae5d5')
 
   useEffect(() => {
     let activo = true
@@ -106,6 +107,10 @@ export default function Mascota() {
 
     if (!usuario) {
       return navigate('/login')
+    }
+
+    if (mascotaAdoptada) {
+      return
     }
 
     navigate(`/adoptante/solicitud/${mascota.id}`)
@@ -240,9 +245,15 @@ export default function Mascota() {
           <div className="acciones">
             {!esRefugio && (
               <>
-                <button className="btn-primario" onClick={handleAplicar}>
-                  Solicitar adopción
-                </button>
+                {mascotaAdoptada ? (
+                  <button className="btn-primario" disabled style={{ opacity: 0.7, cursor: 'not-allowed' }}>
+                    Ya adoptado
+                  </button>
+                ) : (
+                  <button className="btn-primario" onClick={handleAplicar}>
+                    Solicitar adopción
+                  </button>
+                )}
                 <button className="btn-secundario" onClick={handleConsultar} disabled={consultando}>
                   {consultando ? 'Abriendo chat...' : 'Consultar'}
                 </button>

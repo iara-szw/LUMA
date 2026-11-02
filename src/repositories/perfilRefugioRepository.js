@@ -9,10 +9,9 @@ function resolverFotoUsuario(usuario) {
 export async function obtenerMascotasDeRefugio(refugioId) {
   return Supabase
     .from('mascotas')
-    .select('id, nombre, edad, foto_url, urgente, especie_id, especies(nombre)')
+    .select('id, nombre, edad, foto_url, urgente, especie_id, especies(nombre), publicado, adoptado, estado_id, fecha_publicacion')
     .eq('refugio_id', refugioId)
-    .eq('estado_id', ESTADOS.publicada)
-    .eq('publicado', true)
+    .order('publicado', { ascending: false })
     .order('fecha_publicacion', { ascending: false })
 }
 
@@ -37,10 +36,10 @@ export async function obtenerSolicitudesDeRefugio(refugioId) {
 
       return {
         id: s.id,
-        estado: s.estado === 'Pendiente' ? 'en_revision' : s.estado.toLowerCase(),
+        estado: s.estado === 'Pendiente' ? 'en_revision' : s.estado === 'Adoptada' ? 'adoptada' : s.estado.toLowerCase(),
         creado_en: s.fecha_solicitud,
         es_nueva: s.estado === 'Pendiente',
-        paso_actual: s.estado === 'Pendiente' ? 'formulario_completo' : s.estado === 'Aprobada' ? 'entrevista_sugerida' : 'en_revision',
+        paso_actual: s.estado === 'Pendiente' ? 'formulario_completo' : s.estado === 'Aprobada' ? 'entrevista_sugerida' : s.estado === 'Adoptada' ? 'adoptada' : 'en_revision',
         usuarios: {
           ...s.usuarios,
           foto_url: resolverFotoUsuario(s.usuarios),

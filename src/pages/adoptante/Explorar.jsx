@@ -221,7 +221,7 @@ export default function Explorar() {
           titulo="Perros"
           animales={perrosFiltrados}
           onVerMas={() => setFiltroActivo('perros')}
-          onClickAnimal={a => navigate(`/mascota/${a.id}`)}
+          onClickAnimal={a => navigate(`/adoptante/mascota/${a.id}`)}
           favoritos={favoritos}
           onToggleFavorito={toggleFavorito}
         />
@@ -232,7 +232,7 @@ export default function Explorar() {
           titulo="Gatos"
           animales={gatosFiltrados}
           onVerMas={() => setFiltroActivo('gatos')}
-          onClickAnimal={a => navigate(`/mascota/${a.id}`)}
+          onClickAnimal={a => navigate(`/adoptante/mascota/${a.id}`)}
           favoritos={favoritos}
           onToggleFavorito={toggleFavorito}
         />

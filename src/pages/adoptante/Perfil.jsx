@@ -119,44 +119,62 @@ export default function Perfil() {
         {postulaciones.length === 0 ? (
           <p className="vacio">No tenés postulaciones aún.</p>
         ) : (
-          postulaciones.slice(0, mostrarTodasPostulaciones ? postulaciones.length : 3).map(p => (
-            <article
-              key={p.id}
-              className="tarjeta-postulacion"
-              onClick={() => navigate(`/adoptante/postulacion/${p.id}`)}
-            >
-              <div className="postulacion-mascota">
-                {p.mascotas?.foto_url && (
-                  <img src={p.mascotas.foto_url} alt={p.mascotas.nombre} />
-                )}
-                <div>
-                  <h4>{p.mascotas?.nombre}</h4>
-                  <p>{p.refugios?.nombre}</p>
-                </div>
-                <span className={`badge-estado badge-${p.estado}`}>{p.estado}</span>
-              </div>
-              <div className="postulacion-pasos">
-                <p>✓ Formulario enviado · {new Date(p.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                {p.estado === 'Revision' && (
-                  <p>↻ En proceso de revisión — te notificaremos cuando el refugio termine de revisar.</p>
-                )}
-                {p.estado === 'Aprobada' && (
-                  <p>Tu solicitud fue aprobada para la siguiente etapa - el refugio se contactara para coordinar la entrevista.</p>
-                )}
-                 {p.estado === 'Rechazada' && (
-                  <p>Tu solicitud fue rechazada. Tu perfil no encajaba con las necesidades del animal</p>
-                )}
-              </div>
-              <button
-                type="button"
-                className="btn-accion-secundaria"
-                onClick={(e) => handleEliminarSolicitud(e, p.id)}
-                style={{ marginTop: 12 }}
+          postulaciones.slice(0, mostrarTodasPostulaciones ? postulaciones.length : 3).map(p => {
+            const esAdoptada = p.estado === 'Adoptada' || p.estado === 'adoptada'
+
+            return (
+              <article
+                key={p.id}
+                className="tarjeta-postulacion"
+                onClick={() => navigate(`/adoptante/postulacion/${p.id}`)}
               >
-                Eliminar solicitud
-              </button>
-            </article>
-          ))
+                <div className="postulacion-mascota">
+                  {p.mascotas?.foto_url && (
+                    <img src={p.mascotas.foto_url} alt={p.mascotas.nombre || p.nombre_mascota || 'Mascota'} />
+                  )}
+                  <div>
+                    <h4>{p.mascotas?.nombre || p.nombre_mascota || 'Mascota'}</h4>
+                    <p>{p.refugios?.nombre}</p>
+                  </div>
+                  <span className={`badge-estado badge-${p.estado}`}>{p.estado}</span>
+                </div>
+                <div className="postulacion-pasos">
+                  <p>✓ Formulario enviado · {new Date(p.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                  {p.estado === 'Revision' && (
+                    <p>↻ En proceso de revisión — te notificaremos cuando el refugio termine de revisar.</p>
+                  )}
+                  {p.estado === 'Aprobada' && (
+                    <p>Tu solicitud fue aprobada para la siguiente etapa - el refugio se contactara para coordinar la entrevista.</p>
+                  )}
+                   {p.estado === 'Rechazada' && (
+                    <p>Tu solicitud fue rechazada. Tu perfil no encajaba con las necesidades del animal</p>
+                  )}
+                  {esAdoptada && (
+                    <p>Esta mascota ya fue adoptada. La solicitud quedó registrada como finalizada.</p>
+                  )}
+                </div>
+                {esAdoptada ? (
+                  <button
+                    type="button"
+                    className="btn-accion-secundaria"
+                    style={{ marginTop: 12, opacity: 0.6, cursor: 'not-allowed' }}
+                    disabled
+                  >
+                    Adoptada
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn-accion-secundaria"
+                    onClick={(e) => handleEliminarSolicitud(e, p.id)}
+                    style={{ marginTop: 12 }}
+                  >
+                    Eliminar solicitud
+                  </button>
+                )}
+              </article>
+            )
+          })
         )}
       </section>
 
@@ -184,37 +202,41 @@ export default function Perfil() {
           <p className="vacio">No guardaste mascotas todavía.</p>
         ) : (
           <div className="scroll-horizontal">
-            {guardados.map(g => (
-              <article
-                key={g.id}
-                className="tarjeta-mascota"
-                onClick={() => navigate(`/adoptante/mascota/${g.mascotas?.id}`)}
-              >
-                <button
-                  type="button"
-                  className="tarjeta-favorito"
-                  aria-label={`Remover ${g.mascotas?.nombre}`}
-                  onClick={async (e) => {
-                    e.stopPropagation()
-                    if (!usuario || cargandoFavorito) return
-                    setCargandoFavorito(true)
-                    try {
-                      await eliminarFavorito(usuario.id, g.mascotas?.id)
-                      setGuardados(prev => prev.filter(item => item.mascotas?.id !== g.mascotas?.id))
-                    } finally {
-                      setCargandoFavorito(false)
-                    }
-                  }}
+            {guardados.map(g => {
+              const mascota = g.mascotas || {}
+              const nombreMascota = mascota.nombre || 'Mascota'
+              const fotoMascota = mascota.foto_url || '/assets/img/perfil_default.jpg'
+
+              return (
+                <article
+                  key={g.id}
+                  className="tarjeta-mascota"
+                  onClick={() => navigate(`/adoptante/mascota/${g.mascota_id || g.mascotas?.id}`)}
                 >
-                  <img src="/assets/img/corazon-seleccionado.png" alt="" />
-                </button>
-                {g.mascotas?.foto_url && (
-                  <img src={g.mascotas.foto_url} alt={g.mascotas.nombre} />
-                )}
-                <h4>{g.mascotas?.nombre}</h4>
-                {g.mascotas?.urgente && <span className="badge-urgente">Urgente</span>}
-              </article>
-            ))}
+                  <button
+                    type="button"
+                    className="tarjeta-favorito"
+                    aria-label={`Remover ${nombreMascota}`}
+                    onClick={async (e) => {
+                      e.stopPropagation()
+                      if (!usuario || cargandoFavorito) return
+                      setCargandoFavorito(true)
+                      try {
+                        await eliminarFavorito(usuario.id, g.mascota_id || g.mascotas?.id)
+                        setGuardados(prev => prev.filter(item => (item.mascota_id || item.mascotas?.id) !== (g.mascota_id || g.mascotas?.id)))
+                      } finally {
+                        setCargandoFavorito(false)
+                      }
+                    }}
+                  >
+                    <img src="/assets/img/corazon-seleccionado.png" alt="" />
+                  </button>
+                  <img src={fotoMascota} alt={nombreMascota} />
+                  <h4>{nombreMascota}</h4>
+                  {mascota.urgente && <span className="badge-urgente">Urgente</span>}
+                </article>
+              )
+            })}
           </div>
         )}
       </section>

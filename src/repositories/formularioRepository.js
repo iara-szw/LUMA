@@ -190,6 +190,9 @@ export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, info, e
         adoptante_id: adoptanteId,
         mascota_id: mascotaId,
         estado,
+        eliminada: false,
+        fecha_solicitud: new Date().toISOString(),
+        ultima_actualizacion: new Date().toISOString(),
         info: info || {},
       },
       { onConflict: 'mascota_id,adoptante_id' }

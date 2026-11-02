@@ -64,7 +64,7 @@ export default function CrearEntrevista() {
           .from('solicitudes')
           .select('id, mascota_id, mascotas!inner(id, nombre, foto_url, refugio_id)')
           .eq('adoptante_id', conv.adoptante_id)
-          .eq('eliminada', false)
+          .or('eliminada.is.null,eliminada.eq.false')
           .eq('mascotas.refugio_id', usuario.id)
           .order('fecha_solicitud', { ascending: false })
 

@@ -14,7 +14,24 @@ export default function Notificaciones() {
   const [notis, setNotis] = useState([])
   const [cargando, setCargando] = useState(true)
   const [modalConfirmacion, setModalConfirmacion] = useState({ isOpen: false, id: null })
+  const [mostrarTodas, setMostrarTodas] = useState(false)
   const { usuario, esRefugio } = usarAuth() 
+
+  const getFechaMs = (fecha) => {
+    if (!fecha) return 0
+
+    let d = new Date(fecha)
+    if (Number.isNaN(d.getTime()) && typeof fecha === 'string') {
+      d = new Date(fecha.replace(' ', 'T'))
+    }
+
+    return Number.isNaN(d.getTime()) ? 0 : d.getTime()
+  }
+
+  const notisOrdenadas = [...notis].sort((a, b) => getFechaMs(b.fecha) - getFechaMs(a.fecha))
+  const notisVisibles = mostrarTodas ? notisOrdenadas : notisOrdenadas.slice(0, 3)
+  const hayMas = notisOrdenadas.length > 3
+
   useEffect(() => {
     let activo = true
     const cargar = async () => {
@@ -27,7 +44,7 @@ export default function Notificaciones() {
         if (error) console.error(error)
 
         if (!activo) return
-        const ordenadas = [...(data || [])].sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+        const ordenadas = [...(data || [])].sort((a, b) => getFechaMs(b.fecha) - getFechaMs(a.fecha))
         setNotis(ordenadas)
       } finally {
         if (activo) setCargando(false)
@@ -38,11 +55,25 @@ export default function Notificaciones() {
   }, [usuario])
 
   const formatearFecha = (fechaStr) => {
-    try {
-      return new Date(fechaStr).toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })
-    } catch (e) {
-      return ''
+    if (!fechaStr) return ''
+
+    let fecha = new Date(fechaStr)
+
+    if (Number.isNaN(fecha.getTime()) && typeof fechaStr === 'string') {
+      fecha = new Date(fechaStr.replace(' ', 'T'))
     }
+
+    if (Number.isNaN(fecha.getTime())) return ''
+
+    return new Intl.DateTimeFormat('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'America/Argentina/Buenos_Aires',
+    }).format(fecha)
   }
 
   const nombreEmisor = (e) => {
@@ -94,6 +125,22 @@ export default function Notificaciones() {
     }
   }
 
+  const handleBorrarTodasNotificaciones = async () => {
+    if (!usuario?.id || notisOrdenadas.length === 0) return
+
+    const { error } = await Promise.all(
+      notisOrdenadas.map(n => borrarNotificacion(n.id))
+    ).then(() => ({ error: null })).catch(err => ({ error: err }))
+
+    if (!error) {
+      setNotis([])
+      setMostrarTodas(false)
+      window.dispatchEvent(new Event('luma:noti-actualizada'))
+    } else {
+      console.error('Error al eliminar todas las notificaciones:', error)
+    }
+  }
+
   return (
     <div className="pagina-notificaciones">
       <header className="inicio-header">
@@ -114,52 +161,77 @@ export default function Notificaciones() {
       <main className="notis-seccion">
         <div className="notis" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
           <h1>Notificaciones</h1>
-          {notis.some(n => !n.leida) && (
-            <button
-              className="btn-formulario ghost"
-              type="button"
-              onClick={marcarTodasLeidas}
-              style={{ padding: '8px 12px', fontSize: 14 }}
-            >
-              Marcar leídas
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {notis.some(n => !n.leida) && (
+              <button
+                className="btn-formulario ghost"
+                type="button"
+                onClick={marcarTodasLeidas}
+                style={{ padding: '8px 12px', fontSize: 14 }}
+              >
+                Marcar leídas
+              </button>
+            )}
+            {notis.length > 0 && (
+              <button
+                className="btn-formulario ghost"
+                type="button"
+                onClick={handleBorrarTodasNotificaciones}
+                style={{ padding: '8px 12px', fontSize: 14 }}
+              >
+                Eliminar todas
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="noti-lista">
           {cargando ? (
             <p className="vacio">Cargando notificaciones...</p>
-          ) : notis.length === 0 ? (
+          ) : notisOrdenadas.length === 0 ? (
             <p className="vacio">No hay notificaciones.</p>
           ) : (
-            notis.map(n => {
-              const remitente = nombreEmisor(n.emisor)
-              const clickeable = !!(n.link || n.conversacion_id)
-              const esAdopcion = /adopci[oó]n/i.test(`${n.titulo || ''} ${n.mensaje || ''}`)
-              const etiqueta = esAdopcion ? 'Adopción' : 'Nuevo mensaje'
-              return (
-                <article
-                  key={n.id}
-                  className={`noti-item ${n.leida ? 'leida' : 'noleida'} ${clickeable ? 'clickeable' : ''}`}
-                  onClick={() => abrirNoti(n)}
-                  role={clickeable ? 'button' : undefined}
-                  tabIndex={clickeable ? 0 : undefined}
-                  onKeyDown={e => { if (clickeable && e.key === 'Enter') abrirNoti(n) }}
-                >
-                  <div className="noti-header-row">
-                    <span className={`noti-etiqueta ${esAdopcion ? 'noti-etiqueta--adopcion' : 'noti-etiqueta--mensaje'}`}>
-                      {etiqueta}
-                    </span>
-                  </div>
-                  {n.titulo && <h4>{n.titulo}</h4>}
-                  {remitente && <span className="noti-remitente">De: {remitente}</span>}
-                  {n.mensaje && <p>{n.mensaje}</p>}
-                  <time className="noti-fecha">{formatearFecha(n.fecha)}</time>
-                  <button className="btn-borrar" onClick={(e) => { e.stopPropagation(); setModalConfirmacion({ isOpen: true, id: n.id }) }}>
+            <>
+              {notisVisibles.map(n => {
+                const remitente = nombreEmisor(n.emisor)
+                const clickeable = !!(n.link || n.conversacion_id)
+                const esAdopcion = /adopci[oó]n/i.test(`${n.titulo || ''} ${n.mensaje || ''}`)
+                const etiqueta = esAdopcion ? 'Adopción' : 'Nuevo mensaje'
+                return (
+                  <article
+                    key={n.id}
+                    className={`noti-item ${n.leida ? 'leida' : 'noleida'} ${clickeable ? 'clickeable' : ''}`}
+                    onClick={() => abrirNoti(n)}
+                    role={clickeable ? 'button' : undefined}
+                    tabIndex={clickeable ? 0 : undefined}
+                    onKeyDown={e => { if (clickeable && e.key === 'Enter') abrirNoti(n) }}
+                  >
+                    <div className="noti-header-row">
+                      <span className={`noti-etiqueta ${esAdopcion ? 'noti-etiqueta--adopcion' : 'noti-etiqueta--mensaje'}`}>
+                        {etiqueta}
+                      </span>
+                    </div>
+                    {n.titulo && <h4>{n.titulo}</h4>}
+                    {remitente && <span className="noti-remitente">De: {remitente}</span>}
+                    {n.mensaje && <p>{n.mensaje}</p>}
+                    <time className="noti-fecha">{formatearFecha(n.fecha)}</time>
+                    <button className="btn-borrar" onClick={(e) => { e.stopPropagation(); setModalConfirmacion({ isOpen: true, id: n.id }) }}>
 Borrar                  </button>
-                </article>
-              )
-            })
+                  </article>
+                )
+              })}
+
+              {hayMas && (
+                <button
+                  type="button"
+                  className="btn-ver-todos"
+                  onClick={() => setMostrarTodas(v => !v)}
+                  style={{ alignSelf: 'center', marginTop: 10 }}
+                >
+                  {mostrarTodas ? 'Ver menos' : 'Ver más'}
+                </button>
+              )}
+            </>
           )}
         </div>
       </main>
