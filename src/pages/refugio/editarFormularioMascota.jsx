@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { usarAuth } from '../../hooks/UsarAuth'
 import Loader from '../../components/Loader'
-import '../../styles/formularios.css'
+import '../../styles/editarFormularioMascota.css'
 import {
   obtenerFormularioMascota,
   guardarFormularioMascota,
@@ -184,9 +184,7 @@ export default function EditarFormularioMascota() {
       </header>
 
       <form className="fe-contenido" onSubmit={guardar}>
-        <p className="fe-intro">
-          Armá las preguntas que verán los adoptantes. El orden de las secciones define el recorrido por páginas.
-        </p>
+
 
         {bloquesFormulario.map((seccion, indexSeccion) => (
           <section key={seccion.id || indexSeccion} className="fe-seccion">

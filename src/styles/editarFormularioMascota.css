@@ -1,0 +1,369 @@
+/* ==========================================
+   EDITAR FORMULARIO MASCOTA - LUMA EXACT UI
+   ========================================== */
+
+:root {
+  --luma-bg: #F5EFE6;         /* Fondo del header y de la app */
+  --luma-card: #FFFFFF;       /* Fondo de la tarjeta blanca contenedora */
+  --luma-input-bg: #FCF9F5;   /* Fondo beige muy suave de los inputs */
+  --luma-text-dark: #4A3E3D;   /* Texto principal de títulos */
+  --luma-text-label: #8C7B75;  /* Texto de labels en mayúsculas */
+  --luma-border-input: #EADBCE;/* Borde suave de los inputs */
+  --luma-btn-brown: #B59368;   /* Color del botón principal de la app */
+  --luma-btn-brown-hover: #A07F55;
+  --luma-danger: #D9826B;      /* Rojo suave arcilla para eliminar */
+  --luma-radius-card: 24px;   /* Curvatura grande de la tarjeta */
+  --luma-radius-input: 16px;  /* Curvatura de los inputs */
+}
+
+/* Contenedor General */
+.fe-pagina {
+  background-color: var(--luma-bg);
+  min-height: 100vh;
+  padding: 0 0 40px 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--luma-text-dark);
+  box-sizing: border-box;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Header superior curvado */
+.fe-header {
+  padding: 24px 20px 32px 20px;
+  position: relative;
+}
+
+.fe-btn-volver {
+  background: var(--luma-card);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--luma-text-dark);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+.fe-header-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.fe-titulo {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  color: var(--luma-text-dark);
+}
+
+.fe-subtitulo {
+  font-size: 14px;
+  color: var(--luma-text-label);
+}
+
+/* Contenedor del formulario (Tarjeta Blanca) */
+.fe-contenido {
+  background: var(--luma-card);
+  border-radius: var(--luma-radius-card);
+  margin: 0 16px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.fe-intro {
+  font-size: 14px;
+  color: var(--luma-text-label);
+  line-height: 1.5;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* Bloques de Sección */
+.fe-seccion {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #F0ECE6;
+}
+
+.fe-seccion-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.fe-seccion-numero {
+  font-weight: 700;
+  color: var(--luma-text-label);
+  font-size: 14px;
+}
+
+.fe-input--seccion {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--luma-text-dark);
+  border: 1px solid var(--luma-border-input);
+  background: var(--luma-input-bg);
+  border-radius: var(--luma-radius-input);
+  padding: 10px 14px;
+  width: 100%;
+}
+
+/* Bloques de Preguntas dentro de cada sección */
+.fe-pregunta {
+  background: #FAFAFA;
+  border: 1px solid #ECEAE5;
+  border-radius: var(--luma-radius-input);
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fe-pregunta-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fe-pregunta-etiqueta {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--luma-text-label);
+}
+
+.fe-link-peligro {
+  background: none;
+  border: none;
+  color: var(--luma-danger);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Labels y Campos en Mayúsculas (Estilo de la App) */
+.fe-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fe-campo > span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--luma-text-label);
+}
+
+.fe-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--luma-border-input);
+  border-radius: var(--luma-radius-input);
+  font-size: 14px;
+  background: var(--luma-input-bg);
+  color: var(--luma-text-dark);
+  box-sizing: border-box;
+}
+
+.fe-input:focus {
+  outline: none;
+  border-color: var(--luma-btn-brown);
+}
+
+/* Chips para tipo de respuesta */
+.fe-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.fe-chip {
+  background: var(--luma-input-bg);
+  border: 1px solid var(--luma-border-input);
+  color: var(--luma-text-dark);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.fe-chip.activo {
+  background: var(--luma-btn-brown);
+  color: #FFFFFF;
+  border-color: var(--luma-btn-brown);
+}
+
+/* Opciones de Selección Múltiple */
+.fe-opciones {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fe-opcion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fe-opcion-punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--luma-text-label);
+  flex-shrink: 0;
+}
+
+.fe-btn-texto {
+  background: none;
+  border: none;
+  color: var(--luma-btn-brown);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 4px 0;
+}
+
+/* Switch (Obligatorio) */
+.fe-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--luma-text-dark);
+}
+
+.fe-switch input {
+  display: none;
+}
+
+.fe-switch-pista {
+  width: 36px;
+  height: 20px;
+  background-color: #E2D9CE;
+  border-radius: 20px;
+  position: relative;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.fe-switch-pista::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: white;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s;
+}
+
+.fe-switch input:checked + .fe-switch-pista {
+  background-color: var(--luma-btn-brown);
+}
+
+.fe-switch input:checked + .fe-switch-pista::after {
+  transform: translateX(16px);
+}
+
+/* Botones de eliminar e íconos */
+.fe-icono-btn {
+  background: none;
+  border: none;
+  color: var(--luma-text-label);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fe-icono-btn:hover {
+  color: var(--luma-danger);
+}
+
+.fe-icono-btn--chico {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Botones secundario para agregar */
+.fe-btn-agregar {
+  width: 100%;
+  padding: 12px;
+  background: var(--luma-input-bg);
+  border: 1px solid var(--luma-border-input);
+  color: var(--luma-text-dark);
+  border-radius: var(--luma-radius-input);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.fe-btn-agregar--seccion {
+  margin-bottom: 24px;
+  background: #F4EFEA;
+}
+
+.fe-vacio {
+  font-size: 13px;
+  color: var(--luma-text-label);
+  font-style: italic;
+  text-align: center;
+  margin: 12px 0;
+}
+
+/* Barra de botones inferior */
+.fe-barra-acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.fe-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 28px;
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.fe-btn--secundario {
+  background: #EFE8DC;
+  color: var(--luma-text-dark);
+}
+
+.fe-btn--primario {
+    background-color:#9CA788;
+  color: white;
+  box-shadow: 0 4px 10px rgba(181, 147, 104, 0.3);
+}
+
+.fe-btn--primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
