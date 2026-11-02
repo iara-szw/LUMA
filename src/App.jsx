@@ -36,6 +36,7 @@ import Mapa from './pages/adoptante/mapa.jsx'
 import DetalleEntrevista from './pages/DetalleEntrevista.jsx'
 import { useEffect } from 'react'
 import { iniciarRecordatoriosPendientes } from './services/recordatorios'
+import TestMatch from './pages/adoptante/TestMatch'
 
 
 function RutaProtegida({ children, rol }) {
@@ -92,6 +93,7 @@ export default function App() {
               </RutaProtegida>
             }
           />
+          <Route path="/adoptante/test-match" element={<TestMatch />} />
 <Route
   path="/adoptante/calendario"
   element={
