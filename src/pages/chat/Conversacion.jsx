@@ -12,6 +12,7 @@ import {
 } from '../../repositories/chatRepository'
 import { Supabase } from '../../services/supabase'
 import { responderEntrevista, actualizarEntrevista, obtenerEntrevistasPorSolicitud } from '../../repositories/entrevistaRepository'
+import { ESTADOS } from '../../services/authService'
 import '../../styles/chat.css'
 
 function parsearEntrevistaMensaje(contenido) {
@@ -395,7 +396,87 @@ export default function Conversacion() {
 
       if (error) throw error
 
-      setEntrevistaActiva(prev => prev ? { ...prev, resultado: seleccion.texto } : prev)
+      const resultadoTexto = seleccion.texto
+      const estadoTexto = seleccion.estado
+
+      if (resultadoEntrevistaSeleccionado === 'resulto') {
+        const mascotaId = conversacionData?.mascota_id || mascota?.id
+        const solicitudId = conversacionData?.solicitud_id || entrevistaActiva?.solicitud_id
+
+        if (solicitudId) {
+          const { data: adopcionExistente, error: errorAdopcionExistente } = await Supabase
+            .from('adopciones')
+            .select('id')
+            .eq('solicitud_id', solicitudId)
+            .limit(1)
+
+          if (!errorAdopcionExistente && (!adopcionExistente || adopcionExistente.length === 0)) {
+            const { error: errorAdopcion } = await Supabase
+              .from('adopciones')
+              .insert({
+                solicitud_id: solicitudId,
+                fecha_adopcion: hoy,
+                contrato_firmado: false,
+                seguimiento_activo: true,
+              })
+
+            if (errorAdopcion) {
+              console.error('Error creando adopción:', errorAdopcion)
+            }
+          }
+
+          const { error: errorSolicitud } = await Supabase
+            .from('solicitudes')
+            .update({ estado: 'Adoptada', ultima_actualizacion: hoy })
+            .eq('id', solicitudId)
+
+          if (errorSolicitud) {
+            console.error('Error actualizando solicitud como adoptada:', errorSolicitud)
+          }
+        }
+
+        if (mascotaId) {
+          const { error: errorMascota } = await Supabase
+            .from('mascotas')
+            .update({
+              estado_id: ESTADOS.adoptada,
+              adoptado: true,
+              publicado: false,
+              fecha_adopcion: hoy,
+            })
+            .eq('id', mascotaId)
+            .eq('refugio_id', usuario.id)
+
+          if (errorMascota) {
+            console.error('Error marcando mascota como adoptada:', errorMascota)
+          }
+        }
+
+        if (solicitudId && conversacionData?.adoptante_id) {
+          const mensajeAdopcion = `__ADOPCION__${JSON.stringify({
+            mascota: mascota?.nombre || 'tu mascota',
+            texto: '¡Felicitaciones! La mascota fue adoptada y ya formó parte de tu hogar.',
+            fecha: hoy,
+          })}`
+
+          await enviarMensaje(conversacionId, usuario.id, mensajeAdopcion)
+        }
+      }
+
+      setEntrevistaActiva(prev => prev ? { ...prev, resultado: resultadoTexto, estado_confirmacion: estadoTexto } : prev)
+      setMensajes(prev => prev.map(m => {
+        const parsed = parsearEntrevistaMensaje(m.contenido)
+        if (!parsed || String(parsed.id) !== String(entrevistaId)) return m
+
+        const actualizado = {
+          ...parsed,
+          resultado: resultadoTexto,
+          estado: estadoTexto,
+        }
+
+        const prefijo = estadoTexto === 'Confirmada' ? '__ENTREVISTA_CONFIRMADA__' : '__ENTREVISTA_RECHAZADA__'
+        return { ...m, contenido: `${prefijo}${JSON.stringify(actualizado)}` }
+      }))
       setError(null)
       setModalResultadoAbierto(false)
       setResultadoEntrevistaSeleccionado('')
@@ -407,13 +488,22 @@ export default function Conversacion() {
     }
   }
 
+  const debeMostrarFeedbackPostEntrevista = esRefugio &&
+    tieneEntrevistaEnCurso &&
+    !!entrevistaActiva &&
+    !entrevistaActiva.resultado &&
+    new Date(entrevistaActiva.fecha) <= new Date()
+
   // Abrir el modal automáticamente si la entrevista ya pasó
   useEffect(() => {
-    if (!esRefugio || !conversacionData?.solicitud_id || !entrevistaActiva) return
-    if (new Date(entrevistaActiva.fecha) <= new Date()) {
+    if (!debeMostrarFeedbackPostEntrevista) {
       setModalResultadoAbierto(false)
+      return
     }
-  }, [esRefugio, conversacionData?.solicitud_id, entrevistaActiva])
+
+    setResultadoEntrevistaSeleccionado('')
+    setModalResultadoAbierto(true)
+  }, [debeMostrarFeedbackPostEntrevista])
 
   return (
     <div className="chat-pagina">
@@ -442,13 +532,13 @@ export default function Conversacion() {
           </button>
         )}
 
-        {esRefugio && tieneEntrevistaEnCurso && (
+        {debeMostrarFeedbackPostEntrevista && (
           <button
             type="button"
             className="chat-btn-entrevista chat-btn-entrevista--resultado"
             onClick={abrirModalResultado}
           >
-            Resultado
+            Feedback post-entrevista
           </button>
         )}
       </header>
@@ -487,15 +577,73 @@ export default function Conversacion() {
         ) : (
           mensajes.map(m => {
             const esPropio = m.emisor_id === usuario?.id
+            const adopcion = typeof m.contenido === 'string' && m.contenido.startsWith('__ADOPCION__')
+              ? JSON.parse(m.contenido.replace('__ADOPCION__', ''))
+              : null
             const entrevista = parsearEntrevistaMensaje(m.contenido)
             const entrevistaConfirmada = typeof m.contenido === 'string' && m.contenido.startsWith('__ENTREVISTA_CONFIRMADA__')
             const entrevistaRechazada = typeof m.contenido === 'string' && m.contenido.startsWith('__ENTREVISTA_RECHAZADA__')
+
+            if (adopcion) {
+              return (
+                <div
+                  key={m.id}
+                  className={`chat-entrevista ${esPropio ? 'chat-entrevista--propia' : 'chat-entrevista--ajena'}`}
+                >
+                  <div className="chat-entrevista-cabecera">
+                    <strong className="chat-entrevista-titulo">Mascota adoptada</strong>
+                    <span className="chat-entrevista-estado chat-entrevista-estado--confirmada">Adoptada</span>
+                  </div>
+
+                  <dl className="chat-entrevista-datos">
+                    <div className="chat-entrevista-fila">
+                      <dt>Mascota</dt>
+                      <dd>{adopcion.mascota || 'Mascota'}</dd>
+                    </div>
+                    <div className="chat-entrevista-fila">
+                      <dt>Mensaje</dt>
+                      <dd>{adopcion.texto || '¡Felicitaciones! La mascota fue adoptada.'}</dd>
+                    </div>
+                  </dl>
+
+                  <span className="chat-burbuja-hora">{formatearHora(m.fecha)}</span>
+                </div>
+              )
+            }
 
             if (entrevista || entrevistaConfirmada || entrevistaRechazada) {
               const data = entrevista || (entrevistaConfirmada ? parsearEntrevistaMensaje(m.contenido.replace('__ENTREVISTA_CONFIRMADA__', '__ENTREVISTA__')) : parsearEntrevistaMensaje(m.contenido.replace('__ENTREVISTA_RECHAZADA__', '__ENTREVISTA__')))
 
               const estadoEntrevista = entrevistaConfirmada ? 'confirmada' : entrevistaRechazada ? 'rechazada' : 'pendiente'
               const textoEstado = { confirmada: 'Confirmada', rechazada: 'Rechazada', pendiente: 'Pendiente' }[estadoEntrevista]
+              const esAdopcion = (data?.resultado === 'Resultó - Adoptado') || (data?.estado === 'Confirmada' && data?.resultado === 'Resultó - Adoptado')
+
+              if (esAdopcion) {
+                return (
+                  <div
+                    key={m.id}
+                    className={`chat-entrevista ${esPropio ? 'chat-entrevista--propia' : 'chat-entrevista--ajena'}`}
+                  >
+                    <div className="chat-entrevista-cabecera">
+                      <strong className="chat-entrevista-titulo">Mascota adoptada</strong>
+                      <span className="chat-entrevista-estado chat-entrevista-estado--confirmada">Adoptada</span>
+                    </div>
+
+                    <dl className="chat-entrevista-datos">
+                      <div className="chat-entrevista-fila">
+                        <dt>Mascota</dt>
+                        <dd>{data?.mascota || 'Mascota'}</dd>
+                      </div>
+                      <div className="chat-entrevista-fila">
+                        <dt>Resultado</dt>
+                        <dd>{data?.resultado || 'Resultó - Adoptado'}</dd>
+                      </div>
+                    </dl>
+
+                    <span className="chat-burbuja-hora">{formatearHora(m.fecha)}</span>
+                  </div>
+                )
+              }
 
               return (
                 <div

@@ -27,7 +27,8 @@ export default function Notificaciones() {
         if (error) console.error(error)
 
         if (!activo) return
-        setNotis(data || [])
+        const ordenadas = [...(data || [])].sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+        setNotis(ordenadas)
       } finally {
         if (activo) setCargando(false)
       }
@@ -38,7 +39,7 @@ export default function Notificaciones() {
 
   const formatearFecha = (fechaStr) => {
     try {
-      return new Date(fechaStr).toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'long', year: 'numeric' })
+      return new Date(fechaStr).toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })
     } catch (e) {
       return ''
     }
@@ -134,6 +135,8 @@ export default function Notificaciones() {
             notis.map(n => {
               const remitente = nombreEmisor(n.emisor)
               const clickeable = !!(n.link || n.conversacion_id)
+              const esAdopcion = /adopci[oó]n/i.test(`${n.titulo || ''} ${n.mensaje || ''}`)
+              const etiqueta = esAdopcion ? 'Adopción' : 'Nuevo mensaje'
               return (
                 <article
                   key={n.id}
@@ -143,13 +146,17 @@ export default function Notificaciones() {
                   tabIndex={clickeable ? 0 : undefined}
                   onKeyDown={e => { if (clickeable && e.key === 'Enter') abrirNoti(n) }}
                 >
+                  <div className="noti-header-row">
+                    <span className={`noti-etiqueta ${esAdopcion ? 'noti-etiqueta--adopcion' : 'noti-etiqueta--mensaje'}`}>
+                      {etiqueta}
+                    </span>
+                  </div>
                   {n.titulo && <h4>{n.titulo}</h4>}
                   {remitente && <span className="noti-remitente">De: {remitente}</span>}
                   {n.mensaje && <p>{n.mensaje}</p>}
                   <time className="noti-fecha">{formatearFecha(n.fecha)}</time>
                   <button className="btn-borrar" onClick={(e) => { e.stopPropagation(); setModalConfirmacion({ isOpen: true, id: n.id }) }}>
-                    <img src="/assets/img/borrar.png" alt="Borrar" />
-                  </button>
+Borrar                  </button>
                 </article>
               )
             })

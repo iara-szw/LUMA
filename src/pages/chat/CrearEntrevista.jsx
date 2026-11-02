@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { enviarMensaje, obtenerConversacionPorId } from '../../repositories/chatRepository'
-import { obtenerMascotasDeRefugio, obtenerRefugio } from '../../repositories/perfilRefugioRepository'
 import { crearEntrevista } from '../../repositories/entrevistaRepository'
+import { Supabase } from '../../services/supabase'
 import '../../styles/crearEntrevista.css'
 
 const toSupabaseDateTime = (value) => {
@@ -46,29 +46,48 @@ export default function CrearEntrevista() {
 
     const cargar = async () => {
       try {
-        const [convRes, mascotasRes, refugioRes] = await Promise.all([
-          obtenerConversacionPorId(id),
-          obtenerMascotasDeRefugio(usuario.id),
-          obtenerRefugio(usuario.id),
-        ])
-
+        const convRes = await obtenerConversacionPorId(id)
         if (!activo) return
 
         const conv = convRes?.data || null
         setConversacion(conv)
-        const direccionRefugio = refugioRes?.data?.direccion || [refugioRes?.data?.ciudad, refugioRes?.data?.provincia].filter(Boolean).join(', ') || 'Refugio'
-        setRefugioDireccion(direccionRefugio)
 
-        if (conv?.mascotas?.id) {
-          setMascotaId(String(conv.mascotas.id))
+        if (!conv?.adoptante_id) {
+          setError('No se pudo identificar al adoptante de esta conversación.')
+          setMascotas([])
+          setMascotaId('')
+          setCargando(false)
+          return
         }
 
-        if (mascotasRes?.data?.length) {
-          setMascotas(mascotasRes.data)
-          if (!conv?.mascotas?.id) {
-            setMascotaId(String(mascotasRes.data[0].id))
-          }
+        const { data: solicitudes } = await Supabase
+          .from('solicitudes')
+          .select('id, mascota_id, mascotas!inner(id, nombre, foto_url, refugio_id)')
+          .eq('adoptante_id', conv.adoptante_id)
+          .eq('eliminada', false)
+          .eq('mascotas.refugio_id', usuario.id)
+          .order('fecha_solicitud', { ascending: false })
+
+        const mascotasPermitidas = (solicitudes || [])
+          .map(s => s.mascotas)
+          .filter(Boolean)
+          .filter((m, index, arr) => arr.findIndex(item => String(item.id) === String(m.id)) === index)
+
+        if (!mascotasPermitidas.length) {
+          setMascotas([])
+          setMascotaId('')
+          setError('Este adoptante aún no envió una solicitud para ninguna mascota del refugio.')
+          return
         }
+
+        setMascotas(mascotasPermitidas)
+
+        const mascotaPreseleccionada = conv?.mascotas?.id
+          ? mascotasPermitidas.find(m => String(m.id) === String(conv.mascotas.id))
+          : null
+
+        setMascotaId(mascotaPreseleccionada ? String(mascotaPreseleccionada.id) : String(mascotasPermitidas[0].id))
+        setError('')
       } catch (e) {
         console.error(e)
         setError('No se pudo cargar la conversación.')
@@ -85,7 +104,13 @@ export default function CrearEntrevista() {
     e.preventDefault()
 
     if (!fecha || !mascotaId) {
-      setError('Seleccioná una mascota y una fecha para la entrevista.')
+      setError('Seleccioná una mascota con solicitud válida para la entrevista.')
+      return
+    }
+
+    const mascotaSeleccionada = mascotas.find(m => String(m.id) === String(mascotaId))
+    if (!mascotaSeleccionada) {
+      setError('La mascota seleccionada no corresponde a una solicitud válida del adoptante.')
       return
     }
 
@@ -95,7 +120,7 @@ export default function CrearEntrevista() {
     try {
       const lugarFinal = (
         modalidad === 'En refugio'
-          ? (lugar || refugioDireccion || 'En refugio')
+          ? (lugar || 'En refugio')
           : (lugar || 'No especificado')
       )
 
@@ -114,8 +139,6 @@ export default function CrearEntrevista() {
 
       const { data: entrevista, error: errorEntrevista } = await crearEntrevista(payload)
       if (errorEntrevista) throw errorEntrevista
-
-      const mascotaSeleccionada = mascotas.find(m => String(m.id) === String(mascotaId))
 
       const msj = '__ENTREVISTA__' + JSON.stringify({
         id: entrevista?.id,
@@ -206,7 +229,7 @@ export default function CrearEntrevista() {
           />
         </div>
 
-        <button type="submit" className="entrevista-enviar" disabled={guardando}>
+        <button type="submit" className="entrevista-enviar" disabled={guardando || !mascotaId || mascotas.length === 0}>
           {guardando ? 'Enviando...' : 'Enviar propuesta de entrevista'}
         </button>
       </form>

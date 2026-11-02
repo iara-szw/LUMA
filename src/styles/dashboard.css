@@ -48,7 +48,10 @@ overflow-x: hidden;
       background-color: var(--crema);
 
 }
-
+#dashNoti{
+right:65px !important;
+top:20px !important;
+}
 .dash-logo img {
     font-size: 1.75rem;
     font-weight: 800;

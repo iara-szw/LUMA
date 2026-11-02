@@ -39,7 +39,13 @@ export default function FormularioAdopcion() {
         obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, usuario.id),
       ])
 
-      if (mascotaRes.data) setMascota(mascotaRes.data)
+      if (mascotaRes.data) {
+        setMascota(mascotaRes.data)
+        if (mascotaRes.data.adoptado || mascotaRes.data.publicado === false || mascotaRes.data.estado_id === '31d5d4a1-2d4f-4f56-8f31-68b76c8ae5d5') {
+          navigate('/adoptante/perfil')
+          return
+        }
+      }
       if (formularioRes.data?.bloques?.length) setBloques(formularioRes.data.bloques)
       if (solicitudRes.data?.info && Object.keys(solicitudRes.data.info).length > 0) {
         setInfo(solicitudRes.data.info)

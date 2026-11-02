@@ -97,7 +97,7 @@ export const obtenerEntrevistasAdoptante = (adoptanteId) =>
       )
     `)
     .eq('solicitudes.adoptante_id', adoptanteId)
-    .in('estado_confirmacion', ['Pendiente', 'Confirmada'])
+    .eq('estado_confirmacion', 'Confirmada')
     .order('fecha', { ascending: true })
 
 export const responderEntrevista = async (id, aceptar) => {

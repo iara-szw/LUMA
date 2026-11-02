@@ -8,6 +8,7 @@ import Animal from '../../../cliente/public/assets/img/animal.png'
 import { obtenerMascotasRefugio } from '../../repositories/mascotaRepository'
 import { obtenerEventosProximos } from '../../repositories/eventoRepository'
 import {obtenerEntrevistasRefugio} from '../../repositories/entrevistaRepository'
+import NotiBadge from '../../components/NotiBadge'
 import { obtenerRefugio, obtenerSolicitudesDeRefugio } from '../../repositories/perfilRefugioRepository'
 import '../../styles/dashboard.css'
 
@@ -88,6 +89,8 @@ export default function Dashboard() {
         <div className="dash-header-iconos">
           <button className="dash-icono-campana" aria-label="Mensajes" onClick={() => navigate('/refugio/notificaciones')}>
             <img src="/cliente/public/assets/img/notificaciones.png" alt="" />
+                            <NotiBadge id="dashNoti"/>
+            
           </button>
           <img
             className="dash-avatar"

@@ -17,7 +17,20 @@
     margin-bottom: 18px;
 
 }
-
+button.btn-borrar {
+    background: #F4E7E0;
+    border: 1px solid #D8B8A5;
+    border-radius: 50px;
+    padding: 7px 14px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #6A3E2E;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
 .pagina-notificaciones .notis h1 {
     font-size: 22px;
     font-weight: 700;
@@ -38,7 +51,7 @@
 }
 
 .pagina-notificaciones .noti-item {
-    background: #ffffff;
+       background: #ffffff;
     border: 1px solid var(--noti-border);
     border-radius: 12px;
     padding: 14px 16px;
@@ -124,5 +137,33 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     min-width: 20px;
     text-align: center;
+}
+
+.pagina-notificaciones .noti-header-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.pagina-notificaciones .noti-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.pagina-notificaciones .noti-etiqueta--mensaje {
+    background: #e8efe1;
+    color: #3f5a2a;
+}
+
+.pagina-notificaciones .noti-etiqueta--adopcion {
+    background: #f7e7d8;
+    color: #8c4d18;
 }
 

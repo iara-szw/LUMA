@@ -1,4 +1,5 @@
 import { Supabase } from '../services/supabase'
+import { ESTADOS } from '../services/authService'
 
 export const FORMULARIO_DEFAULT = [
   {
@@ -166,6 +167,22 @@ export async function obtenerSolicitudFormularioPorMascotaYAdoptante(mascotaId, 
 }
 
 export async function guardarProgresoSolicitud({ mascotaId, adoptanteId, info, estado = 'Pendiente' }) {
+  if (!mascotaId || !adoptanteId) {
+    return { data: null, error: { message: 'mascotaId y adoptanteId son obligatorios' } }
+  }
+
+  const { data: mascota, error: errorMascota } = await Supabase
+    .from('mascotas')
+    .select('id, adoptado, publicado, estado_id')
+    .eq('id', mascotaId)
+    .maybeSingle()
+
+  if (errorMascota) return { data: null, error: errorMascota }
+  if (!mascota) return { data: null, error: { message: 'Mascota no encontrada' } }
+  if (mascota.adoptado || mascota.publicado === false || mascota.estado_id === ESTADOS.adoptada) {
+    return { data: null, error: { message: 'Esta mascota ya fue adoptada y no recibe más solicitudes.' } }
+  }
+
   const { data, error } = await Supabase
     .from('solicitudes')
     .upsert(
