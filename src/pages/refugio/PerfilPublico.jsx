@@ -4,7 +4,7 @@ import Loader from '../../components/Loader'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { obtenerOCrearConversacion } from '../../repositories/chatRepository'
 import { obtenerMascotasDeRefugio, obtenerRefugio } from '../../repositories/perfilRefugioRepository'
-import '../../styles/perfilRefugio.css'
+import '../../styles/perfilPublico.css'
 
 export default function PerfilPublicoRefugio() {
   const { id } = useParams()
@@ -127,31 +127,32 @@ export default function PerfilPublicoRefugio() {
       <section className="perfil-refugio-info">
         <h2>{refugio.nombre || 'Refugio'}</h2>
         <p className="perfil-refugio-ubicacion">
-          📍 {ubicacion}
+          <img src="/assets/img/ubicacion.png" alt="" />
+          {ubicacion}
         </p>
-{!esRefugio && (
-  <button
-    type="button"
-    onClick={handleIniciarConversacion}
-    disabled={iniciandoChat}
-    style={{
-      marginTop: '16px',
-      background: 'var(--dash-bg)',
-      color: 'var(--arena-hover)',
-      borderWidth: 'medium',
-      borderStyle: 'none',
-      borderColor: 'var(--arena-hover)',
-      borderImage: 'none',
-      border: '1px solid var(--arena-hover)',
-      borderRadius: '20px',
-      padding: '10px 18px',
-      fontWeight: '600',
-      cursor: 'pointer',
-    }}
-  >
-    {iniciandoChat ? 'Abriendo chat...' : 'Iniciar conversación'}
-  </button>
-)}
+        {!esRefugio && (
+          <button
+            type="button"
+            onClick={handleIniciarConversacion}
+            disabled={iniciandoChat}
+            style={{
+              marginTop: '16px',
+              background: 'var(--dash-bg)',
+              color: 'var(--arena-hover)',
+              borderWidth: 'medium',
+              borderStyle: 'none',
+              borderColor: 'var(--arena-hover)',
+              borderImage: 'none',
+              border: '1px solid var(--arena-hover)',
+              borderRadius: '20px',
+              padding: '10px 18px',
+              fontWeight: '600',
+              cursor: 'pointer',
+            }}
+          >
+            {iniciandoChat ? 'Abriendo chat...' : 'Iniciar conversación'}
+          </button>
+        )}
       </section>
 
       <section className="seccion-refugio">

@@ -1,169 +1,256 @@
+/* ── Notificaciones (estilo LUMA) ─────────────────── */
 .pagina-notificaciones {
-    --noti-bg: #fffaf3;
-    --noti-accent: #f5c16c;
-    --noti-border: #f0e2d6;
-    --noti-text: #3c342f;
-    --noti-muted: #887f7a;
-    --noti-unread-bg: #fff1d6;
-    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    color: var(--noti-text);
+  --noti-text: #463b35;
+  --noti-muted: #7A6A5D;
+  --noti-border: #EDE6DA;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: 100px; /* espacio para la barra inferior */
+  background: #FAFAFA;
+  font-family: var(--font, inherit);
+  color: var(--noti-text);
 }
 
+.pagina-notificaciones * {
+  box-sizing: border-box;
+}
+
+/* ── Título + acciones (continúa el header crema) ─── */
 .pagina-notificaciones .notis {
-     border-bottom-left-radius: 14px;
-    border-bottom-right-radius: 14px;
-    padding: 18px 20px;
-    background-color: var(--crema);
-    margin-bottom: 18px;
+  display: flex !important; /* pisa el style inline del JSX */
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 12px 10px !important;
+  margin-bottom: 18px;
+  padding: 6px 20px 22px;
+  background-color: var(--crema, #F2EADD);
+  border-radius: 0 0 28px 28px;
+}
 
-}
-button.btn-borrar {
-    background: #F4E7E0;
-    border: 1px solid #D8B8A5;
-    border-radius: 50px;
-    padding: 7px 14px;
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #6A3E2E;
-    cursor: pointer;
-    white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 0.15s ease, background-color 0.15s ease;
-}
 .pagina-notificaciones .notis h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--noti-text);
-    margin: 0;
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--noti-text);
+}
+
+.pagina-notificaciones .notis > div {
+  width: 100%;
+}
+
+/* Botones "Marcar leídas" / "Eliminar todas" (traen estilos inline) */
+.pagina-notificaciones .notis .btn-formulario {
+  padding: 7px 14px !important;
+  font-size: 12.5px !important;
+  font-weight: 700;
+  background: #fff;
+  color: var(--noti-text);
+  border: 1px solid #CBB99C;
+  border-radius: 50px;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.pagina-notificaciones .notis .btn-formulario:active {
+  transform: scale(0.96);
 }
 
 .pagina-notificaciones .notis-seccion {
-    padding-top: 0;
+  padding-top: 0;
 }
 
+/* ── Lista ────────────────────────────────────────── */
 .pagina-notificaciones .noti-lista {
-    max-width: 880px;
-    margin: 0 auto 48px;
-    padding: 0 16px;
-    display: grid;
-    gap: 12px;
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+  margin: 0 auto 32px;
+  padding: 0 16px;
 }
 
+/* ── Tarjeta ──────────────────────────────────────── */
 .pagina-notificaciones .noti-item {
-       background: #ffffff;
-    border: 1px solid var(--noti-border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: transform 120ms ease, box-shadow 120ms ease;
-    display: flex;
-    flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "titulo   etiqueta"
+    "remitente remitente"
+    "mensaje  mensaje"
+    "fecha    borrar";
+  align-items: center;
+  column-gap: 10px;
+  padding: 14px 16px 10px;
+  background: #fff;
+  border: 1px solid var(--noti-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+.pagina-notificaciones .noti-item.clickeable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pagina-notificaciones .noti-item.clickeable:active {
+  transform: scale(0.985);
+  box-shadow: 0 1px 4px rgba(92, 74, 58, 0.08);
+}
+
+.pagina-notificaciones .noti-item:focus-visible {
+  outline: none;
+  border-color: #b8956a;
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.18);
+}
+
+/* Sin leer: crema suave con barra salvia a la izquierda */
 .pagina-notificaciones .noti-item.noleida {
-    background: var( --crema);
-    border-left: 4px solid var(--verde);
+  background: #FBF7EF;
+  border-color: #E6DAC6;
+  box-shadow:
+    inset 4px 0 0 var(--verde, #9CA986),
+    0 2px 8px rgba(92, 74, 58, 0.06);
 }
 
-.pagina-notificaciones .noti-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(60,52,47,0.08);
+/* Leída: más apagada */
+.pagina-notificaciones .noti-item.leida h4 {
+  color: #6d625d;
+}
+
+/* ── Contenido ────────────────────────────────────── */
+.pagina-notificaciones .noti-header-row {
+  grid-area: etiqueta;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
 }
 
 .pagina-notificaciones .noti-item h4 {
-    margin: 0 0 6px 0;
-    font-size: 16px;
-    color: var(--noti-text);
+  grid-area: titulo;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--noti-text);
+}
+
+.pagina-notificaciones .noti-remitente {
+  grid-area: remitente;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #8A7B6E;
 }
 
 .pagina-notificaciones .noti-item p {
-       margin: 0 0 8px 0;
-    color: var(--noti-muted);
-    overflow-wrap: break-word;
-    line-height: 1.4;
-    margin-right: 10%;
-    width: 90%;
+  grid-area: mensaje;
+  width: auto;
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--noti-muted);
+  overflow-wrap: anywhere;
 }
 
 .pagina-notificaciones .noti-fecha {
-    font-size: 12px;
-    color: var(--noti-muted);
-    align-self: flex-end;
+  grid-area: fecha;
+  align-self: center;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #A39486;
 }
 
-.pagina-notificaciones .vacio {
-    text-align: center;
-    color: var(--noti-muted);
-    padding: 28px 8px;
-}
-
-@media (min-width: 720px) {
-    .pagina-notificaciones .noti-item {
-        flex-direction: row;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .pagina-notificaciones .noti-item h4 {
-        flex: 1 1 auto;
-    }
-
-    .pagina-notificaciones .noti-item p {
-        flex: 2 1 60%;
-    }
-
-    .pagina-notificaciones .noti-fecha {
-        flex: 0 0 auto;
-        margin-left: 12px;
-    }
-}
-
-/* Badge global para icono de campana (pequeño y único) */
-.icono-campana {
-    position: relative;
-}
-
-.luma-noti-badge {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: var(--verde);
-    color: #fff;
-    font-weight: 700;
-    font-size: 11px;
-    line-height: 1;
-    padding: 2px 6px;
-    border-radius: 999px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    min-width: 20px;
-    text-align: center;
-}
-
-.pagina-notificaciones .noti-header-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 8px;
-}
-
+/* ── Etiquetas ────────────────────────────────────── */
 .pagina-notificaciones .noti-etiqueta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .pagina-notificaciones .noti-etiqueta--mensaje {
-    background: #e8efe1;
-    color: #3f5a2a;
+  background: #EEF5EB;
+  color: #5F8252;
 }
 
 .pagina-notificaciones .noti-etiqueta--adopcion {
-    background: #f7e7d8;
-    color: #8c4d18;
+  background: #EDE6DA;
+  color: #7A5C3A;
 }
 
+/* ── Borrar: botón de texto terracota ─────────────── */
+.pagina-notificaciones .noti-item .btn-borrar {
+  grid-area: borrar;
+  justify-self: end;
+  margin-top: 4px;
+  padding: 6px 12px;
+  background: none;
+  border: none;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #B5523B;
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.pagina-notificaciones .noti-item .btn-borrar:hover {
+  background: #F8E3DD;
+}
+
+.pagina-notificaciones .noti-item .btn-borrar:active {
+  transform: scale(0.95);
+}
+
+/* ── Ver más / Ver menos ──────────────────────────── */
+.pagina-notificaciones .noti-lista .btn-ver-todos {
+  justify-self: center;
+  margin: 4px auto 0;
+}
+
+/* ── Estado vacío ─────────────────────────────────── */
+.pagina-notificaciones .vacio {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--noti-muted);
+  background: #fff;
+  border: 1px dashed #E6DAC6;
+  border-radius: 16px;
+}
+
+/* ── Badge de la campana (global, usado en headers) ─ */
+.icono-campana {
+  position: relative;
+}
+
+.luma-noti-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  padding: 2px 6px;
+  background: var(--verde, #9CA986);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(92, 74, 58, 0.18);
+}
