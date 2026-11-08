@@ -8,6 +8,7 @@ import {
   actualizarMascota
 } from '../../repositories/mascotaRepository'
 import { subirAvatar } from '../../repositories/storageRepository'
+import { ESTADOS } from '../../services/authService'
 import '../../styles/editarUsuario.css'
 
 export default function EditarMascota() {
@@ -31,6 +32,8 @@ export default function EditarMascota() {
   const [urgente, setUrgente] = useState(false)
   const [fechaRescate, setFechaRescate] = useState('')
   const [fechaAdopcion, setFechaAdopcion] = useState('')
+  const [adoptado, setAdoptado] = useState(false)
+  const [estadoId, setEstadoId] = useState('')
 
   const [fotoArchivo, setFotoArchivo] = useState(null)
   const [previewFoto, setPreviewFoto] = useState(null)
@@ -62,6 +65,8 @@ export default function EditarMascota() {
     setUrgente(data.urgente === true)
     setFechaRescate(data.fecha_rescate || '')
     setFechaAdopcion(data.fecha_adopcion || '')
+    setAdoptado(data.adoptado === true || data.estado_id === ESTADOS.adoptada)
+    setEstadoId(data.estado_id || '')
     setPreviewFoto(data.foto_url)
 
     setCargando(false)
@@ -95,6 +100,12 @@ export default function EditarMascota() {
       urgente: Boolean(urgente),
       fecha_rescate: fechaRescate || null,
       fecha_adopcion: fechaAdopcion || null,
+      adoptado,
+      estado_id: adoptado
+        ? ESTADOS.adoptada
+        : estadoId === ESTADOS.adoptada
+          ? ESTADOS.publicada
+          : estadoId,
       foto_url: foto || previewFoto,
     }
 
@@ -171,6 +182,19 @@ export default function EditarMascota() {
 
         <label>Fecha adopción</label>
         <input type="date" value={fechaAdopcion || ''} onChange={(e) => setFechaAdopcion(e.target.value)} />
+
+        <div className="adopcion-control">
+          <span>Estado: {adoptado ? 'Adoptado' : 'Disponible para adopción'}</span>
+          <button
+            type="button"
+            className="btn-adopcion"
+            aria-pressed={adoptado}
+            disabled={guardando}
+            onClick={() => setAdoptado(actual => !actual)}
+          >
+            {adoptado ? 'Marcar como disponible' : 'Marcar como adoptado'}
+          </button>
+        </div>
 
         {/* Checkboxes */}
         <label>

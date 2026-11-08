@@ -47,6 +47,21 @@ async function guardarEstadoMensajeEntrevista(mensajeId, contenido) {
     .maybeSingle()
 }
 
+function crearContenidoEntrevista(mensaje, entrevistaId, estado) {
+  const propuesta = parsearEntrevistaMensaje(mensaje?.contenido || '') || {}
+  const prefijo = estado === 'Confirmada' ? '__ENTREVISTA_CONFIRMADA__' : '__ENTREVISTA_RECHAZADA__'
+
+  return `${prefijo}${JSON.stringify({
+    id: entrevistaId,
+    mascota: propuesta.mascota || 'mascota',
+    fecha: propuesta.fecha || new Date().toISOString(),
+    modalidad: propuesta.modalidad || 'Presencial',
+    lugar: propuesta.lugar || 'No especificado',
+    notas: propuesta.notas || '',
+    estado,
+  })}`
+}
+
 export default function Conversacion() {
   const { id: conversacionId } = useParams()
   const navigate = useNavigate()
@@ -257,22 +272,19 @@ export default function Conversacion() {
     setEnviando(false)
   }
 
-  const handleAceptarEntrevista = async (mensajeId, entrevistaId) => {
+  const handleResponderPropuestaEntrevista = async (mensajeId, entrevistaId, aceptada) => {
     if (!mensajeId || !entrevistaId) return
     setRespondiendoEntrevista(true)
     try {
-      const { error: errorEntrevista } = await responderEntrevista(entrevistaId, true)
+      const { error: errorEntrevista } = await responderEntrevista(entrevistaId, aceptada)
       if (errorEntrevista) throw errorEntrevista
 
-      const nuevoContenido = `__ENTREVISTA_CONFIRMADA__${JSON.stringify({
-        id: entrevistaId,
-        mascota: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.mascota || 'mascota',
-        fecha: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.fecha || new Date().toISOString(),
-        modalidad: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.modalidad || 'Presencial',
-        lugar: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.lugar || 'No especificado',
-        notas: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.notas || '',
-        estado: 'Confirmada',
-      })}`
+      const estado = aceptada ? 'Confirmada' : 'Rechazada'
+      const nuevoContenido = crearContenidoEntrevista(
+        mensajes.find(m => m.id === mensajeId),
+        entrevistaId,
+        estado,
+      )
 
       const { error: errorMensaje } = await guardarEstadoMensajeEntrevista(mensajeId, nuevoContenido)
       if (errorMensaje) throw errorMensaje
@@ -285,44 +297,10 @@ export default function Conversacion() {
       }))
       setError(null)
     } catch (err) {
-      console.error('Error confirmando entrevista:', err)
-      setError('No se pudo confirmar la entrevista.')
-    } finally {
-      setRespondiendoEntrevista(false)
-      setProcesoEntrevistaId(null)
-    }
-  }
-
-  const handleRechazarEntrevista = async (mensajeId, entrevistaId) => {
-    if (!mensajeId || !entrevistaId) return
-    setRespondiendoEntrevista(true)
-    try {
-      const { error: errorEntrevista } = await responderEntrevista(entrevistaId, false)
-      if (errorEntrevista) throw errorEntrevista
-
-      const nuevoContenido = `__ENTREVISTA_RECHAZADA__${JSON.stringify({
-        id: entrevistaId,
-        mascota: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.mascota || 'mascota',
-        fecha: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.fecha || new Date().toISOString(),
-        modalidad: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.modalidad || 'Presencial',
-        lugar: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.lugar || 'No especificado',
-        notas: parsearEntrevistaMensaje((mensajes.find(m => m.id === mensajeId)?.contenido || ''))?.notas || '',
-        estado: 'Rechazada',
-      })}`
-
-      const { error: errorMensaje } = await guardarEstadoMensajeEntrevista(mensajeId, nuevoContenido)
-      if (errorMensaje) throw errorMensaje
-
-      setMensajes(prev => prev.map(m => {
-        if (m.id === mensajeId) {
-          return { ...m, contenido: nuevoContenido }
-        }
-        return m
-      }))
-      setError(null)
-    } catch (err) {
-      console.error('Error rechazando entrevista:', err)
-      setError('No se pudo rechazar la entrevista.')
+      const accion = aceptada ? 'confirmando' : 'rechazando'
+      const accionError = aceptada ? 'confirmar' : 'rechazar'
+      console.error(`Error ${accion} entrevista:`, err)
+      setError(`No se pudo ${accionError} la entrevista.`)
     } finally {
       setRespondiendoEntrevista(false)
       setProcesoEntrevistaId(null)
@@ -476,6 +454,7 @@ export default function Conversacion() {
   const debeMostrarFeedbackPostEntrevista = esRefugio &&
     tieneEntrevistaEnCurso &&
     !!entrevistaActiva &&
+    entrevistaActiva.estado_confirmacion === 'Confirmada' &&
     new Date(entrevistaActiva.fecha) <= new Date()
 
   // Abrir el modal automáticamente si la entrevista ya pasó y todavía no tiene resultado
@@ -684,7 +663,7 @@ export default function Conversacion() {
                         type="button"
                         className="chat-entrevista-btn chat-entrevista-btn--aceptar"
                         disabled={respondiendoEntrevista}
-                        onClick={() => handleAceptarEntrevista(m.id, data?.id)}
+                        onClick={() => handleResponderPropuestaEntrevista(m.id, data?.id, true)}
                       >
                         Aceptar
                       </button>
@@ -692,7 +671,7 @@ export default function Conversacion() {
                         type="button"
                         className="chat-entrevista-btn chat-entrevista-btn--rechazar"
                         disabled={respondiendoEntrevista}
-                        onClick={() => handleRechazarEntrevista(m.id, data?.id)}
+                        onClick={() => handleResponderPropuestaEntrevista(m.id, data?.id, false)}
                       >
                         Rechazar
                       </button>

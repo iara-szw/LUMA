@@ -93,7 +93,7 @@ export default function MisMascotas() {
             mascotasFiltradas.map(m => (
               <article
                 key={m.id}
-                className="tarjeta-mascota-refugio tarjeta-mascota-clickeable"
+                className="MisMascoTarjeta"
                 role="button"
                 tabIndex={0}
                 onClick={() => navigate(`/refugio/mascota/${m.id}`)}

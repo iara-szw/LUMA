@@ -3,7 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { usarAuth } from '../../hooks/UsarAuth'
 import { enviarMensaje, obtenerConversacionPorId } from '../../repositories/chatRepository'
-import { crearEntrevista } from '../../repositories/entrevistaRepository'
+import {
+  crearEntrevista,
+  obtenerEntrevistasPorMascotaYUsuario,
+} from '../../repositories/entrevistaRepository'
 import { Supabase } from '../../services/supabase'
 import '../../styles/crearEntrevista.css'
 
@@ -118,6 +121,24 @@ export default function CrearEntrevista() {
     setError('')
 
     try {
+      const { data: entrevistasPrevias, error: errorEntrevistas } = await obtenerEntrevistasPorMascotaYUsuario({
+        adoptanteId: conversacion.adoptante_id,
+        refugioId: conversacion.refugio_id || usuario.id,
+      })
+
+      if (errorEntrevistas) throw errorEntrevistas
+
+      const ahora = Date.now()
+      const entrevistaPendiente = entrevistasPrevias?.some(entrevista =>
+        entrevista.estado_confirmacion?.toLowerCase() !== 'rechazada' &&
+        new Date(entrevista.fecha).getTime() > ahora,
+      )
+
+      if (entrevistaPendiente) {
+        setError('Ya hay una entrevista pendiente o confirmada. Podés programar otra cuando pase su horario.')
+        return
+      }
+
       const lugarFinal = (
         modalidad === 'En refugio'
           ? (lugar || 'En refugio')

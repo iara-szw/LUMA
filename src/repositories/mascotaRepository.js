@@ -168,6 +168,8 @@ export async function actualizarMascota(id, datos) {
     detalle_salud: datos.detalle_salud,
     urgente: datos.urgente,
     publicado: datos.publicado,
+    adoptado: datos.adoptado,
+    estado_id: datos.estado_id,
     fecha_rescate: datos.fecha_rescate,
     fecha_adopcion: datos.fecha_adopcion,
     requisitos: datos.requisitos,

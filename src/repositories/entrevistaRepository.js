@@ -69,11 +69,15 @@ export async function obtenerEntrevistasPorMascotaYUsuario({ adoptanteId, refugi
     estado_confirmacion,
     solicitud_id,
     adoptante_id,
-    refugio_id
+    refugio_id,
+    solicitudes!inner (
+      adoptante_id,
+      mascotas!inner ( refugio_id )
+    )
   `)
 
-  if (adoptanteId) query = query.eq('adoptante_id', adoptanteId)
-  if (refugioId) query = query.eq('refugio_id', refugioId)
+  if (adoptanteId) query = query.eq('solicitudes.adoptante_id', adoptanteId)
+  if (refugioId) query = query.eq('solicitudes.mascotas.refugio_id', refugioId)
   if (solicitudId) query = query.eq('solicitud_id', solicitudId)
 
   return query.order('fecha', { ascending: true })
@@ -105,23 +109,26 @@ export const responderEntrevista = async (id, aceptar) => {
     return { data: null, error: { message: 'entrevista_id faltante' } }
   }
 
-  const { data, error } = await Supabase
+  const { count, error } = await Supabase
     .from('entrevistas')
-    .update({
-      estado_confirmacion: aceptar ? 'Confirmada' : 'Rechazada',
-      resultado: aceptar ? 'Confirmada' : 'Rechazada',
-      fecha_respuesta: new Date().toISOString(),
-    })
+    .update(
+      {
+        estado_confirmacion: aceptar ? 'Confirmada' : 'Rechazada',
+        fecha_respuesta: new Date().toISOString(),
+      },
+      { count: 'exact' },
+    )
     .eq('id', id)
-    .select()
 
   if (error) return { data: null, error }
-
-  if (!data || data.length === 0) {
-    return { data: null, error: null }
+  if (count !== 1) {
+    return {
+      data: null,
+      error: { message: 'No se actualizó la entrevista. Verificá el ID y los permisos de la base de datos.' },
+    }
   }
 
-  return { data: data[0], error: null }
+  return { data: { id }, error: null }
 }
 
 export const obtenerEntrevistasConfirmadas = (adoptanteId) =>

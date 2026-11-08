@@ -247,6 +247,32 @@
   cursor: pointer;
 }
 
+.pagina-editar .adopcion-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0.75rem 0;
+  color: var(--texto, #5C4A3A);
+  font-weight: 700;
+}
+
+.pagina-editar .btn-adopcion {
+  padding: 0.65rem 1.25rem;
+  background: var(--blanco, #fff);
+  color: var(--texto, #5C4A3A);
+  border: 1px solid #CBB99C;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pagina-editar .btn-adopcion:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* Guardar: verde salvia */
 .pagina-editar form > button[type="submit"] {
   background: var(--verde, #9CA986);
