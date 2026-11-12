@@ -13,85 +13,96 @@ export default function Registro() {
   const [ciudad, setCiudad]       = useState('')
   const [provincia, setProvincia] = useState('')
   const [rol, setRol]             = useState('adoptante')
-  const [estado, setEstado]         = useState('')
-  const [cargando, setCargando]   = useState(false)
+  const [estado, setEstado]       = useState('')
+  const [cargando, setCargando]  = useState(false)
+
+  const esRefugio = rol === 'refugio'
 
   const manejarRegistro = async () => {
     setEstado('')
-   if (!nombre || !apellido || !email || !password) {
-  setEstado('Completa todos los campos obligatorios')
-  return
-}
-if (password.length < 6) {
-  setEstado('La contrasena debe tener al menos 6 caracteres')
-  return
-}
+    if (!nombre || (!esRefugio && !apellido) || !email || !password) {
+      setEstado('Completa todos los campos obligatorios')
+      return
+    }
+    if (password.length < 6) {
+      setEstado('La contrasena debe tener al menos 6 caracteres')
+      return
+    }
 
-setCargando(true)
+    setCargando(true)
 
-const { data, error: authError } = await registrarUsuario(email, password)
+    const { data, error: authError } = await registrarUsuario(email, password)
 
-if (authError) {
-  if (authError.message === "User already registered") {
-    setEstado("Email ya en uso")
-  } else {
-    setEstado(authError.message)
-  }
-  setCargando(false)
-  return
-}
+    if (authError) {
+      if (authError.message === "User already registered") {
+        setEstado("Email ya en uso")
+      } else {
+        setEstado(authError.message)
+      }
+      setCargando(false)
+      return
+    }
 
-const uid = data.user.id
-const { error: usuarioError } = await insertarUsuario(uid, { nombre, apellido, email, telefono, ciudad, provincia })
-if (usuarioError) {
-  setEstado('No se pudo guardar el perfil: ' + usuarioError.message)
-  setCargando(false)
-  return
-}
+    const uid = data.user.id
+    const { error: usuarioError } = await insertarUsuario(uid, {
+      nombre,
+      apellido: esRefugio ? null : apellido,
+      email,
+      telefono,
+      ciudad,
+      provincia,
+    })
+    if (usuarioError) {
+      setEstado('No se pudo guardar el perfil: ' + usuarioError.message)
+      setCargando(false)
+      return
+    }
 
-const { error: rolError } = await insertarRolUsuario(uid, ROLES[rol])
+    const { error: rolError } = await insertarRolUsuario(uid, ROLES[rol])
 
-if (rolError) {
-  setEstado('No se pudo asignar el rol: ' + rolError.message)
-  setCargando(false)
-  return
-}
+    if (rolError) {
+      setEstado('No se pudo asignar el rol: ' + rolError.message)
+      setCargando(false)
+      return
+    }
 
-setEstado("Usuario creado exitosamente")
-setCargando(false)
+    setEstado("Usuario creado exitosamente")
+    setCargando(false)
   }
 
   return (
     <div className="auth-page">
       <div className="pantalla-auth">
-<img src="/assets/img/logo.png" alt="LUMA" className="logo-img" />
-      <div className="selector-rol">
-        <button type="button" className={rol === 'adoptante' ? 'activo' : ''} onClick={() => setRol('adoptante')}>
-          Quiero adoptar
+        <img src="/assets/img/logo.png" alt="LUMA" className="logo-img" />
+        <div className="selector-rol">
+          <button type="button" className={rol === 'adoptante' ? 'activo' : ''} onClick={() => setRol('adoptante')}>
+            Quiero adoptar
+          </button>
+          <button type="button" className={rol === 'refugio' ? 'activo' : ''} onClick={() => setRol('refugio')}>
+            Soy un refugio
+          </button>
+        </div>
+
+        <input type="text" placeholder={esRefugio ? 'Nombre del refugio *' : 'Nombre *'} value={nombre} id="Nombre" onChange={e => setNombre(e.target.value)} />
+        {!esRefugio && (
+          <input type="text" placeholder="Apellido *" value={apellido} id="Apellido" onChange={e => setApellido(e.target.value)} />
+        )}
+        <input type="email" placeholder="Email *" value={email} id="Mail" onChange={e => setEmail(e.target.value)} />
+        <input type="password" placeholder="Contraseña *" value={password} id="Password" onChange={e => setPassword(e.target.value)} />
+        <input type="tel" placeholder="Telefono" pattern="[0-9]{2} [0-9]{4}-[0-9]{4}" value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
+        <input type="text" placeholder="Ciudad" value={ciudad} id="Ciudad" onChange={e => setCiudad(e.target.value)} />
+        <input type="text" placeholder="Provincia" value={provincia} id="Provincia" onChange={e => setProvincia(e.target.value)} />
+
+        {estado && <p className="estado">{estado}</p>}
+
+        <button type="button" onClick={manejarRegistro} disabled={cargando}>
+          {cargando ? 'Creando cuenta...' : 'Crear cuenta'}
         </button>
-        <button type="button" className={rol === 'refugio' ? 'activo' : ''} onClick={() => setRol('refugio')}>
-          Soy un refugio
-        </button>
+
+        <p>¿Ya tenes cuenta? <Link to="/login">Iniciar sesión</Link></p>
+
+        <p><Link to="/">Volver al inicio</Link></p>
       </div>
-
-      <input type="text"     placeholder="Nombre *"     value={nombre} id="Nombre"   onChange={e => setNombre(e.target.value)} />
-      <input type="text"     placeholder="Apellido *"   value={apellido} id="Apellido" onChange={e => setApellido(e.target.value)} />
-      <input type="email"    placeholder="Email *"      value={email}    id="Mail" onChange={e => setEmail(e.target.value)} />
-      <input type="password" placeholder="Contraseña *" value={password} id="Password" onChange={e => setPassword(e.target.value)} />
-      <input type="tel"      placeholder="Telefono"   pattern="[0-9]{2} [0-9]{4}-[0-9]{4}"  value={telefono} id="Telefono" onChange={e => setTelefono(e.target.value)} />
-      <input type="text"     placeholder="Ciudad"       value={ciudad}   id="Ciudad" onChange={e => setCiudad(e.target.value)} />
-      <input type="text"     placeholder="Provincia"    value={provincia} id="Provincia" onChange={e => setProvincia(e.target.value)} />
-
-      {estado && <p className="estado">{estado}</p>}
-
-      <button type="button" onClick={manejarRegistro} disabled={cargando}>
-        {cargando ? 'Creando cuenta...' : 'Crear cuenta'}
-      </button>
-
-      <p>¿Ya tenes cuenta? <Link to="/login">Iniciar sesión</Link></p>
-
-      <p><Link to="/">Volver al inicio</Link></p>
     </div>
-  </div>
   )
 }
