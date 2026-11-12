@@ -66,20 +66,18 @@ export default function PerfilPublicoRefugio() {
 
   const fallbackAvatar = '/assets/img/perfil_default.jpg'
 
-  const resolverFotoUsuario = (usuarioActual) => {
-    const fallback = '/assets/img/perfil_default.jpg'
-    if (!usuarioActual) return fallback
+ const resolverFotoRefugio = (r) => {
+  const fallback = '/assets/img/perfil_default.jpg'
+  if (!r) return fallback
 
-    const valor = usuarioActual.foto_url
-    if (typeof valor !== 'string') return fallback
+  const valido = [r.logo_url, r.foto_url, r.logoUrl, r.logoURL].find(
+    v => typeof v === 'string' && v.trim() && v.trim() !== 'null' && v.trim() !== 'undefined'
+  )
 
-    const limpio = valor.trim()
-    if (!limpio || limpio === 'null' || limpio === 'undefined') return fallback
+  return valido ? valido.trim() : fallback
+}
 
-    return limpio
-  }
-
-  const avatarRefugio = resolverFotoUsuario(refugio)
+const avatarRefugio = resolverFotoRefugio(refugio)
 
   const handleImageError = (event) => {
     event.currentTarget.src = '/assets/img/perfil_default.jpg'
