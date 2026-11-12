@@ -44,9 +44,10 @@ export default function Registro() {
     }
 
     const uid = data.user.id
+    const apellidoFinal = esRefugio ? 'REFUGIO' : apellido
     const { error: usuarioError } = await insertarUsuario(uid, {
       nombre,
-      apellido: esRefugio ? null : apellido,
+      apellido: apellidoFinal,
       email,
       telefono,
       ciudad,
