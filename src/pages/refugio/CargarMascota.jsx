@@ -42,9 +42,24 @@ export default function CargarMascota() {
     }
   }
 
+  const limpiarPreviewFoto = () => {
+    if (previewFoto) {
+      URL.revokeObjectURL(previewFoto)
+    }
+    setArchivoFoto(null)
+    setPreviewFoto(null)
+    if (inputFotoRef.current) {
+      inputFotoRef.current.value = ''
+    }
+  }
+
   const manejarSeleccionFoto = (e) => {
     const archivo = e.target.files?.[0]
     if (!archivo) return
+
+    if (previewFoto) {
+      URL.revokeObjectURL(previewFoto)
+    }
 
     setArchivoFoto(archivo)
     setPreviewFoto(URL.createObjectURL(archivo))
@@ -52,8 +67,12 @@ export default function CargarMascota() {
 
   const validar = () => {
     const nuevosErrores = {}
+
     if (!form.nombre.trim()) nuevosErrores.nombre = 'El nombre es obligatorio.'
     if (!form.especie) nuevosErrores.especie = 'Elegí una especie.'
+    if (form.problemasSalud && !form.detalleSalud.trim()) {
+      nuevosErrores.detalleSalud = 'Describí el problema de salud.'
+    }
 
     setErrores(nuevosErrores)
     return Object.keys(nuevosErrores).length === 0
@@ -110,7 +129,12 @@ export default function CargarMascota() {
         return
       }
 
+      limpiarPreviewFoto()
       setExito(true)
+      setGuardando(false)
+      setErrores({})
+      setForm(ESTADO_INICIAL)
+
       setTimeout(() => navigate('/refugio/dashboard'), 1200)
     } catch {
       setErrorEnvio('Ocurrío un error inesperado. Intenta de nuevo.')
@@ -247,6 +271,7 @@ export default function CargarMascota() {
             value={form.detalleSalud}
             onChange={e => actualizarCampo('detalleSalud', e.target.value)}
           />
+          {errores.detalleSalud && <span className="cargar-error">{errores.detalleSalud}</span>}
         </section>
 
         <section className="cargar-tarjeta">

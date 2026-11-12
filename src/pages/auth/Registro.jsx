@@ -2,6 +2,7 @@ import '../../styles/auth.css'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { registrarUsuario, ROLES } from '../../services/authService'
+import { Supabase } from '../../services/supabase'
 import { insertarUsuario, insertarRolUsuario } from '../../repositories/usuarioRepository'
 
 export default function Registro() {
@@ -20,18 +21,38 @@ export default function Registro() {
 
   const manejarRegistro = async () => {
     setEstado('')
-    if (!nombre || (!esRefugio && !apellido) || !email || !password) {
+
+    const nombreTrim = nombre.trim()
+    const apellidoTrim = apellido.trim()
+    const emailTrim = email.trim()
+    const telefonoTrim = telefono.trim()
+    const ciudadTrim = ciudad.trim()
+    const provinciaTrim = provincia.trim()
+    const passwordTrim = password.trim()
+
+    if (!nombreTrim || (!esRefugio && !apellidoTrim) || !emailTrim || !passwordTrim) {
       setEstado('Completa todos los campos obligatorios')
       return
     }
-    if (password.length < 6) {
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
+      setEstado('Ingresá un email válido')
+      return
+    }
+
+    if (passwordTrim.length < 6) {
       setEstado('La contrasena debe tener al menos 6 caracteres')
+      return
+    }
+
+    if (telefonoTrim && !/^\d{2,4}[\s-]?\d{4}[\s-]?\d{4}$/.test(telefonoTrim)) {
+      setEstado('Ingresá un teléfono válido')
       return
     }
 
     setCargando(true)
 
-    const { data, error: authError } = await registrarUsuario(email, password)
+    const { data, error: authError } = await registrarUsuario(emailTrim, passwordTrim)
 
     if (authError) {
       if (authError.message === "User already registered") {
@@ -44,15 +65,16 @@ export default function Registro() {
     }
 
     const uid = data.user.id
-    const apellidoFinal = esRefugio ? 'REFUGIO' : apellido
+    const apellidoFinal = esRefugio ? 'REFUGIO' : apellidoTrim
     const { error: usuarioError } = await insertarUsuario(uid, {
-      nombre,
+      nombre: nombreTrim,
       apellido: apellidoFinal,
-      email,
-      telefono,
-      ciudad,
-      provincia,
+      email: emailTrim,
+      telefono: telefonoTrim || null,
+      ciudad: ciudadTrim || null,
+      provincia: provinciaTrim || null,
     })
+
     if (usuarioError) {
       setEstado('No se pudo guardar el perfil: ' + usuarioError.message)
       setCargando(false)
@@ -65,6 +87,25 @@ export default function Registro() {
       setEstado('No se pudo asignar el rol: ' + rolError.message)
       setCargando(false)
       return
+    }
+
+    if (esRefugio) {
+      const { error: refugioError } = await Supabase
+        .from('refugios')
+        .upsert({
+          id: uid,
+          nombre: nombreTrim,
+          ciudad: ciudadTrim || null,
+          provincia: provinciaTrim || null,
+          telefono: telefonoTrim || null,
+          descripcion: '',
+        }, { onConflict: 'id' })
+
+      if (refugioError) {
+        setEstado('Se creó el usuario, pero no se pudo crear el perfil del refugio: ' + refugioError.message)
+        setCargando(false)
+        return
+      }
     }
 
     setEstado("Usuario creado exitosamente")
