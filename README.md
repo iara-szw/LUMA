@@ -1,4 +1,3 @@
-```markdown
 # 🐾 LUMA – Plataforma Centralizada de Adopción de Mascotas
 
 Proyecto final de Informática – Secundaria ORT  
@@ -151,6 +150,3 @@ La visión es que LUMA se convierta en la plataforma centralizada de adopción d
 
 *Hecho con el objetivo de que cada mascota tenga un hogar.*
 
-```
-
-```
