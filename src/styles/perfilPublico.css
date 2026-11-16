@@ -1,0 +1,74 @@
+/* ── Tarjeta del carrusel (perfil público) ────────── */
+/* Selector más específico para ganarle a misMascotas.css (display:flex) */
+.pagina-perfil-refugio .scroll-horizontal-refugio .tarjeta-mascota-refugio {
+  position: relative;
+  display: block !important;
+  flex: 0 0 140px;
+  width: 140px;
+  margin: 0;
+  padding: 0 0 10px !important;
+  background: #fff;
+  border: 1px solid #efe3d1;
+  border-radius: 18px;
+  box-shadow: 0 3px 10px rgba(92, 74, 58, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.pagina-perfil-refugio .scroll-horizontal-refugio .tarjeta-mascota-refugio:active {
+  transform: scale(0.97);
+}
+
+/* La foto rellena todo el ancho de la tarjeta, con las esquinas de arriba redondeadas */
+.pagina-perfil-refugio .scroll-horizontal-refugio .tarjeta-mascota-refugio > img {
+  display: block;
+  width: 100% !important;
+  height: 130px !important;
+  max-width: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0 !important;
+  background: #ede6da;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Texto debajo de la foto (el JSX trae estilos inline, por eso !important) */
+.pagina-perfil-refugio .scroll-horizontal-refugio .tarjeta-mascota-refugio > div {
+  padding: 10px 12px 0 !important;
+}
+
+.pagina-perfil-refugio .scroll-horizontal-refugio .tarjeta-mascota-refugio > div strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 14px !important;
+  font-weight: 800;
+  color: #463b35 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pagina-perfil-refugio .scroll-horizontal-refugio {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Sangrado de 16px a cada lado: el carrusel llega hasta los bordes del cuadro blanco
+     y la 1ª tarjeta sigue alineada con el título. Los márgenes negativos de arriba y abajo
+     compensan el padding para que nada se mueva en vertical. */
+  margin: -4px -16px -8px;
+  padding: 4px 16px 8px;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.pagina-perfil-refugio .scroll-horizontal-refugio::-webkit-scrollbar {
+  display: none;
+}

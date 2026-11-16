@@ -1,0 +1,62 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--blanco);
+  border-top: 1px solid #EDE8E3;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.6rem 0 calc(0.6rem + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.footer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  text-decoration: none;
+  padding: 0 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.footer-item.activo {
+  color: var(--arena);
+}
+
+.footer-item.activo .footer-icono {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(20%) saturate(500%) hue-rotate(340deg) brightness(95%);
+}
+
+.footer-icono {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(55%) sepia(10%) saturate(300%) hue-rotate(340deg);
+}
+
+/* botón central destacado */
+.footer-central {
+  background: var(--arena);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -18px;
+  box-shadow: 0 4px 14px rgba(186,163,146,0.45);
+  padding: 0;
+}
+
+.footer-central .footer-icono {
+  width: 26px;
+  height: 26px;
+  filter: brightness(0) invert(1);
+}

@@ -1,122 +1,302 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { ProveedorAuth } from './contexts/ContextoAuth.jsx'
+import { usarAuth } from './hooks/UsarAuth.jsx'
+import { ProveedorChat } from './contexts/ContextoChat.jsx'
+import ListaChats from './pages/chat/ListaChats.jsx'
+import Conversacion from './pages/chat/Conversacion.jsx'
+import Loader from './components/Loader.jsx'
+import Home from './pages/Home'
+import Perfil from './pages/adoptante/Perfil.jsx'
+import Notificaciones from './pages/Notificaciones.jsx'
+import IniciarSesion from './pages/auth/InicioSesion'
+import EditarPerfil from './pages/adoptante/editarUsuario.jsx'
+import Registro from './pages/auth/Registro'
+import CargarEvento from './pages/refugio/CargarEvento.jsx'
+import Dashboard from './pages/refugio/Dashboard.jsx'
+import PerfilRefugio from './pages/refugio/Perfil.jsx'
+import CargarMascota from './pages/refugio/CargarMascota.jsx'
+import EditarMascota from './pages/refugio/editarMascota.jsx'
+import EditarFormularioMascota from './pages/refugio/editarFormularioMascota.jsx'
+import EditarRefugio from './pages/refugio/editarRefugio.jsx'
+import SolicitudesRefugio from './pages/refugio/Solicitudes.jsx'
+import MisMascotas from './pages/refugio/MisMascotas.jsx'
+import SolicitudesMascota from './pages/refugio/SolicitudesMascota.jsx'
+import Explorar from './pages/adoptante/Explorar.jsx'
+import DetalleEvento from './pages/DetalleEvento.jsx'
+import FormularioAdopcion from './pages/adoptante/formularioAdopcion.jsx'
+import Mascota from './pages/Mascota.jsx'
+import SolicitudFormulario from './pages/refugio/solicitudFormulario.jsx'
+import PerfilAdoptanteRefugio from './pages/refugio/PerfilUsuario.jsx'
+import PerfilPublicoRefugio from './pages/refugio/PerfilPublico.jsx'
+import Calendario from './pages/adoptante/Calendario.jsx'
+import CalendarioRefugio from './pages/refugio/calendario.jsx'
+import PerfilAdoptante from './pages/refugio/PerfilAdoptante.jsx'
+import CrearEntrevista from './pages/chat/CrearEntrevista.jsx'
+import Mapa from './pages/adoptante/mapa.jsx'
+import DetalleEntrevista from './pages/DetalleEntrevista.jsx'
+import { useEffect } from 'react'
+import { iniciarRecordatoriosPendientes } from './services/recordatorios'
+import TestMatch from './pages/adoptante/TestMatch'
 
-function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+function RutaProtegida({ children, rol }) {
+  const { usuario, cargando, esAdoptante, esRefugio } = usarAuth()
 
-      <div className="ticks"></div>
+  if (cargando) return <Loader />
+  if (!usuario) return <Navigate to="/login" replace />
+  if (rol === 'adoptante' && !esAdoptante) return <Navigate to="/login" replace />
+  if (rol === 'refugio' && !esRefugio) return <Navigate to="/login" replace />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+  return children
 }
 
-export default App
+// Redirige al usuario según su rol después del login
+function RutaInicio() {
+  const { usuario, cargando, esRefugio } = usarAuth()
+
+  if (cargando) return <Loader />
+  if (usuario && esRefugio) return <Navigate to="/refugio/dashboard" replace />
+
+  return <Home />
+}
+
+export default function App() {
+  useEffect(() => {
+    iniciarRecordatoriosPendientes()
+  }, [])
+
+  return (
+    <BrowserRouter>
+      <ProveedorAuth>
+        <ProveedorChat>
+        <Routes>
+          {/* Inicio: muestra Home o redirige a dashboard si es refugio */}
+          <Route path="/" element={<RutaInicio />} />
+
+          <Route path="/login" element={<IniciarSesion />} />
+          <Route path="/registro" element={<Registro />} />
+
+          {/* Dashboard del refugio */}
+          <Route
+            path="/refugio/dashboard"
+            element={
+              <RutaProtegida rol="refugio">
+                <Dashboard />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/notificaciones"
+            element={
+              <RutaProtegida rol="refugio">
+                <Notificaciones />
+              </RutaProtegida>
+            }
+          />
+          <Route path="/adoptante/test-match" element={<TestMatch />} />
+<Route
+  path="/adoptante/calendario"
+  element={
+    <RutaProtegida rol="adoptante">
+      <Calendario />
+    </RutaProtegida>
+  }
+            />
+
+          <Route
+            path="/refugio/adoptante/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <PerfilAdoptante />
+              </RutaProtegida>
+            }
+          />
+
+                    <Route
+                      path="/refugio/calendario"
+                      element={
+                        <RutaProtegida rol="refugio">
+                          <CalendarioRefugio />
+                        </RutaProtegida>
+                      }
+                    />
+                    <Route path="/eventos/:id" element={<DetalleEvento />} />
+          <Route path="/entrevistas/:id" element={<DetalleEntrevista />} />
+          {/* Perfil del refugio */}
+          <Route
+            path="/refugio/perfil"
+            element={
+              <RutaProtegida rol="refugio">
+                <PerfilRefugio />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/solicitudes"
+            element={
+              <RutaProtegida rol="refugio">
+                <SolicitudesRefugio />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/mismascotas"
+            element={
+              <RutaProtegida rol="refugio">
+                <MisMascotas />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/mascotas"
+            element={
+              <RutaProtegida rol="refugio">
+                <MisMascotas />
+              </RutaProtegida>
+            }
+          />
+          <Route
+  path="/refugio/eventos/crear"
+  element={
+    <RutaProtegida rol="refugio">
+      <CargarEvento />
+    </RutaProtegida>
+  }
+/>
+          <Route
+            path="/refugio/mascota/:id/postulaciones"
+            element={
+              <RutaProtegida rol="refugio">
+                <SolicitudesMascota />
+              </RutaProtegida>
+            }
+          />
+           <Route
+            path="/adoptante/mapa"
+            element={
+              <RutaProtegida rol="adoptante">
+                <Mapa />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/solicitud/:id/perfil"
+            element={
+              <RutaProtegida rol="refugio">
+                <PerfilAdoptanteRefugio />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/solicitud/:id/formulario"
+            element={
+              <RutaProtegida rol="refugio">
+                <SolicitudFormulario />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/cargarMascota"
+            element={
+              <RutaProtegida rol="refugio">
+                <CargarMascota />
+              </RutaProtegida>
+            }
+          />
+           
+          <Route
+            path="/refugio/editarRefugio"
+            element={
+              <RutaProtegida rol="refugio">
+                <EditarRefugio />
+              </RutaProtegida>
+            }
+          />
+          {/* Rutas del adoptante */}
+          <Route
+            path="/adoptante/perfil"
+            element={
+              <RutaProtegida rol="adoptante">
+                <Perfil />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/adoptante/editarUsuario"
+            element={
+              <RutaProtegida rol="adoptante">
+                <EditarPerfil />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/adoptante/buscar"
+            element={<Explorar />}
+          />
+          <Route
+            path="/adoptante/solicitud/:id"
+            element={
+              <RutaProtegida rol="adoptante">
+                <FormularioAdopcion />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Detalle de mascota (público y rutas con rol) */}
+          <Route
+            path="/adoptante/mascota/:id"
+            element={<Mascota />}
+          />
+          <Route
+            path="/refugio/mascota/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <Mascota />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/editarMascota/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <EditarMascota />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/editarFormulario/:id"
+            element={
+              <RutaProtegida rol="refugio">
+                <EditarFormularioMascota />
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/refugio/:id"
+            element={<PerfilPublicoRefugio />}
+          />
+ <Route
+            path="/notificaciones"
+            element={
+              <RutaProtegida rol="adoptante">
+                <Notificaciones />
+              </RutaProtegida>
+            }
+          />
+          <Route path="/mascota/:id" element={<Mascota />} />
+
+          <Route path="/inicio" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+           <Route path="/refugio/chats" element={<RutaProtegida rol="refugio"><ListaChats /></RutaProtegida>} />
+      <Route path="/refugio/chats/:id" element={<RutaProtegida rol="refugio"><Conversacion /></RutaProtegida>} />
+      <Route path="/adoptante/chats" element={<RutaProtegida rol="adoptante"><ListaChats /></RutaProtegida>} />
+      <Route path="/adoptante/chats/:id" element={<RutaProtegida rol="adoptante"><Conversacion /></RutaProtegida>} />
+      <Route path="/refugio/entrevista/crear" element={<RutaProtegida rol="refugio"><CrearEntrevista /></RutaProtegida>} />
+      <Route path="/refugio/chats/:id/entrevista" element={<RutaProtegida rol="refugio"><CrearEntrevista /></RutaProtegida>} />
+      <Route path="/adoptante/chats/:id/entrevista" element={<RutaProtegida rol="adoptante"><CrearEntrevista /></RutaProtegida>} />
+        </Routes>
+        </ProveedorChat>
+      </ProveedorAuth>
+    </BrowserRouter>
+  )
+}

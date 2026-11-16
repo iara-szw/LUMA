@@ -1,0 +1,560 @@
+/* =====================
+   solicitudes.css — LUMA
+   ===================== */
+
+* {
+  box-sizing: border-box;
+}
+
+.pagina-solicitudes {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: #faf8f5;
+  color: #463b35;
+  font-family: var(--font, inherit);
+  padding-bottom: 90px;
+}
+
+.solicitudes-contenedor {
+  padding-bottom: 8px;
+}
+
+/* ---------- Header crema (igual que Mensajes / Mis mascotas) ---------- */
+.nav {
+  background-color: #f2ebe0;
+  padding: 0 0 18px;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+}
+
+.solicitudes-titulo {
+  margin: 0;
+  padding: 22px 20px 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: #463b35;
+}
+
+/* Si agregás el header con el logo arriba del título, se acerca */
+.inicio-header + .solicitudes-titulo {
+  padding-top: 4px;
+}
+
+/* ---------- Filtros ---------- */
+.solicitudes-filtros {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 14px;
+  padding: 0 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.solicitudes-filtros::-webkit-scrollbar {
+  display: none;
+}
+
+.solicitudes-filtros .filtro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 9px 18px;
+  background: #fff;
+  border: 1px solid #e3d8c6;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6d625d;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.solicitudes-filtros .filtro-btn:hover {
+  background: #f6f0e6;
+  border-color: #cbb99c;
+}
+
+.solicitudes-filtros .filtro-btn.activo {
+  background: #b8956a;
+  border-color: #b8956a;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(184, 149, 106, 0.3);
+}
+
+.solicitudes-filtros .filtro-badge {
+  background: #a3ae8e;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+.solicitudes-filtros .filtro-btn.activo .filtro-badge {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* ---------- Resumen ---------- */
+.solicitudes-resumen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 20px 4px;
+  font-size: 13px;
+  color: #7a6b63;
+}
+
+.solicitudes-resumen .nuevas {
+  color: #5f8252;
+  font-weight: 800;
+}
+
+/* ---------- Lista de solicitudes ---------- */
+.solicitudes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px 0;
+}
+
+.vacio-solicitudes {
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #a8998d;
+}
+
+.tarjeta-solicitud-refugio {
+  position: relative;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #f1e8da;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(92, 74, 58, 0.08);
+}
+
+/* Punto de "nueva": sobre la esquina del avatar para no chocar con el estado */
+.punto-nuevo {
+  position: absolute;
+  top: 11px;
+  left: 51px;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  background: #a3ae8e;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+.solicitud-fila-superior {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.solicitud-avatar {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ede6da;
+}
+
+.solicitud-avatar-placeholder {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ede6da;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.solicitud-datos {
+  flex: 1;
+  min-width: 0;
+}
+
+.solicitud-datos h4 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #463b35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.solicitud-datos p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #a8998d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Chips de estado (misma paleta que Mensajes) */
+.badge-estado-sol {
+  flex-shrink: 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* el JSX genera .badge-revision; dejo también .badge-en_revision por compatibilidad */
+.badge-revision,
+.badge-en_revision {
+  background: #ede6da;
+  color: #7a5c3a;
+}
+
+.badge-aprobada {
+  background: #dce7d2;
+  color: #4f7243;
+}
+
+.badge-rechazada {
+  background: #f8e3dd;
+  color: #b5523b;
+}
+
+.badge-Pendiente,
+.badge-pendiente {
+  background: #f3eee6;
+  color: #7a6b63;
+}
+
+.solicitud-paso {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #6d625d;
+}
+
+/* ---------- Acciones de la tarjeta ---------- */
+.solicitud-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f4ede0;
+}
+
+.btn-accion-primaria,
+.solicitudes-contenedor .btn-accion-primaria {
+  padding: 9px 16px;
+  background: #fff;
+  border: 1px solid #cbb99c;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  color: #463b35;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.btn-accion-primaria:hover {
+  background: #f6f0e6;
+}
+
+.btn-accion-verde {
+  padding: 9px 16px;
+  background: #9ca788;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(156, 167, 136, 0.35);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.btn-accion-primaria:active,
+.btn-accion-verde:active {
+  transform: scale(0.97);
+}
+
+.btn-ver-perfil {
+  padding: 7px 10px;
+  background: none;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  color: #7a5c3a;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-ver-perfil:hover {
+  background: #f6f0e6;
+}
+
+/* ---------- Ver todos ---------- */
+.btn-ver-todos {
+  display: block;
+  margin: 18px auto 8px;
+  padding: 11px 28px;
+  background: #ede6da;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #463b35;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Utilidades que ya usabas en otras pantallas ---------- */
+.nombre {
+  margin: 3%;
+  font-size: 30px;
+}
+
+.volver {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(92, 74, 58, 0.15);
+  font-size: 16px;
+  color: #463b35;
+  cursor: pointer;
+}
+
+/* ---------- Bottom nav ---------- */
+.bottom-nav-refugio {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--blanco, #fff);
+  border-top: 1px solid var(--linea, #ede8e3);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item-refugio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  color: var(--texto-light, #a8998d);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.nav-item-refugio img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.45;
+}
+
+.nav-item-refugio.activo {
+  color: var(--verde-oscuro, #5f8252);
+}
+
+.nav-item-refugio.activo img {
+  opacity: 1;
+  filter: invert(50%) sepia(30%) saturate(500%) hue-rotate(60deg);
+}
+
+/* ---------- Responsive ---------- */
+@media (min-width: 480px) {
+  .solicitudes-filtros,
+  .solicitudes-resumen,
+  .solicitudes-lista {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ---------- Panel de filtros (overlay) ---------- */
+.filtro-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(70, 59, 53, 0.4);
+  z-index: 200;
+}
+
+.filtro-panel {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 40px);
+  max-width: 500px;
+  max-height: 80vh;
+  padding: 20px;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(92, 74, 58, 0.18);
+}
+
+.filtro-panel h3 {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #463b35;
+}
+
+.filtro-panel h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #6d625d;
+}
+
+.filtro-panel label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6d625d;
+}
+
+.filtro-select {
+  width: 100%;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid #e3d8c6;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #463b35;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filtro-select:focus {
+  outline: none;
+  border-color: #b8956a;
+}
+
+.filtro-seccion-selectores {
+  margin-bottom: 16px;
+}
+
+.filtro-lista-aplicados {
+  flex: 1;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f1e8da;
+}
+
+.filtro-items-scroll {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.filtro-item-aplicado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #faf6ee;
+  border: 1px solid #efe3d1;
+  border-radius: 14px;
+}
+
+.filtro-item-contenido {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.filtro-item-contenido strong {
+  font-size: 12px;
+  color: #463b35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filtro-item-contenido span {
+  font-size: 12px;
+  color: #7a6b63;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filtro-item-eliminar {
+  flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #a8998d;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.filtro-item-eliminar:hover {
+  color: #b5523b;
+}
+
+.filtro-opcion {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #e3d8c6;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6d625d;
+  cursor: pointer;
+}
+
+.filtro-opcion.activo {
+  background: #b8956a;
+  border-color: #b8956a;
+  color: #fff;
+}
+
+.filtro-panel .btn-formulario.ghost {
+  margin: 0;
+}

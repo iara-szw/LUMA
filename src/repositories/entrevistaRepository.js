@@ -1,0 +1,216 @@
+import { Supabase } from '../services/supabase'
+
+// El refugio agenda una entrevista para una solicitud puntual
+export async function crearEntrevista({
+  solicitud_id = null,
+  adoptante_id = null,
+  refugio_id = null,
+  fecha,
+  modalidad = 'Presencial',
+  lugar = '',
+  duracion_minutos = 30,
+  notas = '',
+  estado_confirmacion = 'Pendiente',
+  resultado = null,
+}) {
+  return Supabase
+    .from('entrevistas')
+    .insert({
+      solicitud_id,
+      adoptante_id,
+      refugio_id,
+      fecha,
+      modalidad,
+      lugar,
+      duracion_minutos,
+      notas,
+      estado_confirmacion,
+      resultado,
+    })
+    .select()
+    .single()
+}
+
+export async function obtenerEntrevistasPorSolicitud(solicitudId) {
+  if (!solicitudId) return { data: [], error: null }
+
+  return Supabase
+    .from('entrevistas')
+    .select(`
+      id,
+      fecha,
+      modalidad,
+      lugar,
+      duracion_minutos,
+      notas,
+      resultado,
+      estado_confirmacion,
+      solicitud_id,
+      adoptante_id,
+      refugio_id
+    `)
+    .eq('solicitud_id', solicitudId)
+    .order('fecha', { ascending: true })
+}
+
+export async function obtenerEntrevistasPorMascotaYUsuario({ adoptanteId, refugioId, solicitudId }) {
+  if (!adoptanteId && !refugioId && !solicitudId) {
+    return { data: [], error: null }
+  }
+
+  let query = Supabase.from('entrevistas').select(`
+    id,
+    fecha,
+    modalidad,
+    lugar,
+    duracion_minutos,
+    notas,
+    resultado,
+    estado_confirmacion,
+    solicitud_id,
+    adoptante_id,
+    refugio_id,
+    solicitudes!inner (
+      adoptante_id,
+      mascotas!inner ( refugio_id )
+    )
+  `)
+
+  if (adoptanteId) query = query.eq('solicitudes.adoptante_id', adoptanteId)
+  if (refugioId) query = query.eq('solicitudes.mascotas.refugio_id', refugioId)
+  if (solicitudId) query = query.eq('solicitud_id', solicitudId)
+
+  return query.order('fecha', { ascending: true })
+}
+
+// Reprogramar fecha/modalidad, cargar resultado, editar notas, etc.
+export async function actualizarEntrevista(id, cambios) {
+  return Supabase.from('entrevistas').update(cambios).eq('id', id).select().single()
+}
+
+export const obtenerEntrevistasAdoptante = (adoptanteId) =>
+  Supabase
+    .from('entrevistas')
+    .select(`
+      *,
+      solicitudes!inner (
+        id,
+        adoptante_id,
+        mascota_id,
+        mascotas ( nombre, refugios ( nombre ) )
+      )
+    `)
+    .eq('solicitudes.adoptante_id', adoptanteId)
+    .eq('estado_confirmacion', 'Confirmada')
+    .order('fecha', { ascending: true })
+
+export const responderEntrevista = async (id, aceptar) => {
+  if (!id) {
+    return { data: null, error: { message: 'entrevista_id faltante' } }
+  }
+
+  const { count, error } = await Supabase
+    .from('entrevistas')
+    .update(
+      {
+        estado_confirmacion: aceptar ? 'Confirmada' : 'Rechazada',
+        fecha_respuesta: new Date().toISOString(),
+      },
+      { count: 'exact' },
+    )
+    .eq('id', id)
+
+  if (error) return { data: null, error }
+  if (count !== 1) {
+    return {
+      data: null,
+      error: { message: 'No se actualizó la entrevista. Verificá el ID y los permisos de la base de datos.' },
+    }
+  }
+
+  return { data: { id }, error: null }
+}
+
+export const obtenerEntrevistasConfirmadas = (adoptanteId) =>
+  Supabase
+    .from('entrevistas')
+    .select(`
+      id,
+      fecha,
+      modalidad,
+      lugar,
+      duracion_minutos,
+      solicitudes!inner (
+        adoptante_id,
+        mascota_id,
+        mascotas ( nombre, refugios ( nombre ) )
+      )
+    `)
+    .eq('solicitudes.adoptante_id', adoptanteId)
+    .eq('estado_confirmacion', 'Confirmada')
+    .gte('fecha', new Date().toISOString())
+    .order('fecha', { ascending: true })
+
+export async function obtenerEntrevistasRefugio(refugioId) {
+  return Supabase
+    .from('entrevistas')
+    .select(`
+      *,
+      solicitudes!inner (
+        adoptante_id,
+        mascota_id,
+        mascotas!inner ( refugio_id, nombre ),
+        usuarios ( nombre, apellido )
+      )
+    `)
+    .eq('refugio_id', refugioId)
+    .order('fecha', { ascending: true })
+}
+
+export async function obtenerEntrevistaPorId(id) {
+  if (!id) return { data: null, error: { message: 'entrevista_id faltante' } }
+
+  return Supabase
+    .from('entrevistas')
+    .select(`
+      id,
+      fecha,
+      modalidad,
+      lugar,
+      duracion_minutos,
+      notas,
+      resultado,
+      estado_confirmacion,
+      solicitud_id,
+      adoptante_id,
+      refugio_id,
+      refugios:refugio_id (
+        id,
+        nombre,
+        logo_url
+      ),
+      usuarios:adoptante_id (
+        id,
+        nombre,
+        apellido,
+        foto_url
+      ),
+      solicitudes!inner (
+        id,
+        adoptante_id,
+        mascota_id,
+        mascotas!inner (
+          id,
+          nombre,
+          foto_url,
+          refugios!inner (
+            id,
+            nombre,
+            logo_url
+          )
+        )
+      )
+    `)
+    .eq('id', id)
+    .maybeSingle()
+}
